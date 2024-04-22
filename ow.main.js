@@ -1751,30 +1751,16 @@ function activate(context) {
                     </head>
                     <body>
                     <i><h3>参考手册</h3></i>
-                    <button style="width: 150px; height: auto;" onclick="navigate('Mode')">模式</button>
-                    <br>
-                    <br>
-                    <button style="width: 150px; height: auto;" onclick="navigate('Map')">地图</button>
-                    <br>
-                    <br>
-                    <button style="width: 150px; height: auto;" onclick="navigate('String')">字符串</button>
-                    <br>
-                    <br>
-                    <button style="width: 150px; height: auto;" onclick="navigate('Color')">颜色</button>
-                    <br>
-                    <br>
-                    <button style="width: 150px; height: auto;" onclick="navigate('Icon')">图标</button>
-                    <br>
-                    <br>
-                    <button style="width: 150px; height: auto;" onclick="navigate('HeroIcon')">英雄技能图标</button>
-                    <br>
-                    <br>
-                    <button style="width: 150px; height: auto;" onclick="navigate('Effect')">效果</button>
-                    <br>
-                    <br>
-                    <button style="width: 150px; height: auto;" onclick="navigate('Projectile')">弹道</button>
-                    <br>
-                    <br>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: max-content;">
+                      <button style="width: 150px; height: auto;" onclick="navigate('HeroIcon')">英雄技能图标</button>
+                      <button style="width: 150px; height: auto;" onclick="navigate('Icon')">图标</button>
+                      <button style="width: 150px; height: auto;" onclick="navigate('Mode')">模式</button>
+                      <button style="width: 150px; height: auto;" onclick="navigate('Map')">地图</button>
+                      <button style="width: 150px; height: auto;" onclick="navigate('String')">字符串</button>
+                      <button style="width: 150px; height: auto;" onclick="navigate('Color')">颜色</button>
+                      <button style="width: 150px; height: auto;" onclick="navigate('Effect')">效果</button>
+                      <button style="width: 150px; height: auto;" onclick="navigate('Projectile')">弹道</button>
+                    </div>
                     </body>
                     </html>`
           }
@@ -2064,7 +2050,7 @@ function activate(context) {
                     )
                     const icons = MODEL.常量.图标.map((element) => element.名称)
                     return `<td style="text-align:center; font-weight: 500;">
-                    <img src="${imageSrc}" class="icon">
+                    <img src="${imageSrc}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground));">
 
                     <br>${icons[imageNumber - 1]}</td>`
                   })
@@ -2094,7 +2080,7 @@ function activate(context) {
           }
 
           function getHeroIconTableHtml() {
-            const buildAvatar = (src, name) => {
+            function buildAvatar(src, name) {
               return `
              <td style="text-align: center;"><img src="${webviewView.webview.asWebviewUri(
                vscode.Uri.joinPath(
@@ -2109,7 +2095,7 @@ function activate(context) {
             </td>`
             }
 
-            const buildWeapon = (src) => {
+            function buildWeapon(src) {
               return `
               <td style="text-align: center;">
                 <img src="${webviewView.webview.asWebviewUri(
@@ -2121,11 +2107,11 @@ function activate(context) {
                     "ability",
                     src
                   )
-                )}" height="32" />
+                )}" height="32">
               </td>`
             }
 
-            const buildIcon = (src) => {
+            function buildIcon(src) {
               return `
               <td style="text-align: center;">
                 <img src="${webviewView.webview.asWebviewUri(
@@ -2137,11 +2123,11 @@ function activate(context) {
                     "ability",
                     src
                   )
-                )}" height="32" />
+                )}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground, var(--vscode-foreground)));">
               </td>`
             }
 
-            const buildEmpty = () => {
+            function buildEmpty() {
               return `<td style="text-align: center;"></td>`
             }
 
@@ -2159,17 +2145,21 @@ function activate(context) {
               crouch: src
             }
             */
-            const buildHero = (infos) => {
+            function buildHero(infos) {
               return `
                 <tr>
                   ${buildAvatar(infos["avatar"], infos["name"])}
                   ${
-                    infos.hasOwnProperty("primary")
-                      ? buildWeapon(infos["primary"])
+                    infos.hasOwnProperty("primaryWeapon")
+                      ? buildWeapon(infos["primaryWeapon"])
+                      : infos.hasOwnProperty("primary")
+                      ? buildIcon(infos["primary"])
                       : buildEmpty()
                   }
                   ${
-                    infos.hasOwnProperty("secondary")
+                    infos.hasOwnProperty("secondaryWeapon")
+                      ? buildWeapon(infos["secondaryWeapon"])
+                      : infos.hasOwnProperty("secondary")
                       ? buildIcon(infos["secondary"])
                       : buildEmpty()
                   }
@@ -2232,7 +2222,7 @@ function activate(context) {
                           "type",
                           "tank.png"
                         )
-                      )}" class="icon"/>
+                      )}" class="icon">
                     </div>
                     &nbsp;重装</h4>
                     <table style="min-width: 700px; max-width: 800px;">
@@ -2252,7 +2242,7 @@ function activate(context) {
                     ${buildHero({
                       name: "末日铁拳",
                       avatar: "tank_doomfist_avatar.png",
-                      primary: "tank_doomfist_weapon.png",
+                      primaryWeapon: "tank_doomfist_weapon.png",
                       secondary: "tank_doomfist_secondaryfire.png",
                       ultimate: "tank_doomfist_ultimate.png",
                       ability1: "tank_doomfist_ability1.png",
@@ -2263,7 +2253,7 @@ function activate(context) {
                     ${buildHero({
                       name: "D.Va",
                       avatar: "tank_dva_avatar.png",
-                      primary: "tank_dva_weapon1.png",
+                      primaryWeapon: "tank_dva_weapon1.png",
                       secondary: "tank_dva_secondaryfire.png",
                       ultimate: "tank_dva_ultimate1.png",
                       ability1: "tank_dva_ability1.png",
@@ -2274,7 +2264,7 @@ function activate(context) {
                     ${buildHero({
                       name: "破坏球",
                       avatar: "tank_wrecking_ball_avatar.png",
-                      primary: "tank_wrecking_ball_weapon.png",
+                      primaryWeapon: "tank_wrecking_ball_weapon.png",
                       secondary: "tank_wrecking_ball_secondaryfire.png",
                       ultimate: "tank_wrecking_ball_ultimate.png",
                       ability1: "tank_wrecking_ball_ability1.png",
@@ -2286,7 +2276,7 @@ function activate(context) {
                     ${buildHero({
                       name: "渣客女王",
                       avatar: "tank_junker-queen_avatar.png",
-                      primary: "tank_junker-queen_weapon.png",
+                      primaryWeapon: "tank_junker-queen_weapon.png",
                       secondary: "tank_junker-queen_secondaryfire.png",
                       ultimate: "tank_junker-queen_ultimate.png",
                       ability1: "tank_junker-queen_ability1.png",
@@ -2297,7 +2287,7 @@ function activate(context) {
                     ${buildHero({
                       name: "奥丽莎",
                       avatar: "tank_orisa_avatar.png",
-                      primary: "tank_orisa_weapon.png",
+                      primaryWeapon: "tank_orisa_weapon.png",
                       secondary: "tank_orisa_secondaryfire.png",
                       ultimate: "tank_orisa_ultimate.png",
                       ability1: "tank_orisa_ability1.png",
@@ -2308,7 +2298,7 @@ function activate(context) {
                      ${buildHero({
                        name: "莱因哈特",
                        avatar: "tank_reinhardt_avatar.png",
-                       primary: "tank_reinhardt_weapon.png",
+                       primaryWeapon: "tank_reinhardt_weapon.png",
                        secondary: "tank_reinhardt_secondaryfire.png",
                        ultimate: "tank_reinhardt_ultimate.png",
                        ability1: "tank_reinhardt_ability1.png",
@@ -2319,7 +2309,7 @@ function activate(context) {
                     ${buildHero({
                       name: "路霸",
                       avatar: "tank_roadhog_avatar.png",
-                      primary: "tank_roadhog_weapon.png",
+                      primaryWeapon: "tank_roadhog_weapon.png",
                       secondary: "tank_roadhog_secondaryfire.png",
                       ultimate: "tank_roadhog_ultimate.png",
                       ability1: "tank_roadhog_ability1.png",
@@ -2330,7 +2320,7 @@ function activate(context) {
                     ${buildHero({
                       name: "西格玛",
                       avatar: "tank_sigma_avatar.png",
-                      primary: "tank_sigma_weapon.png",
+                      primaryWeapon: "tank_sigma_weapon.png",
                       secondary: "tank_sigma_secondaryfire.png",
                       ultimate: "tank_sigma_ultimate.png",
                       ability1: "tank_sigma_ability1.png",
@@ -2341,8 +2331,8 @@ function activate(context) {
                     ${buildHero({
                       name: "温斯顿",
                       avatar: "tank_winston_avatar.png",
-                      primary: "tank_winston_weapon.png",
-                      secondary: "tank_winston_weapon.png",
+                      primaryWeapon: "tank_winston_weapon.png",
+                      secondaryWeapon: "tank_winston_weapon.png",
                       ultimate: "tank_winston_ultimate.png",
                       ability1: "tank_winston_ability1.png",
                       ability2: "tank_winston_ability2.png",
@@ -2352,8 +2342,8 @@ function activate(context) {
                     ${buildHero({
                       name: "查莉娅",
                       avatar: "tank_zarya_avatar.png",
-                      primary: "tank_zarya_weapon.png",
-                      secondary: "tank_zarya_weapon.png",
+                      primaryWeapon: "tank_zarya_weapon.png",
+                      secondaryWeapon: "tank_zarya_weapon.png",
                       ultimate: "tank_zarya_ultimate.png",
                       ability1: "tank_zarya_ability1.png",
                       ability2: "tank_zarya_ability2.png",
@@ -2363,7 +2353,7 @@ function activate(context) {
                     ${buildHero({
                       name: "拉玛刹",
                       avatar: "tank_ramattra_avatar.png",
-                      primary: "tank_ramattra_weapon1.png",
+                      primaryWeapon: "tank_ramattra_weapon1.png",
                       secondary: "tank_ramattra_secondaryfire1.png",
                       ultimate: "tank_ramattra_ultimate.png",
                       ability1: "tank_ramattra_ability1.png",
@@ -2374,8 +2364,8 @@ function activate(context) {
                     ${buildHero({
                       name: "毛加",
                       avatar: "tank_mauga_avatar.png",
-                      primary: "tank_mauga_weapon1.png",
-                      secondary: "tank_mauga_weapon2.png",
+                      primaryWeapon: "tank_mauga_weapon1.png",
+                      secondaryWeapon: "tank_mauga_weapon2.png",
                       ultimate: "tank_mauga_ultimate.png",
                       ability1: "tank_mauga_ability1.png",
                       ability2: "tank_mauga_ability2.png",
@@ -2395,7 +2385,7 @@ function activate(context) {
                           "type",
                           "damage.png"
                         )
-                      )}" class="icon" />
+                      )}" class="icon">
                     </div>
                     &nbsp;输出</h4>
                     <table style="min-width: 700px; max-width: 800px;">
@@ -2415,8 +2405,8 @@ function activate(context) {
                     ${buildHero({
                       name: "艾什",
                       avatar: "damage_ashe_avatar.png",
-                      primary: "damage_ashe_weapon.png",
-                      secondary: "damage_ashe_weapon.png",
+                      primaryWeapon: "damage_ashe_weapon.png",
+                      secondaryWeapon: "damage_ashe_weapon.png",
                       ultimate: "damage_ashe_ultimate.png",
                       ability1: "damage_ashe_ability1.png",
                       ability2: "damage_ashe_ability2.png",
@@ -2426,7 +2416,7 @@ function activate(context) {
                     ${buildHero({
                       name: "堡垒",
                       avatar: "damage_bastion_avatar.png",
-                      primary: "damage_bastion_weapon1.png",
+                      primaryWeapon: "damage_bastion_weapon1.png",
                       secondary: "damage_bastion_secondaryfire.png",
                       ultimate: "damage_bastion_ultimate.png",
                       ability1: "damage_bastion_ability1.png",
@@ -2436,7 +2426,7 @@ function activate(context) {
                     ${buildHero({
                       name: "回声",
                       avatar: "damage_echo_avatar.png",
-                      primary: "damage_echo_weapon.png",
+                      primaryWeapon: "damage_echo_weapon.png",
                       secondary: "damage_echo_secondaryfire.png",
                       ultimate: "damage_echo_ultimate.png",
                       ability1: "damage_echo_ability1.png",
@@ -2448,8 +2438,8 @@ function activate(context) {
                     ${buildHero({
                       name: "源氏",
                       avatar: "damage_genji_avatar.png",
-                      primary: "damage_genji_weapon.png",
-                      secondary: "damage_genji_weapon.png",
+                      primaryWeapon: "damage_genji_weapon.png",
+                      secondaryWeapon: "damage_genji_weapon.png",
                       ultimate: "damage_genji_ultimate.png",
                       ability1: "damage_genji_ability1.png",
                       ability2: "damage_genji_ability2.png",
@@ -2460,7 +2450,7 @@ function activate(context) {
                     ${buildHero({
                       name: "半藏",
                       avatar: "damage_hanzo_avatar.png",
-                      primary: "damage_hanzo_weapon.png",
+                      primaryWeapon: "damage_hanzo_weapon.png",
                       ultimate: "damage_hanzo_ultimate.png",
                       ability1: "damage_hanzo_ability1.png",
                       ability2: "damage_hanzo_ability2.png",
@@ -2471,7 +2461,7 @@ function activate(context) {
                     ${buildHero({
                       name: "狂鼠",
                       avatar: "damage_junkrat_avatar.png",
-                      primary: "damage_junkrat_weapon.png",
+                      primaryWeapon: "damage_junkrat_weapon.png",
                       ultimate: "damage_junkrat_ultimate.png",
                       ability1: "damage_junkrat_ability1.png",
                       ability2: "damage_junkrat_ability2.png",
@@ -2481,8 +2471,8 @@ function activate(context) {
                     ${buildHero({
                       name: "卡西迪",
                       avatar: "damage_cassidy_avatar.png",
-                      primary: "damage_cassidy_weapon.png",
-                      secondary: "damage_cassidy_weapon.png",
+                      primaryWeapon: "damage_cassidy_weapon.png",
+                      secondaryWeapon: "damage_cassidy_weapon.png",
                       ultimate: "damage_cassidy_ultimate.png",
                       ability1: "damage_cassidy_ability1.png",
                       ability2: "damage_cassidy_ability2.png",
@@ -2492,8 +2482,8 @@ function activate(context) {
                     ${buildHero({
                       name: "美",
                       avatar: "damage_mei_avatar.png",
-                      primary: "damage_mei_weapon.png",
-                      secondary: "damage_mei_weapon.png",
+                      primaryWeapon: "damage_mei_weapon.png",
+                      secondaryWeapon: "damage_mei_weapon.png",
                       ultimate: "damage_mei_ultimate.png",
                       ability1: "damage_mei_ability1.png",
                       ability2: "damage_mei_ability2.png",
@@ -2503,7 +2493,7 @@ function activate(context) {
                     ${buildHero({
                       name: "法老之鹰",
                       avatar: "damage_pharah_avatar.png",
-                      primary: "damage_pharah_weapon.png",
+                      primaryWeapon: "damage_pharah_weapon.png",
                       secondary: "damage_pharah_secondaryfire.png",
                       ultimate: "damage_pharah_ultimate.png",
                       ability1: "damage_pharah_ability1.png",
@@ -2515,7 +2505,7 @@ function activate(context) {
                     ${buildHero({
                       name: "死神",
                       avatar: "damage_reaper_avatar.png",
-                      primary: "damage_reaper_weapon.png",
+                      primaryWeapon: "damage_reaper_weapon.png",
                       ultimate: "damage_reaper_ultimate.png",
                       ability1: "damage_reaper_ability1.png",
                       ability2: "damage_reaper_ability2.png",
@@ -2525,7 +2515,7 @@ function activate(context) {
                     ${buildHero({
                       name: "索杰恩",
                       avatar: "damage_sojourn_avatar.png",
-                      primary: "damage_sojourn_weapon.png",
+                      primaryWeapon: "damage_sojourn_weapon.png",
                       secondary: "damage_sojourn_secondaryfire.png",
                       ultimate: "damage_sojourn_ultimate.png",
                       ability1: "damage_sojourn_ability1.png",
@@ -2536,8 +2526,8 @@ function activate(context) {
                     ${buildHero({
                       name: "士兵：76",
                       avatar: "damage_soldier-76_avatar.png",
-                      primary: "damage_soldier-76_weapon.png",
-                      secondary: "damage_soldier-76_weapon.png",
+                      primaryWeapon: "damage_soldier-76_weapon.png",
+                      secondaryWeapon: "damage_soldier-76_weapon.png",
                       ultimate: "damage_soldier-76_ultimate.png",
                       ability1: "damage_soldier-76_ability1.png",
                       ability2: "damage_soldier-76_ability2.png",
@@ -2547,8 +2537,8 @@ function activate(context) {
                     ${buildHero({
                       name: "黑影",
                       avatar: "damage_sombra_avatar.png",
-                      primary: "damage_sombra_weapon.png",
-                      secondary: "damage_sombra_weapon.png",
+                      primaryWeapon: "damage_sombra_weapon.png",
+                      secondaryWeapon: "damage_sombra_weapon.png",
                       ultimate: "damage_sombra_ultimate.png",
                       ability1: "damage_sombra_ability1.png",
                       ability2: "damage_sombra_ability2.png",
@@ -2558,8 +2548,8 @@ function activate(context) {
                     ${buildHero({
                       name: "秩序之光",
                       avatar: "damage_symmetra_avatar.png",
-                      primary: "damage_symmetra_weapon.png",
-                      secondary: "damage_symmetra_weapon.png",
+                      primaryWeapon: "damage_symmetra_weapon.png",
+                      secondaryWeapon: "damage_symmetra_weapon.png",
                       ultimate: "damage_symmetra_ultimate.png",
                       ability1: "damage_symmetra_ability1.png",
                       ability2: "damage_symmetra_ability2.png",
@@ -2569,8 +2559,8 @@ function activate(context) {
                     ${buildHero({
                       name: "托比昂",
                       avatar: "damage_torbjorn_avatar.png",
-                      primary: "damage_torbjorn_weapon1.png",
-                      secondary: "damage_torbjorn_weapon1.png",
+                      primaryWeapon: "damage_torbjorn_weapon1.png",
+                      secondaryWeapon: "damage_torbjorn_weapon1.png",
                       ultimate: "damage_torbjorn_ultimate.png",
                       ability1: "damage_torbjorn_ability1.png",
                       ability2: "damage_torbjorn_ability2.png",
@@ -2580,7 +2570,7 @@ function activate(context) {
                     ${buildHero({
                       name: "猎空",
                       avatar: "damage_tracer_avatar.png",
-                      primary: "damage_tracer_weapon.png",
+                      primaryWeapon: "damage_tracer_weapon.png",
                       ultimate: "damage_tracer_ultimate.png",
                       ability1: "damage_tracer_ability1.png",
                       ability2: "damage_tracer_ability2.png",
@@ -2590,7 +2580,7 @@ function activate(context) {
                     ${buildHero({
                       name: "黑百合",
                       avatar: "damage_widowmaker_avatar.png",
-                      primary: "damage_widowmaker_weapon.png",
+                      primaryWeapon: "damage_widowmaker_weapon.png",
                       ultimate: "damage_widowmaker_ultimate.png",
                       ability1: "damage_widowmaker_ability1.png",
                       ability2: "damage_widowmaker_ability2.png",
@@ -2600,7 +2590,7 @@ function activate(context) {
                     ${buildHero({
                       name: "探奇",
                       avatar: "damage_venture_avatar.png",
-                      primary: "damage_venture_weapon.png",
+                      primaryWeapon: "damage_venture_weapon.png",
                       secondary: "damage_venture_secondaryfire.png",
                       ultimate: "damage_venture_ultimate.png",
                       ability1: "damage_venture_ability1.png",
@@ -2620,7 +2610,7 @@ function activate(context) {
                           "type",
                           "support.png"
                         )
-                      )}" class="icon" />
+                      )}" class="icon">
                     </div>
                     &nbsp;支援</h4>
                     <table style="min-width: 700px; max-width: 800px;">
@@ -2640,7 +2630,7 @@ function activate(context) {
                     ${buildHero({
                       name: "安娜",
                       avatar: "support_ana_avatar.png",
-                      primary: "support_ana_weapon.png",
+                      primaryWeapon: "support_ana_weapon.png",
                       ultimate: "support_ana_ultimate.png",
                       ability1: "support_ana_ability1.png",
                       ability2: "support_ana_ability2.png",
@@ -2650,8 +2640,8 @@ function activate(context) {
                     ${buildHero({
                       name: "巴蒂斯特",
                       avatar: "support_baptiste_avatar.png",
-                      primary: "support_baptiste_weapon1.png",
-                      secondary: "support_baptiste_weapon2.png",
+                      primaryWeapon: "support_baptiste_weapon1.png",
+                      secondaryWeapon: "support_baptiste_weapon2.png",
                       ultimate: "support_baptiste_ultimate.png",
                       ability1: "support_baptiste_ability1.png",
                       ability2: "support_baptiste_ability2.png",
@@ -2662,7 +2652,7 @@ function activate(context) {
                     ${buildHero({
                       name: "布丽吉塔",
                       avatar: "support_brigitte_avatar.png",
-                      primary: "support_brigitte_weapon.png",
+                      primaryWeapon: "support_brigitte_weapon.png",
                       secondary: "support_brigitte_secondaryfire1.png",
                       ultimate: "support_brigitte_ultimate.png",
                       ability1: "support_brigitte_ability1.png",
@@ -2673,8 +2663,8 @@ function activate(context) {
                     ${buildHero({
                       name: "雾子",
                       avatar: "support_kiriko_avatar.png",
-                      primary: "support_kiriko_weapon1.png",
-                      secondary: "support_kiriko_weapon2.png",
+                      primaryWeapon: "support_kiriko_weapon1.png",
+                      secondaryWeapon: "support_kiriko_weapon2.png",
                       ultimate: "support_kiriko_ultimate.png",
                       ability1: "support_kiriko_ability1.png",
                       ability2: "support_kiriko_ability2.png",
@@ -2685,7 +2675,7 @@ function activate(context) {
                     ${buildHero({
                       name: "卢西奥",
                       avatar: "support_lucio_avatar.png",
-                      primary: "support_lucio_weapon.png",
+                      primaryWeapon: "support_lucio_weapon.png",
                       secondary: "support_lucio_secondaryfire.png",
                       ultimate: "support_lucio_ultimate.png",
                       ability1: "support_lucio_ability1.png",
@@ -2697,8 +2687,8 @@ function activate(context) {
                     ${buildHero({
                       name: "天使",
                       avatar: "support_mercy_avatar.png",
-                      primary: "support_mercy_weapon1.png",
-                      secondary: "support_mercy_weapon1.png",
+                      primaryWeapon: "support_mercy_weapon1.png",
+                      secondaryWeapon: "support_mercy_weapon1.png",
                       ultimate: "support_mercy_ultimate.png",
                       ability1: "support_mercy_ability1.png",
                       ability2: "support_mercy_ability2.png",
@@ -2709,7 +2699,7 @@ function activate(context) {
                     ${buildHero({
                       name: "莫伊拉",
                       avatar: "support_moira_avatar.png",
-                      primary: "support_moira_weapon.png",
+                      primaryWeapon: "support_moira_weapon.png",
                       secondary: "support_moira_secondaryfire.png",
                       ultimate: "support_moira_ultimate.png",
                       ability1: "support_moira_ability1.png",
@@ -2720,8 +2710,8 @@ function activate(context) {
                     ${buildHero({
                       name: "禅雅塔",
                       avatar: "support_zenyatta_avatar.png",
-                      primary: "support_zenyatta_weapon.png",
-                      secondary: "support_zenyatta_weapon.png",
+                      primaryWeapon: "support_zenyatta_weapon.png",
+                      secondaryWeapon: "support_zenyatta_weapon.png",
                       ultimate: "support_zenyatta_ultimate.png",
                       ability1: "support_zenyatta_ability1.png",
                       ability2: "support_zenyatta_ability2.png",
@@ -2731,7 +2721,7 @@ function activate(context) {
                     ${buildHero({
                       name: "生命之梭",
                       avatar: "support_lifeweaver_avatar.png",
-                      primary: "support_lifeweaver_weapon1.png",
+                      primaryWeapon: "support_lifeweaver_weapon1.png",
                       secondary: "support_lifeweaver_secondaryfire.png",
                       ultimate: "support_lifeweaver_ultimate.png",
                       ability1: "support_lifeweaver_ability1.png",
@@ -2742,7 +2732,7 @@ function activate(context) {
                     ${buildHero({
                       name: "伊拉锐",
                       avatar: "support_illari_avatar.png",
-                      primary: "support_illari_weapon.png",
+                      primaryWeapon: "support_illari_weapon.png",
                       secondary: "support_illari_secondaryfire.png",
                       ultimate: "support_illari_ultimate.png",
                       ability1: "support_illari_ability1.png",
