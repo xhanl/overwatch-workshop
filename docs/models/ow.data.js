@@ -2313,7 +2313,7 @@ let 常量 = {
       名称: "破坏球",
       标签: ["事件", "英雄", "重装"],
       提示: "“破坏球”的驾驶员哈蒙德是一只仓鼠，经过基因改造，他的智力发生了突变式进化。哈蒙德在世界各地探索，不断寻求着新的冒险。",
-      图标: "images/ow/hero/avatar/tank_wrecking-ball_avatar.png",
+      图标: "images/ow/hero/avatar/tank_wrecking_ball_avatar.png",
       生命: {
         自由: "300",
         职责: "450",
@@ -2322,41 +2322,41 @@ let 常量 = {
       },
       技能: {
         四联火炮: {
-          图标: "images/ow/hero/ability/tank_wrecking-ball_weapon.png",
+          图标: "images/ow/hero/ability/tank_wrecking_ball_weapon.png",
           绑定: ["主要攻击模式"],
         },
         工程抓钩: {
           图标: {
-            深色: "images/ow/hero/ability/tank_wrecking-ball_secondaryfire.png",
-            浅色: "images/ow/hero/ability_gray/tank_wrecking-ball_secondaryfire.png",
+            深色: "images/ow/hero/ability/tank_wrecking_ball_secondaryfire.png",
+            浅色: "images/ow/hero/ability_gray/tank_wrecking_ball_secondaryfire.png",
           },
           绑定: ["辅助攻击模式"],
         },
         地雷禁区: {
           图标: {
-            深色: "images/ow/hero/ability/tank_wrecking-ball_ultimate.png",
-            浅色: "images/ow/hero/ability_gray/tank_wrecking-ball_ultimate.png",
+            深色: "images/ow/hero/ability/tank_wrecking_ball_ultimate.png",
+            浅色: "images/ow/hero/ability_gray/tank_wrecking_ball_ultimate.png",
           },
           绑定: ["终极技能"],
         },
         动力铁球: {
           图标: {
-            深色: "images/ow/hero/ability/tank_wrecking-ball_ability1.png",
-            浅色: "images/ow/hero/ability_gray/tank_wrecking-ball_ability1.png",
+            深色: "images/ow/hero/ability/tank_wrecking_ball_ability1.png",
+            浅色: "images/ow/hero/ability_gray/tank_wrecking_ball_ability1.png",
           },
           绑定: ["技能1"],
         },
         感应护盾: {
           图标: {
-            深色: "images/ow/hero/ability/tank_wrecking-ball_ability2.png",
-            浅色: "images/ow/hero/ability_gray/tank_wrecking-ball_ability2.png",
+            深色: "images/ow/hero/ability/tank_wrecking_ball_ability2.png",
+            浅色: "images/ow/hero/ability_gray/tank_wrecking_ball_ability2.png",
           },
           绑定: ["技能2"],
         },
         重力坠击: {
           图标: {
-            深色: "images/ow/hero/ability/tank_wrecking-ball_crouch.png",
-            浅色: "images/ow/hero/ability_gray/tank_wrecking-ball_crouch.png",
+            深色: "images/ow/hero/ability/tank_wrecking_ball_crouch.png",
+            浅色: "images/ow/hero/ability_gray/tank_wrecking_ball_crouch.png",
           },
           绑定: ["蹲下"],
         },
@@ -8902,7 +8902,7 @@ let 常量 = {
       提示: "如果条件列表从假转变为真，或者规则中的事件在为真的条件下再次发生，则从第一项动作开始重新执行动作列表。",
     },
   ],
-};
+}
 
 let 规则 = {
   事件: {
@@ -16809,7 +16809,7 @@ let 规则 = {
       提示: "预先为指定的玩家将指定的英雄及皮肤加载入内存。当需要经常改变英雄且已知接下来要使用哪个英雄时适用。",
     },
   },
-};
+}
 
 let 扩展 = {
   光束效果: { 标签: ["扩展", "∴ 2"], 提示: "一个工坊扩展选项。" },
@@ -16823,7 +16823,7 @@ let 扩展 = {
   播放更多效果: { 标签: ["扩展", "∴ 1"], 提示: "一个工坊扩展选项。" },
   生成更多机器人: { 标签: ["扩展", "∴ 2"], 提示: "一个工坊扩展选项。" },
   弹道: { 标签: ["扩展", "∴ 4"], 提示: "一个工坊扩展选项。" },
-};
+}
 
 let 模版 = {
   全局: {
@@ -16934,4 +16934,4 @@ let 模版 = {
       提示: "一个规则中的动作模板。",
     },
   },
-};
+}
