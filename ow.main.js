@@ -2082,22 +2082,20 @@ function activate(context) {
           function getHeroIconTableHtml() {
             function buildAvatar(src, name) {
               return `
-             <td style="text-align: center;"><img src="${webviewView.webview.asWebviewUri(
-               vscode.Uri.joinPath(
-                 extensionUri,
-                 "images",
-                 "ow",
-                 "hero",
-                 "avatar",
-                 src
-               )
-             )}" height="48"><br>${name}<br>
-            </td>`
+              <img src="${webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(
+                  extensionUri,
+                  "images",
+                  "ow",
+                  "hero",
+                  "avatar",
+                  src
+                )
+              )}" style="height: 48px;/>`
             }
 
             function buildWeapon(src) {
               return `
-              <td style="text-align: center;">
                 <img src="${webviewView.webview.asWebviewUri(
                   vscode.Uri.joinPath(
                     extensionUri,
@@ -2107,28 +2105,21 @@ function activate(context) {
                     "ability",
                     src
                   )
-                )}" height="32">
-              </td>`
+                )}" style="height: 32px;"/>`
             }
 
             function buildIcon(src) {
               return `
-              <td style="text-align: center;">
-                <img src="${webviewView.webview.asWebviewUri(
-                  vscode.Uri.joinPath(
-                    extensionUri,
-                    "images",
-                    "ow",
-                    "hero",
-                    "ability",
-                    src
-                  )
-                )}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground, var(--vscode-foreground)));">
-              </td>`
-            }
-
-            function buildEmpty() {
-              return `<td style="text-align: center;"></td>`
+              <img src="${webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(
+                  extensionUri,
+                  "images",
+                  "ow",
+                  "hero",
+                  "ability",
+                  src
+                )
+              )}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground, var(--vscode-foreground)));"/>`
             }
 
             /* 参数含义
@@ -2136,7 +2127,9 @@ function activate(context) {
               name: string
               avatar: src
               primary: src
+              primaryWeapon: src
               secondary: src
+              secondaryWeapon: src
               ultimate: src
               ability1: src
               ability2: src
@@ -2148,51 +2141,66 @@ function activate(context) {
             function buildHero(infos) {
               return `
                 <tr>
-                  ${buildAvatar(infos["avatar"], infos["name"])}
+                  ${buildAvatar(infos["avatar"])}
+                  <br>${infos["name"]}<br>
+                  <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("primaryWeapon")
                       ? buildWeapon(infos["primaryWeapon"])
                       : infos.hasOwnProperty("primary")
                       ? buildIcon(infos["primary"])
-                      : buildEmpty()
+                      : ""
                   }
+                  </td>
+                  <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("secondaryWeapon")
                       ? buildWeapon(infos["secondaryWeapon"])
                       : infos.hasOwnProperty("secondary")
                       ? buildIcon(infos["secondary"])
-                      : buildEmpty()
+                      : ""
                   }
+                  </td>
+                  <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("ultimate")
                       ? buildIcon(infos["ultimate"])
-                      : buildEmpty()
+                      : ""
                   }
+                  </td>
+                  <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("ability1")
                       ? buildIcon(infos["ability1"])
-                      : buildEmpty()
+                      : ""
                   }
+                  </td>
+                  <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("ability2")
                       ? buildIcon(infos["ability2"])
-                      : buildEmpty()
+                      : ""
                   }
+                  </td>
+                  <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("melee")
                       ? buildIcon(infos["melee"])
-                      : buildEmpty()
+                      : ""
                   }
+                  </td>
+                  <td style="text-align: center;">
                   ${
-                    infos.hasOwnProperty("jump")
-                      ? buildIcon(infos["jump"])
-                      : buildEmpty()
+                    infos.hasOwnProperty("jump") ? buildIcon(infos["jump"]) : ""
                   }
+                  </td>
+                  <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("crouch")
                       ? buildIcon(infos["crouch"])
-                      : buildEmpty()
+                      : ""
                   }
+                  </td>
                 </tr>`
             }
 
@@ -2222,7 +2230,7 @@ function activate(context) {
                           "type",
                           "tank.png"
                         )
-                      )}" class="icon">
+                      )}" class="icon"/>
                     </div>
                     &nbsp;重装</h4>
                     <table style="min-width: 700px; max-width: 800px;">
