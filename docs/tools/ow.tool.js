@@ -51,7 +51,7 @@ function convertObjectToArray() {
     const outputString = JSON.stringify(outputArray, null, 2)
 
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
@@ -84,7 +84,7 @@ function buildPinYinArray() {
 
     const outputString = JSON.stringify(obj, null, 2)
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
@@ -116,7 +116,7 @@ function buildPinYinPropertyToObjectElement() {
 
     const outputString = JSON.stringify(obj, null, 2)
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
@@ -147,7 +147,7 @@ function buildPinYinToSubSubObject() {
 
     const outputString = JSON.stringify(obj, null, 2)
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
@@ -177,7 +177,7 @@ function buildPinYinToSubObject() {
 
     const outputString = JSON.stringify(MODEL.规则.条件, null, 2)
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
@@ -216,7 +216,7 @@ function buildPinYinToSubObject() {
 
     const outputString = JSON.stringify(MODEL.规则.动作, null, 2)
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
@@ -251,7 +251,7 @@ function buildPinYinToSubObject() {
 
     const outputString = JSON.stringify(MODEL.常量, null, 2)
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
@@ -282,7 +282,7 @@ function buildPinYinToSubObject() {
 
     const outputString = JSON.stringify(MODEL.扩展, null, 2)
     fs.writeFileSync(
-      "/Users/x/Desktop/overwatch-workshop/overwatch-workshop/output.txt",
+      "output.txt",
       outputString,
       "utf-8"
     )
