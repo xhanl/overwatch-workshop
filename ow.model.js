@@ -8841,177 +8841,206 @@ let 常量 = {
 
 let 规则 = {
   事件: {
-    选项: {
-      "持续 - 全局": {
-        标签: ["事件"],
-        提示: "当比赛开始时，创建此规则的单一副本。此副本在整场比赛中保持激活状态。",
-        拼音: "Chi Xu Quan Ju",
+    选项: [
+      {
+        '名称': '持续 - 全局',
+        '标签': [ '事件' ],
+        '提示': '当比赛开始时，创建此规则的单一副本。此副本在整场比赛中保持激活状态。',
+        '拼音': 'Chi Xu Quan Ju'
       },
-      "持续 - 每名玩家": {
-        标签: ["事件"],
-        提示: "当玩家加入比赛时，为每位玩家创建此规则的副本。此副本会保持激活，直至玩家离开比赛或比赛结束。每个副本都会独立追踪并执行条件和行动。",
-        拼音: "Chi Xu Mei Ming Wan Jia",
+      {
+        '名称': '持续 - 每名玩家',
+        '标签': [ '事件' ],
+        '提示': '当玩家加入比赛时，为每位玩家创建此规则的副本。此副本会保持激活，直至玩家离开比赛或比赛结束。每个副本都会独立追踪并执行条件和行动。',
+        '拼音': 'Chi Xu Mei Ming Wan Jia'
       },
-      玩家造成伤害: {
-        标签: ["事件"],
-        提示: "当玩家造成伤害时执行规则。",
-        拼音: "Wan Jia Zao Cheng Shang Hai",
+      {
+        '名称': '玩家造成伤害',
+        '标签': [ '事件' ],
+        '提示': '当玩家造成伤害时执行规则。',
+        '拼音': 'Wan Jia Zao Cheng Shang Hai'
       },
-      玩家造成最后一击: {
-        标签: ["事件"],
-        提示: "当玩家造成最后一击时执行规则。",
-        拼音: "Wan Jia Zao Cheng Zui Hou Yi Ji",
+      {
+        '名称': '玩家造成最后一击',
+        '标签': [ '事件' ],
+        '提示': '当玩家造成最后一击时执行规则。',
+        '拼音': 'Wan Jia Zao Cheng Zui Hou Yi Ji'
       },
-      玩家造成治疗: {
-        标签: ["事件"],
-        提示: "当玩家造成治疗时执行规则。",
-        拼音: "Wan Jia Zao Cheng Zhi Liao",
+      {
+        '名称': '玩家造成治疗',
+        '标签': [ '事件' ],
+        '提示': '当玩家造成治疗时执行规则。',
+        '拼音': 'Wan Jia Zao Cheng Zhi Liao'
       },
-      玩家造成击退: {
-        标签: ["事件"],
-        提示: "当玩家造成击退时执行规则. ",
-        拼音: "Wan Jia Zao Cheng Ji Tui",
+      {
+        '名称': '玩家造成击退',
+        '标签': [ '事件' ],
+        '提示': '当玩家造成击退时执行规则. ',
+        '拼音': 'Wan Jia Zao Cheng Ji Tui'
       },
-      玩家阵亡: {
-        标签: ["事件"],
-        提示: "当玩家阵亡时执行规则。",
-        拼音: "Wan Jia Zhen Wang",
+      {
+        '名称': '玩家阵亡',
+        '标签': [ '事件' ],
+        '提示': '当玩家阵亡时执行规则。',
+        '拼音': 'Wan Jia Zhen Wang'
       },
-      玩家参与消灭: {
-        标签: ["事件"],
-        提示: "当玩家参与消灭时执行规则。",
-        拼音: "Wan Jia Can Yu Xiao Mie",
+      {
+        '名称': '玩家参与消灭',
+        '标签': [ '事件' ],
+        '提示': '当玩家参与消灭时执行规则。',
+        '拼音': 'Wan Jia Can Yu Xiao Mie'
       },
-      玩家加入比赛: {
-        标签: ["事件"],
-        提示: "当玩家加入比赛时执行规则。",
-        拼音: "Wan Jia Jia Ru Bi Sai",
+      {
+        '名称': '玩家加入比赛',
+        '标签': [ '事件' ],
+        '提示': '当玩家加入比赛时执行规则。',
+        '拼音': 'Wan Jia Jia Ru Bi Sai'
       },
-      玩家离开比赛: {
-        标签: ["事件"],
-        提示: "当玩家离开比赛时执行规则。",
-        拼音: "Wan Jia Li Kai Bi Sai",
+      {
+        '名称': '玩家离开比赛',
+        '标签': [ '事件' ],
+        '提示': '当玩家离开比赛时执行规则。',
+        '拼音': 'Wan Jia Li Kai Bi Sai'
       },
-      玩家受到治疗: {
-        标签: ["事件"],
-        提示: "当玩家受到治疗时执行规则。",
-        拼音: "Wan Jia Shou Dao Zhi Liao",
+      {
+        '名称': '玩家受到治疗',
+        '标签': [ '事件' ],
+        '提示': '当玩家受到治疗时执行规则。',
+        '拼音': 'Wan Jia Shou Dao Zhi Liao'
       },
-      玩家受到击退: {
-        标签: ["事件"],
-        提示: "当玩家受到击退时执行规则. ",
-        拼音: "Wan Jia Shou Dao Ji Tui",
+      {
+        '名称': '玩家受到击退',
+        '标签': [ '事件' ],
+        '提示': '当玩家受到击退时执行规则. ',
+        '拼音': 'Wan Jia Shou Dao Ji Tui'
       },
-      玩家受到伤害: {
-        标签: ["事件"],
-        提示: "当玩家受到伤害时执行规则。",
-        拼音: "Wan Jia Shou Dao Shang Hai",
+      {
+        '名称': '玩家受到伤害',
+        '标签': [ '事件' ],
+        '提示': '当玩家受到伤害时执行规则。',
+        '拼音': 'Wan Jia Shou Dao Shang Hai'
       },
-      子程序: {
-        标签: ["事件"],
-        提示: "当被“调用子程序“或”开始规则”动作调用时执行该规则。",
-        拼音: "Zi Cheng Xu",
+      {
+        '名称': '子程序',
+        '标签': [ '事件' ],
+        '提示': '当被“调用子程序“或”开始规则”动作调用时执行该规则。',
+        '拼音': 'Zi Cheng Xu'
+      }
+    ],
+    队伍: [
+      {
+        '名称': '队伍1',
+        '标签': [ '事件', '队伍' ],
+        '提示': '表示默认颜色为蓝的队伍。仅用于“规则事件”中的队伍选项。',
+        '拼音': 'Dui Wu 1'
       },
-    },
-    队伍: {
-      队伍1: {
-        标签: ["事件", "队伍"],
-        提示: "表示默认颜色为蓝的队伍。仅用于“规则事件”中的队伍选项。",
-        拼音: "Dui Wu 1",
+      {
+        '名称': '队伍2',
+        '标签': [ '事件', '队伍' ],
+        '提示': '表示默认颜色为红的队伍。仅用于“规则事件”中的队伍选项。',
+        '拼音': 'Dui Wu 2'
       },
-      队伍2: {
-        标签: ["事件", "队伍"],
-        提示: "表示默认颜色为红的队伍。仅用于“规则事件”中的队伍选项。",
-        拼音: "Dui Wu 2",
+      {
+        '名称': '双方',
+        '标签': [ '事件', '队伍' ],
+        '提示': '表示两支队伍或非团队模式（例如“死斗”）的所有玩家。仅用于“规则事件”中的队伍选项。',
+        '拼音': 'Shuang Fang'
+      }
+    ],
+    玩家: [
+      {
+        '名称': '全部',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '0',
+        '提示': '表示所有栏位的玩家。',
+        '拼音': 'Quan Bu'
       },
-      双方: {
-        标签: ["事件", "队伍"],
-        提示: "表示两支队伍或非团队模式（例如“死斗”）的所有玩家。仅用于“规则事件”中的队伍选项。",
-        拼音: "Shuang Fang",
+      {
+        '名称': '栏位 0',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '1',
+        '提示': '表示第0个栏位的玩家。',
+        '拼音': 'Lan Wei 0'
       },
-    },
-    玩家: {
-      全部: {
-        标签: ["事件", "玩家"],
-        顺序: "0",
-        提示: "表示所有栏位的玩家。",
-        拼音: "Quan Bu",
+      {
+        '名称': '栏位 1',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '2',
+        '提示': '表示第1个栏位的玩家。',
+        '拼音': 'Lan Wei 1'
       },
-      "栏位 0": {
-        标签: ["事件", "玩家"],
-        顺序: "1",
-        提示: "表示第0个栏位的玩家。",
-        拼音: "Lan Wei 0",
+      {
+        '名称': '栏位 2',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '3',
+        '提示': '表示第2个栏位的玩家。',
+        '拼音': 'Lan Wei 2'
       },
-      "栏位 1": {
-        标签: ["事件", "玩家"],
-        顺序: "2",
-        提示: "表示第1个栏位的玩家。",
-        拼音: "Lan Wei 1",
+      {
+        '名称': '栏位 3',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '4',
+        '提示': '表示第3个栏位的玩家。',
+        '拼音': 'Lan Wei 3'
       },
-      "栏位 2": {
-        标签: ["事件", "玩家"],
-        顺序: "3",
-        提示: "表示第2个栏位的玩家。",
-        拼音: "Lan Wei 2",
+      {
+        '名称': '栏位 4',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '5',
+        '提示': '表示第4个栏位的玩家。',
+        '拼音': 'Lan Wei 4'
       },
-      "栏位 3": {
-        标签: ["事件", "玩家"],
-        顺序: "4",
-        提示: "表示第3个栏位的玩家。",
-        拼音: "Lan Wei 3",
+      {
+        '名称': '栏位 5',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '6',
+        '提示': '表示第5个栏位的玩家。',
+        '拼音': 'Lan Wei 5'
       },
-      "栏位 4": {
-        标签: ["事件", "玩家"],
-        顺序: "5",
-        提示: "表示第4个栏位的玩家。",
-        拼音: "Lan Wei 4",
+      {
+        '名称': '栏位 6',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '7',
+        '提示': '表示第6个栏位的玩家。',
+        '拼音': 'Lan Wei 6'
       },
-      "栏位 5": {
-        标签: ["事件", "玩家"],
-        顺序: "6",
-        提示: "表示第5个栏位的玩家。",
-        拼音: "Lan Wei 5",
+      {
+        '名称': '栏位 7',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '8',
+        '提示': '表示第7个栏位的玩家。',
+        '拼音': 'Lan Wei 7'
       },
-      "栏位 6": {
-        标签: ["事件", "玩家"],
-        顺序: "7",
-        提示: "表示第6个栏位的玩家。",
-        拼音: "Lan Wei 6",
+      {
+        '名称': '栏位 8',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '9',
+        '提示': '表示第8个栏位的玩家。',
+        '拼音': 'Lan Wei 8'
       },
-      "栏位 7": {
-        标签: ["事件", "玩家"],
-        顺序: "8",
-        提示: "表示第7个栏位的玩家。",
-        拼音: "Lan Wei 7",
+      {
+        '名称': '栏位 9',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '10',
+        '提示': '表示第9个栏位的玩家。',
+        '拼音': 'Lan Wei 9'
       },
-      "栏位 8": {
-        标签: ["事件", "玩家"],
-        顺序: "9",
-        提示: "表示第8个栏位的玩家。",
-        拼音: "Lan Wei 8",
+      {
+        '名称': '栏位 10',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '11',
+        '提示': '表示第10个栏位的玩家。',
+        '拼音': 'Lan Wei 10'
       },
-      "栏位 9": {
-        标签: ["事件", "玩家"],
-        顺序: "10",
-        提示: "表示第9个栏位的玩家。",
-        拼音: "Lan Wei 9",
-      },
-      "栏位 10": {
-        标签: ["事件", "玩家"],
-        顺序: "11",
-        提示: "表示第10个栏位的玩家。",
-        拼音: "Lan Wei 10",
-      },
-      "栏位 11": {
-        标签: ["事件", "玩家"],
-        顺序: "12",
-        提示: "表示第11个栏位的玩家。",
-        拼音: "Lan Wei 11",
-      },
-    },
+      {
+        '名称': '栏位 11',
+        '标签': [ '事件', '玩家' ],
+        '顺序': '12',
+        '提示': '表示第11个栏位的玩家。',
+        '拼音': 'Lan Wei 11'
+      }
+    ]
   },
-
   条件: {
     "If-Then-Else": {
       参数: [
@@ -12923,7 +12952,6 @@ let 规则 = {
       拼音: "Gao Du",
     },
   },
-
   动作: {
     Else: {
       标签: ["动作", "流程"],
@@ -17299,7 +17327,6 @@ let 模版 = {
     {
         模式名称: \${1:"新模式"}
         描述: \${2:"新描述"}
-
     }
 
     大厅
@@ -17531,38 +17558,38 @@ function buildStaticModels(PATH) {
     console.log(`错误：buildStaticModels 其它常量` + error)
   }
   try {
-    for (i in 常量.英雄) {
-      let description = `<img src="${常量.英雄[i].图标}" width=48 height=48/><br>${常量.英雄[i].提示}`
-      常量.英雄[i].悬停 = {
+    for (i of 常量.英雄) {
+      let description = `<img src="${i.图标}" width=48 height=48/><br>${i.提示}`
+      i.悬停 = {
         深色: buildHover(
           PATH,
-          常量.英雄[i].名称,
-          常量.英雄[i].标签,
+          i.名称,
+          i.标签,
           description
         ),
         浅色: buildHover(
           PATH,
-          常量.英雄[i].名称,
-          常量.英雄[i].标签,
+          i.名称,
+          i.标签,
           description
         ),
       }
 
-      常量.英雄[i].补全 = {
+      i.补全 = {
         深色: buildCompletion(
           PATH,
-          常量.英雄[i].名称,
-          常量.英雄[i].拼音,
+          i.名称,
+          i.拼音,
           vscode.CompletionItemKind.Constant,
-          常量.英雄[i].标签,
+          i.标签,
           description
         ),
         浅色: buildCompletion(
           PATH,
-          常量.英雄[i].名称,
-          常量.英雄[i].拼音,
+          i.名称,
+          i.拼音,
           vscode.CompletionItemKind.Constant,
-          常量.英雄[i].标签,
+          i.标签,
           description
         ),
       }
@@ -17571,42 +17598,42 @@ function buildStaticModels(PATH) {
     console.log(`错误：buildStaticModels 常量.英雄` + error)
   }
   try {
-    for (i in 常量.图标) {
+    for (i of 常量.图标) {
       const details = {
-        深色: `<img src="${常量.图标[i].图标.深色}" width=36 height=36/><br>${常量.图标[i].提示}`,
-        浅色: `<img src="${常量.图标[i].图标.浅色}" width=36 height=36/><br>${常量.图标[i].提示}`,
+        深色: `<img src="${i.图标.深色}" width=36 height=36/><br>${i.提示}`,
+        浅色: `<img src="${i.图标.浅色}" width=36 height=36/><br>${i.提示}`,
       }
 
-      常量.图标[i].悬停 = {
+      i.悬停 = {
         深色: buildHover(
           PATH,
-          常量.图标[i].名称,
-          常量.图标[i].标签,
+          i.名称,
+          i.标签,
           details.深色
         ),
         浅色: buildHover(
           PATH,
-          常量.图标[i].名称,
-          常量.图标[i].标签,
+          i.名称,
+          i.标签,
           details.浅色
         ),
       }
 
-      常量.图标[i].补全 = {
+      i.补全 = {
         深色: buildCompletion(
           PATH,
-          常量.图标[i].名称,
-          常量.图标[i].拼音,
+          i.名称,
+          i.拼音,
           vscode.CompletionItemKind.Constant,
-          常量.图标[i].标签,
+          i.标签,
           details.深色
         ),
         浅色: buildCompletion(
           PATH,
-          常量.图标[i].名称,
-          常量.图标[i].拼音,
+          i.名称,
+          i.拼音,
           vscode.CompletionItemKind.Constant,
-          常量.图标[i].标签,
+          i.标签,
           details.浅色
         ),
       }
@@ -17615,50 +17642,50 @@ function buildStaticModels(PATH) {
     console.log(`错误：buildStaticModels 常量.图标` + error)
   }
   try {
-    for (i in 常量.按钮) {
-      if (常量.按钮[i].图标.hasOwnProperty("深色")) {
+    for (i of 常量.按钮) {
+      if (i.图标.hasOwnProperty("深色")) {
         //双色主题图标
         const details = {
           深色: `
 |||
 |:-|:-|
-<img src="${常量.按钮[i].图标.深色}" width=32 height=32/>&nbsp;&nbsp;|${常量.按钮[i].提示}`,
+<img src="${i.图标.深色}" width=32 height=32/>&nbsp;&nbsp;|${i.提示}`,
           浅色: `
 |||
 |:-|:-|
-<img src="${常量.按钮[i].图标.浅色}" width=32 height=32/>&nbsp;&nbsp;|${常量.按钮[i].提示}`,
+<img src="${i.图标.浅色}" width=32 height=32/>&nbsp;&nbsp;|${i.提示}`,
         }
 
-        常量.按钮[i].悬停 = {
+        i.悬停 = {
           深色: buildHover(
             PATH,
-            常量.按钮[i].名称,
-            常量.按钮[i].标签,
+            i.名称,
+            i.标签,
             details.深色
           ),
           浅色: buildHover(
             PATH,
-            常量.按钮[i].名称,
-            常量.按钮[i].标签,
+            i.名称,
+            i.标签,
             details.浅色
           ),
         }
 
-        常量.按钮[i].补全 = {
+        i.补全 = {
           深色: buildCompletion(
             PATH,
-            常量.按钮[i].名称,
-            常量.按钮[i].拼音,
+            i.名称,
+            i.拼音,
             vscode.CompletionItemKind.Constant,
-            常量.按钮[i].标签,
+            i.标签,
             details.深色
           ),
           浅色: buildCompletion(
             PATH,
-            常量.按钮[i].名称,
-            常量.按钮[i].拼音,
+            i.名称,
+            i.拼音,
             vscode.CompletionItemKind.Constant,
-            常量.按钮[i].标签,
+            i.标签,
             details.浅色
           ),
         }
@@ -17667,19 +17694,19 @@ function buildStaticModels(PATH) {
         const details = `
 |||
 |:-|:-|
-<img src="${常量.按钮[i].图标}" width=32 height=32/>&nbsp;&nbsp;|${常量.按钮[i].提示}`
-        常量.按钮[i].悬停 = buildHover(
+<img src="${i.图标}" width=32 height=32/>&nbsp;&nbsp;|${i.提示}`
+        i.悬停 = buildHover(
           PATH,
-          常量.按钮[i].名称,
-          常量.按钮[i].标签,
+          i.名称,
+          i.标签,
           details
         )
-        常量.按钮[i].补全 = buildCompletion(
+        i.补全 = buildCompletion(
           PATH,
-          常量.按钮[i].名称,
-          常量.按钮[i].拼音,
+          i.名称,
+          i.拼音,
           vscode.CompletionItemKind.Constant,
-          常量.按钮[i].标签,
+          i.标签,
           details
         )
       }
@@ -17688,23 +17715,23 @@ function buildStaticModels(PATH) {
     console.log(`错误：buildStaticModels 常量.按钮` + error)
   }
   try {
-    for (i in 常量.颜色) {
+    for (i of 常量.颜色) {
       const details = `
 |||
 |:-|:-|
-<img src="${常量.颜色[i].图标}" width=32 height=32/>&nbsp;&nbsp;|${常量.颜色[i].提示}`
-      常量.颜色[i].悬停 = buildHover(
+<img src="${i.图标}" width=32 height=32/>&nbsp;&nbsp;|${i.提示}`
+      i.悬停 = buildHover(
         PATH,
-        常量.颜色[i].名称,
-        常量.颜色[i].标签,
+        i.名称,
+        i.标签,
         details
       )
-      常量.颜色[i].补全 = buildCompletion(
+      i.补全 = buildCompletion(
         PATH,
-        常量.颜色[i].名称,
-        常量.颜色[i].拼音,
+        i.名称,
+        i.拼音,
         vscode.CompletionItemKind.Constant,
-        常量.颜色[i].标签,
+        i.标签,
         details
       )
     }
@@ -17712,82 +17739,88 @@ function buildStaticModels(PATH) {
     console.log(`错误：buildStaticModels 常量.颜色` + error)
   }
   try {
-    for (i in 常量.字符串) {
-      常量.字符串[i].补全 = buildCompletion(
+    for (i of 常量.字符串) {
+      i.补全 = buildCompletion(
         PATH,
-        常量.字符串[i].名称,
-        常量.字符串[i].拼音,
+        i.名称,
+        i.拼音,
         vscode.CompletionItemKind.Constant,
-        常量.字符串[i].标签,
-        常量.字符串[i].提示
+        i.标签,
+        i.提示
       )
     }
   } catch (error) {
     console.log(`错误：buildStaticModels 常量.字符串` + error)
   }
   try {
-    for (i in 规则.事件.选项) {
-      规则.事件.选项[i].悬停 = buildHover(
+    for (i of 规则.事件.选项) {
+      i.悬停 = buildHover(
         PATH,
-        i,
-        规则.事件.选项[i].标签,
-        规则.事件.选项[i].提示
+        i.名称,
+        i.标签,
+        i.提示
       )
-      规则.事件.选项[i].补全 = buildCompletion(
+      i.补全 = buildCompletion(
         PATH,
-        i,
-        规则.事件.选项[i].拼音,
+        i.名称,
+        i.拼音,
         vscode.CompletionItemKind.Event,
-        规则.事件.选项[i].标签,
-        规则.事件.选项[i].提示,
+        i.标签,
+        i.提示,
         undefined,
-        `${i};`
+        `${i.名称};`
       )
     }
   } catch (error) {
     console.log(`错误：buildStaticModels 规则.事件.选项` + error)
   }
   try {
-    for (i in 规则.事件.队伍) {
-      规则.事件.队伍[i].悬停 = buildHover(
+    for (i of 规则.事件.队伍) {
+      i.悬停 = buildHover(
         PATH,
-        i,
-        规则.事件.队伍[i].标签,
-        规则.事件.队伍[i].提示
+        i.名称,
+        i.标签,
+        i.提示
       )
-      规则.事件.队伍[i].补全 = buildCompletion(
+      i.补全 = buildCompletion(
         PATH,
-        i,
-        规则.事件.队伍[i].拼音,
+        i.名称,
+        i.拼音,
         vscode.CompletionItemKind.Event,
-        规则.事件.队伍[i].标签,
-        规则.事件.队伍[i].提示,
+        i.标签,
+        i.提示,
         undefined,
-        `${i};`
+        `${i.名称};`
       )
     }
   } catch (error) {
     console.log(`错误：buildStaticModels 规则.事件.队伍` + error)
   }
   try {
-    for (i in 规则.事件.玩家) {
-      规则.事件.玩家[i].悬停 = buildHover(
+    for (i of 规则.事件.玩家) {
+      i.悬停 = buildHover(
         PATH,
-        i,
-        规则.事件.玩家[i].标签,
-        规则.事件.玩家[i].提示
+        i.名称,
+        i.标签,
+        i.提示
       )
-      规则.事件.玩家[i].补全 = buildCompletion(
+      i.补全 = buildCompletion(
         PATH,
-        i,
-        规则.事件.玩家[i].拼音,
+        i.名称,
+        i.拼音,
         vscode.CompletionItemKind.Event,
-        规则.事件.玩家[i].标签,
-        规则.事件.玩家[i].提示,
+        i.标签,
+        i.提示,
         undefined,
-        `${i};`,
-        规则.事件.玩家[i].顺序
+        `${i.名称};`,
+        i.顺序
       )
+    }
+    for (i of 常量.英雄) {
+      let hero = Object.assign({}, i);
+      hero.补全.深色.insertText = `${hero.名称};`
+      hero.补全.浅色.insertText = `${hero.名称};`
+      规则.事件.玩家.push(hero)
     }
   } catch (error) {
     console.log(`错误：buildStaticModels 规则.事件.玩家` + error)

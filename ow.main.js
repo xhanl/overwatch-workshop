@@ -1160,9 +1160,7 @@ function activate(context) {
                 } else if (first.startsWith("子程序")) {
                   return
                 }
-                return buildStaticCompletions(MODEL.规则.事件.玩家).concat(
-                  buildStaticCompletions(MODEL.常量.英雄)
-                )
+                return buildStaticCompletions(MODEL.规则.事件.玩家)
               }
             }
 
