@@ -2152,17 +2152,14 @@ function activate(context) {
             }
             */
             function buildHero(infos) {
-              console.log(`${buildAvatar(infos["avatar"])}`);
               return `
                 <tr>
                   <td style="text-align: center;">
-                  ${buildAvatar(infos["avatar"])}
-                  
+                    ${buildAvatar(infos["avatar"])}
                   </td>
                   <td style="text-align: center;">
-                  <br>${infos["name"]}<br>
+                    <br>${infos["name"]}<br>
                   </td>
-
                   <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("primaryWeapon")
