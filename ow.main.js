@@ -935,23 +935,32 @@ function activate(context) {
             }
           } else if (scope.name === "事件") {
             const event = MODEL.规则.事件
-            if (event.选项.hasOwnProperty(hoverText)) {
-              return event.选项[hoverText].悬停
+            console.log(hoverText);
+            for (i of event.选项) {
+              if (hoverText === i.名称) {
+                return i.悬停
+              }
             }
-            if (event.队伍.hasOwnProperty(hoverText)) {
-              return event.队伍[hoverText].悬停
+            for (i of event.队伍) {
+              if (hoverText === i.名称) {
+                return i.悬停
+              }
             }
-            if (event.玩家.hasOwnProperty(hoverText)) {
-              return event.玩家[hoverText].悬停
-            }
-            for (i of MODEL.常量.英雄) {
-              if (i.名称 == hoverText) {
-                const theme =
+            for (i of event.玩家) {
+              console.log(i.名称)
+              if (hoverText === i.名称) {
+                if (i.悬停.hasOwnProperty("深色")) {
+                  //双色主题图标
+                  const theme =
                   vscode.window.activeColorTheme.kind ===
                   vscode.ColorThemeKind.Dark
                     ? "深色"
                     : "浅色"
-                return i.悬停[theme]
+                  return i.悬停[theme]
+                } else {
+                  //通用主题图标
+                  return i.悬停
+                }
               }
             }
             return matchDynamicHover()
