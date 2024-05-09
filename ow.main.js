@@ -1,16 +1,16 @@
-const vscode = require("vscode")
-const fs = require("fs")
-const path = require("path")
+const vscode = require("vscode");
+const fs = require("fs");
+const path = require("path");
 
-const MODEL = require("./ow.model.js")
-const UTIL = require("./ow.utiliy.js")
+const MODEL = require("./ow.model.js");
+const UTIL = require("./ow.utiliy.js");
 
 function activate(context) {
   //初始化路径
-  const PATH = context.extensionPath
+  const PATH = context.extensionPath;
 
   //初始化模型
-  MODEL.buildStaticModels(PATH)
+  MODEL.buildStaticModels(PATH);
 
   //初始化能力
   context.subscriptions.push(
@@ -25,94 +25,94 @@ function activate(context) {
           })
           .then((fileUri) => {
             if (fileUri) {
-              const filePath = fileUri.fsPath
+              const filePath = fileUri.fsPath;
               fs.writeFile(filePath, MODEL.示例, "utf-8", () => {
-                const document = vscode.workspace.openTextDocument(filePath)
-                vscode.window.showTextDocument(document)
-              })
+                const document = vscode.workspace.openTextDocument(filePath);
+                vscode.window.showTextDocument(document);
+              });
             }
-          })
+          });
       } catch (error) {
-        console.log("错误：ow.command.newFile 新建文件能力")
-        console.log(error)
+        console.log("错误：ow.command.newFile 新建文件能力");
+        console.log(error);
       }
     }),
 
     //主动建议能力
     vscode.commands.registerCommand("ow.command.suggest", () => {
       try {
-        vscode.commands.executeCommand("editor.action.triggerSuggest")
-        vscode.commands.executeCommand("editor.action.triggerParameterHints")
+        vscode.commands.executeCommand("editor.action.triggerSuggest");
+        vscode.commands.executeCommand("editor.action.triggerParameterHints");
       } catch (error) {
-        console.log("错误：ow.command.suggest 主动建议能力")
-        console.log(error)
+        console.log("错误：ow.command.suggest 主动建议能力");
+        console.log(error);
       }
     }),
 
     //自动换行能力
     vscode.commands.registerCommand("ow.command.line", () => {
       try {
-        vscode.commands.executeCommand("editor.action.toggleWordWrap")
+        vscode.commands.executeCommand("editor.action.toggleWordWrap");
       } catch (error) {
-        console.log("错误：ow.command.line 自动换行能力")
-        console.log(error)
+        console.log("错误：ow.command.line 自动换行能力");
+        console.log(error);
       }
     }),
 
     //导出修复能力
     vscode.commands.registerCommand("ow.command.copy", () => {
       try {
-        const activeEditor = vscode.window.activeTextEditor
+        const activeEditor = vscode.window.activeTextEditor;
         if (activeEditor) {
-          const document = activeEditor.document
-          let text = document.getText()
+          const document = activeEditor.document;
+          let text = document.getText();
           text = text.replace(
             /(创建地图文本|创建HUD文本|创建进度条地图文本|创建进度条HUD文本)\s*\((.*),\s*无\s*,(.*)\)\s*;/g,
             "$1($2, 全部禁用,$3);"
-          )
+          );
           text = text.replace(
             /(追踪全局变量频率|追踪玩家变量频率|持续追踪全局变量|持续追踪玩家变量|开始治疗调整|设置不可见)\s*\((.*),\s*无\s*\)\s*;/g,
             "$1($2, 全部禁用);"
-          )
-          vscode.env.clipboard.writeText(text)
+          );
+          vscode.env.clipboard.writeText(text);
           vscode.window.showInformationMessage(
             `${path.basename(document.fileName)} 已导出到剪切板`
-          )
+          );
         }
       } catch (error) {
-        console.log("错误：ow.command.copy 导出修复能力")
-        console.log(error)
+        console.log("错误：ow.command.copy 导出修复能力");
+        console.log(error);
       }
     }),
 
     //修复导入能力
     vscode.commands.registerCommand("ow.command.paste", () => {
       try {
-        const activeEditor = vscode.window.activeTextEditor
+        const activeEditor = vscode.window.activeTextEditor;
         if (activeEditor) {
           vscode.env.clipboard.readText().then((text) => {
             text = text.replace(
               /(创建地图文本|创建HUD文本|创建进度条地图文本|创建进度条HUD文本)\s*\((.*),\s*无\s*,(.*)\)\s*;/g,
               "$1($2, 全部禁用,$3);"
-            )
+            );
             text = text.replace(
               /(追踪全局变量频率|追踪玩家变量频率|持续追踪全局变量|持续追踪玩家变量|开始治疗调整|设置不可见)\s*\((.*),\s*无\s*\)\s*;/g,
               "$1($2, 全部禁用);"
-            )
-            const edit = new vscode.WorkspaceEdit()
+            );
+            const edit = new vscode.WorkspaceEdit();
             const wholeDocumentRange = activeEditor.document.validateRange(
               new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE)
-            )
-            edit.replace(activeEditor.document.uri, wholeDocumentRange, text)
-            vscode.workspace.applyEdit(edit)
+            );
+            edit.replace(activeEditor.document.uri, wholeDocumentRange, text);
+            vscode.workspace.applyEdit(edit);
             vscode.window.showInformationMessage(
               `${path.basename(activeEditor.document.fileName)} 已导入并修复`
-            )
-          })
+            );
+          });
         }
       } catch (error) {
-        console.log("错误：ow.command.paste 修复导入能力")
-        console.log(error)
+        console.log("错误：ow.command.paste 修复导入能力");
+        console.log(error);
       }
     }),
 
@@ -127,20 +127,20 @@ function activate(context) {
             validateInput: (value) => {
               if (value === "") {
                 //使用默认值
-                return
+                return;
               }
-              const intValue = parseInt(value)
+              const intValue = parseInt(value);
               if (isNaN(intValue)) {
-                return "无效输入"
+                return "无效输入";
               } else if (intValue > 32768) {
-                return `超出游戏限制 (最多32768个)`
+                return `超出游戏限制 (最多32768个)`;
               }
             },
           })
           .then((value) => {
             if (value === undefined) {
               //用户取消
-              return
+              return;
             }
             const pickItems = [
               "填充规则（占用更多元素）",
@@ -152,8 +152,8 @@ function activate(context) {
                 label: label,
                 index: index,
                 picked: true,
-              }
-            })
+              };
+            });
             vscode.window
               .showQuickPick(pickItems, {
                 title: "混淆生成   2 / 2",
@@ -163,41 +163,41 @@ function activate(context) {
               .then((selected) => {
                 if (selected === undefined) {
                   //用户取消
-                  return
+                  return;
                 }
 
                 //获取用户配置
                 const options = selected.map((option) => {
-                  return option.index
-                })
+                  return option.index;
+                });
 
                 //最大元素数量
-                const input = parseInt(value)
-                let elementCount = 32768
-                elementCount -= isNaN(input) ? 30000 : input
+                const input = parseInt(value);
+                let elementCount = 32768;
+                elementCount -= isNaN(input) ? 30000 : input;
 
                 //修改当前文件
-                const activeEditor = vscode.window.activeTextEditor
+                const activeEditor = vscode.window.activeTextEditor;
                 if (activeEditor) {
                   //文档数据
-                  const document = activeEditor.document
-                  const dynamicList = UTIL.getDynamicList(document)
+                  const document = activeEditor.document;
+                  const dynamicList = UTIL.getDynamicList(document);
 
                   //混淆内容
-                  let settings = ""
-                  let variables = ""
-                  let subroutines = ""
-                  let rules = ""
-                  let strings = []
-                  let obfuscatedRules = []
+                  let settings = "";
+                  let variables = "";
+                  let subroutines = "";
+                  let rules = "";
+                  let strings = [];
+                  let obfuscatedRules = [];
 
                   //分离 设置，变量，子程序，规则
-                  let block
-                  let range
-                  let stack = 0
+                  let block;
+                  let range;
+                  let stack = 0;
                   for (let i = 0; i < document.lineCount; i++) {
-                    const line = document.lineAt(i)
-                    const trimText = line.text.trim()
+                    const line = document.lineAt(i);
+                    const trimText = line.text.trim();
                     if (
                       stack == 0 &&
                       (match = trimText.match(
@@ -205,30 +205,32 @@ function activate(context) {
                       ))
                     ) {
                       if (match[0].length > 3) {
-                        block = "规则"
+                        block = "规则";
                       } else {
-                        block = match[0]
+                        block = match[0];
                       }
-                      range = line.range
+                      range = line.range;
                     } else if (trimText == "{") {
-                      stack++
+                      stack++;
                     } else if (trimText == "}") {
-                      stack--
+                      stack--;
                       if (stack == 0) {
                         switch (block) {
                           case "设置":
-                            settings = document.getText(range.union(line.range))
-                            break
+                            settings = document.getText(
+                              range.union(line.range)
+                            );
+                            break;
                           case "变量":
-                            break
+                            break;
                           case "子程序":
-                            break
+                            break;
                           case "规则":
-                            i = document.lineCount - 1
+                            i = document.lineCount - 1;
                             rules = document.getText(
                               range.union(document.lineAt(i).range)
-                            )
-                            break
+                            );
+                            break;
                         }
                       }
                     }
@@ -241,7 +243,7 @@ function activate(context) {
                       if (match.startsWith('"')) {
                         //移除字符串注释
                         //console.log(`移除字符串注释：${match} → 🗑️`);
-                        return ""
+                        return "";
                       } else if (
                         match.startsWith("自定义字符串") ||
                         match.startsWith("字符串")
@@ -258,83 +260,83 @@ function activate(context) {
                                       char.match(/[\x00-\x1F\x7F-\x9F\xAD]/g)
                                     ) {
                                       //忽略隐形字符
-                                      return char
+                                      return char;
                                     }
                                     return String.fromCodePoint(
                                       char.charCodeAt(0) + 0xe0000
-                                    )
+                                    );
                                   }
-                                  return char
+                                  return char;
                                 }
                               )
                             : string
-                        )
-                        return "自定义字符串(❖"
+                        );
+                        return "自定义字符串(❖";
                       } else if (match.startsWith("规则")) {
                         //移除规则名
                         //console.log(`移除规则名：${match} → 规则(""`);
-                        return '规则(""'
+                        return '规则(""';
                       } else if (
                         match.startsWith("//") ||
                         match.startsWith("/*")
                       ) {
                         //移除单行和多行注释
                         //console.log(`移除行注释：${match} → 🗑️`);
-                        return ""
+                        return "";
                       } else if (match.startsWith("禁用")) {
                         //替换禁用
                         //console.log(`替换禁用：${match} → ⟁`);
-                        return "⟁"
+                        return "⟁";
                       }
                     }
-                  )
+                  );
 
                   //清洗空隙
-                  rules = rules.replace(/\s+/g, "")
+                  rules = rules.replace(/\s+/g, "");
 
                   //修复特殊条目
-                  rules = rules.replace(/持续-全局/g, "持续 - 全局")
-                  rules = rules.replace(/持续-每名玩家/g, "持续 - 每名玩家")
-                  rules = rules.replace(/For全局变量/g, "For 全局变量")
-                  rules = rules.replace(/For玩家变量/g, "For 玩家变量")
-                  rules = rules.replace(/ElseIf/g, "Else If")
+                  rules = rules.replace(/持续-全局/g, "持续 - 全局");
+                  rules = rules.replace(/持续-每名玩家/g, "持续 - 每名玩家");
+                  rules = rules.replace(/For全局变量/g, "For 全局变量");
+                  rules = rules.replace(/For玩家变量/g, "For 玩家变量");
+                  rules = rules.replace(/ElseIf/g, "Else If");
 
                   //添加 "{}" 换行
                   rules = rules.replace(/{|}/g, (match) => {
-                    return `\n${match[0]}\n`
-                  })
+                    return `\n${match[0]}\n`;
+                  });
 
                   //添加 ";" 换行
-                  rules = rules.replace(/;/g, ";\n")
+                  rules = rules.replace(/;/g, ";\n");
 
                   //修复工坊错误
                   rules = rules.replace(
                     /(创建地图文本|创建HUD文本|创建进度条地图文本|创建进度条HUD文本)\((.*),无,(.*)\);/g,
                     "$1($2,全部禁用,$3);"
-                  )
+                  );
                   rules = rules.replace(
                     /(追踪全局变量频率|追踪玩家变量频率|持续追踪全局变量|持续追踪玩家变量|开始治疗调整|设置不可见)\((.*),无\);/g,
                     "$1($2,全部禁用);"
-                  )
+                  );
 
                   //获取混淆名称
-                  const obfuscatedNames = UTIL.getObfuscatedNames(128)
+                  const obfuscatedNames = UTIL.getObfuscatedNames(128);
                   let obfuscatedList = {
                     子程序: [],
                     全局变量: [],
                     玩家变量: [],
-                  }
+                  };
 
                   //混淆子程序
                   for (const i in dynamicList.子程序) {
                     //更新混淆列表
-                    obfuscatedList.子程序.push(obfuscatedNames[i])
+                    obfuscatedList.子程序.push(obfuscatedNames[i]);
 
                     //事件
                     rules = rules.replace(
                       RegExp(`^\\b${dynamicList.子程序[i]}\\b;$`, "gm"),
                       `${obfuscatedNames[i]};`
-                    )
+                    );
                     //开始规则
                     rules = rules.replace(
                       RegExp(
@@ -342,7 +344,7 @@ function activate(context) {
                         "g"
                       ),
                       `开始规则(${obfuscatedNames[i]},$1);`
-                    )
+                    );
                     //调用子程序
                     rules = rules.replace(
                       RegExp(
@@ -350,19 +352,19 @@ function activate(context) {
                         "g"
                       ),
                       `调用子程序(${obfuscatedNames[i]});`
-                    )
+                    );
                   }
 
                   //混淆全局变量
                   for (const i in dynamicList.全局变量) {
                     //更新混淆列表
-                    obfuscatedList.全局变量.push(obfuscatedNames[i])
+                    obfuscatedList.全局变量.push(obfuscatedNames[i]);
 
                     //前缀为 "全局."
                     rules = rules.replace(
                       RegExp(`全局\\.\\b${dynamicList.全局变量[i]}\\b`, "g"),
                       `全局.${obfuscatedNames[i]}`
-                    )
+                    );
 
                     //For 全局变量
                     rules = rules.replace(
@@ -371,7 +373,7 @@ function activate(context) {
                         "g"
                       ),
                       `For 全局变量(${obfuscatedNames[i]},$1,$2,$3);`
-                    )
+                    );
                     //设置全局变量
                     rules = rules.replace(
                       RegExp(
@@ -379,7 +381,7 @@ function activate(context) {
                         "g"
                       ),
                       `设置全局变量(${obfuscatedNames[i]},$1);`
-                    )
+                    );
                     //修改全局变量
                     rules = rules.replace(
                       RegExp(
@@ -387,7 +389,7 @@ function activate(context) {
                         "g"
                       ),
                       `修改全局变量(${obfuscatedNames[i]},$1,$2);`
-                    )
+                    );
                     //在索引处设置全局变量
                     rules = rules.replace(
                       RegExp(
@@ -395,7 +397,7 @@ function activate(context) {
                         "g"
                       ),
                       `在索引处设置全局变量(${obfuscatedNames[i]},$1,$2);`
-                    )
+                    );
                     //在索引处修改全局变量
                     rules = rules.replace(
                       RegExp(
@@ -403,7 +405,7 @@ function activate(context) {
                         "g"
                       ),
                       `在索引处修改全局变量(${obfuscatedNames[i]},$1,$2,$3);`
-                    )
+                    );
                     //持续追踪全局变量
                     rules = rules.replace(
                       RegExp(
@@ -411,7 +413,7 @@ function activate(context) {
                         "g"
                       ),
                       `持续追踪全局变量(${obfuscatedNames[i]},$1,$2,$3);`
-                    )
+                    );
                     //追踪全局变量频率
                     rules = rules.replace(
                       RegExp(
@@ -419,7 +421,7 @@ function activate(context) {
                         "g"
                       ),
                       `追踪全局变量频率(${obfuscatedNames[i]},$1,$2,$3);`
-                    )
+                    );
                     //停止追踪全局变量
                     rules = rules.replace(
                       RegExp(
@@ -427,19 +429,19 @@ function activate(context) {
                         "g"
                       ),
                       `停止追踪全局变量(${obfuscatedNames[i]});`
-                    )
+                    );
                   }
 
                   //混淆玩家变量
                   for (const i in dynamicList.玩家变量) {
                     //更新混淆列表
-                    obfuscatedList.玩家变量.push(obfuscatedNames[i])
+                    obfuscatedList.玩家变量.push(obfuscatedNames[i]);
 
                     //前缀为 "."
                     rules = rules.replace(
                       RegExp(`\\.\\b${dynamicList.玩家变量[i]}\\b`, "g"),
                       `.${obfuscatedNames[i]}`
-                    )
+                    );
                     //For 玩家变量
                     rules = rules.replace(
                       RegExp(
@@ -447,7 +449,7 @@ function activate(context) {
                         "g"
                       ),
                       `For 玩家变量($1,${obfuscatedNames[i]},$2,$3,$4);`
-                    )
+                    );
                     //设置玩家变量
                     rules = rules.replace(
                       RegExp(
@@ -455,7 +457,7 @@ function activate(context) {
                         "g"
                       ),
                       `设置玩家变量($1,${obfuscatedNames[i]},$2);`
-                    )
+                    );
                     //修改玩家变量
                     rules = rules.replace(
                       RegExp(
@@ -463,7 +465,7 @@ function activate(context) {
                         "g"
                       ),
                       `修改玩家变量($1,${obfuscatedNames[i]},$2,$3);`
-                    )
+                    );
                     //在索引处设置玩家变量
                     rules = rules.replace(
                       RegExp(
@@ -471,7 +473,7 @@ function activate(context) {
                         "g"
                       ),
                       `在索引处设置玩家变量($1,${obfuscatedNames[i]},$2,$3);`
-                    )
+                    );
                     //在索引处修改玩家变量
                     rules = rules.replace(
                       RegExp(
@@ -479,7 +481,7 @@ function activate(context) {
                         "g"
                       ),
                       `在索引处修改玩家变量($1,${obfuscatedNames[i]},$2,$3,$4);`
-                    )
+                    );
                     //持续追踪玩家变量
                     rules = rules.replace(
                       RegExp(
@@ -487,7 +489,7 @@ function activate(context) {
                         "g"
                       ),
                       `持续追踪玩家变量($1,${obfuscatedNames[i]},$2,$3,$4);`
-                    )
+                    );
                     //追踪玩家变量频率
                     rules = rules.replace(
                       RegExp(
@@ -495,7 +497,7 @@ function activate(context) {
                         "g"
                       ),
                       `追踪玩家变量频率($1,${obfuscatedNames[i]},$2,$3,$4);`
-                    )
+                    );
                     //停止追踪玩家变量
                     rules = rules.replace(
                       RegExp(
@@ -503,11 +505,11 @@ function activate(context) {
                         "g"
                       ),
                       `停止追踪玩家变量($1,${obfuscatedNames[i]});`
-                    )
+                    );
                   }
 
                   //清洗空行
-                  rules = rules.replace(/[\r\n]+/g, "")
+                  rules = rules.replace(/[\r\n]+/g, "");
 
                   //规则处理
                   const ruleList = rules
@@ -515,7 +517,7 @@ function activate(context) {
                     .split("✂")
                     .filter((rule) => {
                       //忽略空白
-                      return rule.trim() !== ""
+                      return rule.trim() !== "";
                     })
                     .map((rule) => {
                       //分解规则
@@ -539,17 +541,17 @@ function activate(context) {
                                           (options.includes(0) ? 330 : 30)
                                         ) {
                                           //加密服务端计算条目其它索引
-                                          elementCount -= 3
+                                          elementCount -= 3;
                                           return `[乘(10000000, ${(
                                             parseInt(number) * 0.0000001
-                                          ).toFixed(7)})]`
+                                          ).toFixed(7)})]`;
                                         }
-                                        return match
+                                        return match;
                                       }
                                     )
-                                  : entry
+                                  : entry;
                               })
-                              .join("\n")
+                              .join("\n");
                           } else if (block.startsWith("动作{")) {
                             return block
                               .replace(/({|;)/g, "$1✂")
@@ -560,7 +562,7 @@ function activate(context) {
                                   "禁用查看器录制",
                                   "启用查看器录制",
                                   "记入查看器",
-                                ].some((name) => entry.startsWith(name))
+                                ].some((name) => entry.startsWith(name));
                               })
                               .map((entry) => {
                                 //混淆索引
@@ -592,9 +594,9 @@ function activate(context) {
                                           parseInt(number) +
                                           Math.random() * 0.8 -
                                           0.4
-                                        ).toFixed(3)}]`
+                                        ).toFixed(3)}]`;
                                       }
-                                    )
+                                    );
                                   }
                                 } else {
                                   if (options.includes(2)) {
@@ -607,41 +609,41 @@ function activate(context) {
                                           (options.includes(0) ? 330 : 30)
                                         ) {
                                           //加密服务端计算条目其它索引
-                                          elementCount -= 3
-                                          const value = parseInt(number)
+                                          elementCount -= 3;
+                                          const value = parseInt(number);
                                           return `[乘(10000000, ${
                                             value == 0
                                               ? 0
                                               : (value * 0.0000001).toFixed(7)
-                                          })]`
+                                          })]`;
                                         }
-                                        return match
+                                        return match;
                                       }
-                                    )
+                                    );
                                   }
                                 }
-                                return entry
+                                return entry;
                               })
-                              .join("\n")
+                              .join("\n");
                           } else {
-                            return block
+                            return block;
                           }
                         })
-                        .join("")
-                    })
+                        .join("");
+                    });
 
                   //填充查看器警告 (2元素)
                   if (elementCount >= 2) {
-                    elementCount -= 2
+                    elementCount -= 2;
                     ruleList.unshift(
                       `规则("代码受到保护，请尊重作者劳动成果。守望先锋® 工坊语言支持"){事件{持续 - 全局;}动作{禁用查看器录制;}}`
-                    )
+                    );
                   }
 
                   //填充篡改保护 (25元素，5元素/个)
                   for (let t = 0; t < 5; t++) {
                     if (elementCount >= 5) {
-                      elementCount -= 5
+                      elementCount -= 5;
                       ruleList.splice(
                         Math.floor(Math.random() * (ruleList.length + 1)),
                         0,
@@ -649,45 +651,45 @@ function activate(context) {
                           1,
                           4
                         )} == 假;}动作{While(真);End;}}`
-                      )
+                      );
                     } else {
-                      break
+                      break;
                     }
                   }
 
                   //映射规则
-                  let maxLength = Math.min(elementCount, 2500)
-                  let length = Math.floor(maxLength / (ruleList.length - 1))
+                  let maxLength = Math.min(elementCount, 2500);
+                  let length = Math.floor(maxLength / (ruleList.length - 1));
                   if (length === 0) {
-                    length = 5
+                    length = 5;
                   }
                   for (let i = 0; i < ruleList.length; i++) {
-                    obfuscatedRules.push(ruleList[i])
+                    obfuscatedRules.push(ruleList[i]);
                     //填充空白规则 (随机插入，1元素/个)
                     if (options.includes(0)) {
                       for (let j = 0; j < length; j++) {
                         if (elementCount > 0) {
-                          obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`)
+                          obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`);
                         }
                       }
                     }
                   }
 
                   //合并规则
-                  rules = obfuscatedRules.join("")
+                  rules = obfuscatedRules.join("");
 
                   //还原禁用
-                  rules = rules.replace(/⟁/g, "禁用 ")
+                  rules = rules.replace(/⟁/g, "禁用 ");
 
                   //还原字符串
                   rules = rules.replace(/❖/g, () => {
-                    return `"${strings.shift()}"`
-                  })
+                    return `"${strings.shift()}"`;
+                  });
 
                   //混淆规则名称
                   //拟合 (17388 - 总规则数量) / 总规则数量 = 单规则名称倍率
                   const nameLength =
-                    (17388 - obfuscatedRules.length) / obfuscatedRules.length
+                    (17388 - obfuscatedRules.length) / obfuscatedRules.length;
                   rules = rules.replace(
                     /规则\(""\)/g,
                     () =>
@@ -698,49 +700,49 @@ function activate(context) {
                       }`.repeat(
                         UTIL.getRandomInt(nameLength, nameLength + 2)
                       )}")`
-                  )
+                  );
 
                   //混淆子程序列表
                   if (obfuscatedList.子程序.length > 0) {
-                    UTIL.shuffleArray(obfuscatedList.子程序)
-                    subroutines += `子程序{\n`
+                    UTIL.shuffleArray(obfuscatedList.子程序);
+                    subroutines += `子程序{\n`;
                     for (const i in obfuscatedList.子程序) {
-                      subroutines += `${i}: ${obfuscatedList.子程序[i]}\n`
+                      subroutines += `${i}: ${obfuscatedList.子程序[i]}\n`;
                     }
-                    subroutines += `}`
+                    subroutines += `}`;
                   }
 
                   //混淆变量列表
-                  variables += `变量{\n`
+                  variables += `变量{\n`;
                   if (obfuscatedList.全局变量.length > 0) {
-                    UTIL.shuffleArray(obfuscatedList.全局变量)
-                    variables += `全局:\n`
+                    UTIL.shuffleArray(obfuscatedList.全局变量);
+                    variables += `全局:\n`;
                     for (const i in obfuscatedList.全局变量) {
-                      variables += `${i}: ${obfuscatedList.全局变量[i]}\n`
+                      variables += `${i}: ${obfuscatedList.全局变量[i]}\n`;
                     }
                   }
                   if (obfuscatedList.玩家变量.length > 0) {
-                    UTIL.shuffleArray(obfuscatedList.玩家变量)
-                    variables += `玩家:\n`
+                    UTIL.shuffleArray(obfuscatedList.玩家变量);
+                    variables += `玩家:\n`;
                     for (const i in obfuscatedList.玩家变量) {
-                      variables += `${i}: ${obfuscatedList.玩家变量[i]}\n`
+                      variables += `${i}: ${obfuscatedList.玩家变量[i]}\n`;
                     }
                   }
-                  variables += `}`
+                  variables += `}`;
 
                   vscode.env.clipboard.writeText(
                     `${settings}\n${variables}\n${subroutines}\n${rules}`
-                  )
+                  );
                   vscode.window.showInformationMessage(
                     `${path.basename(document.fileName)}（混淆）已导出到剪切板`
-                  )
-                  return
+                  );
+                  return;
                 }
-              })
-          })
+              });
+          });
       } catch (error) {
-        console.log("错误：ow.command.obfuscate 代码混淆能力")
-        console.log(error)
+        console.log("错误：ow.command.obfuscate 代码混淆能力");
+        console.log(error);
       }
     }),
 
@@ -748,25 +750,25 @@ function activate(context) {
     vscode.languages.registerDocumentSymbolProvider("ow", {
       provideDocumentSymbols(document) {
         try {
-          let documentSymbols = []
-          let i = 0
+          let documentSymbols = [];
+          let i = 0;
           while (i < document.lineCount) {
-            const line = document.lineAt(i)
-            const lineText = line.text.trim()
+            const line = document.lineAt(i);
+            const lineText = line.text.trim();
             if (lineText.startsWith("{")) {
-              documentSymbols.push(getDocumentSymbol())
+              documentSymbols.push(getDocumentSymbol());
             }
-            i++
+            i++;
           }
 
           function getDocumentSymbol() {
-            let symbol = undefined
+            let symbol = undefined;
             while (i < document.lineCount) {
-              const line = document.lineAt(i)
-              const lineText = line.text.trim()
+              const line = document.lineAt(i);
+              const lineText = line.text.trim();
               if (lineText.startsWith("{")) {
-                const prevLine = document.lineAt(i - 1)
-                const prevLineText = prevLine.text.trim()
+                const prevLine = document.lineAt(i - 1);
+                const prevLineText = prevLine.text.trim();
                 if (symbol === undefined) {
                   if (prevLineText === "动作") {
                     symbol = [
@@ -774,40 +776,40 @@ function activate(context) {
                       "",
                       vscode.SymbolKind.Method,
                       prevLine.range.start,
-                    ]
+                    ];
                   } else if (prevLineText === "事件") {
-                    const nextLine = document.lineAt(i + 1)
-                    let nextLineText = nextLine.text.trim()
+                    const nextLine = document.lineAt(i + 1);
+                    let nextLineText = nextLine.text.trim();
                     if ((match = nextLineText.match(/^([^;]*);.*$/))) {
-                      nextLineText = match[1]
+                      nextLineText = match[1];
                     }
                     symbol = [
                       prevLineText,
                       nextLineText,
                       vscode.SymbolKind.Event,
                       prevLine.range.start,
-                    ]
+                    ];
                   } else if (prevLineText === "条件") {
                     symbol = [
                       prevLineText,
                       "",
                       vscode.SymbolKind.Boolean,
                       prevLine.range.start,
-                    ]
+                    ];
                   } else if (prevLineText === "变量") {
                     symbol = [
                       prevLineText,
                       "",
                       vscode.SymbolKind.Variable,
                       prevLine.range.start,
-                    ]
+                    ];
                   } else if (prevLineText === "子程序") {
                     symbol = [
                       prevLineText,
                       "",
                       vscode.SymbolKind.Function,
                       prevLine.range.start,
-                    ]
+                    ];
                   } else if (
                     (match = prevLineText.match(
                       /^(禁用\s*)?规则\s*\(\s*"(.*)"\s*\)$/
@@ -820,7 +822,7 @@ function activate(context) {
                         vscode.SymbolKind.Module,
                         prevLine.range.start,
                         [],
-                      ]
+                      ];
                     } else {
                       symbol = [
                         "规则",
@@ -828,7 +830,7 @@ function activate(context) {
                         vscode.SymbolKind.Module,
                         prevLine.range.start,
                         [],
-                      ]
+                      ];
                     }
                   } else {
                     symbol = [
@@ -837,10 +839,10 @@ function activate(context) {
                       vscode.SymbolKind.Property,
                       prevLine.range.start,
                       [],
-                    ]
+                    ];
                   }
                 } else {
-                  symbol[4].push(getDocumentSymbol())
+                  symbol[4].push(getDocumentSymbol());
                 }
               } else if (lineText.endsWith("}")) {
                 const documentSymbol = new vscode.DocumentSymbol(
@@ -849,17 +851,17 @@ function activate(context) {
                   symbol[2],
                   new vscode.Range(symbol[3], line.range.end),
                   new vscode.Range(symbol[3], line.range.end)
-                )
-                documentSymbol.children = symbol[4]
-                return documentSymbol
+                );
+                documentSymbol.children = symbol[4];
+                return documentSymbol;
               }
-              i++
+              i++;
             }
           }
-          return documentSymbols
+          return documentSymbols;
         } catch (error) {
-          console.log("错误：provideDocumentSymbols 代码大纲能力")
-          console.log(error)
+          console.log("错误：provideDocumentSymbols 代码大纲能力");
+          console.log(error);
         }
       },
     }),
@@ -868,10 +870,10 @@ function activate(context) {
     vscode.languages.registerColorProvider("ow", {
       provideDocumentColors(document) {
         try {
-          const text = document.getText()
+          const text = document.getText();
           const pattern =
-            /自定义颜色\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g
-          let colors = []
+            /自定义颜色\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g;
+          let colors = [];
           while ((match = pattern.exec(text))) {
             colors.push(
               new vscode.ColorInformation(
@@ -886,12 +888,12 @@ function activate(context) {
                   match[4] / 255
                 )
               )
-            )
+            );
           }
-          return colors
+          return colors;
         } catch (error) {
-          console.log("错误：provideDocumentColors 调色盘能力")
-          console.log(error)
+          console.log("错误：provideDocumentColors 调色盘能力");
+          console.log(error);
         }
       },
       provideColorPresentations(color) {
@@ -905,11 +907,11 @@ function activate(context) {
             Math.floor(color.blue * 255) +
             ", " +
             Math.floor(color.alpha * 255) +
-            ")"
-          return [new vscode.ColorPresentation(newColor)]
+            ")";
+          return [new vscode.ColorPresentation(newColor)];
         } catch (error) {
-          console.log("错误：provideColorPresentations 调色盘能力")
-          console.log(error)
+          console.log("错误：provideColorPresentations 调色盘能力");
+          console.log(error);
         }
       },
     }),
@@ -918,12 +920,12 @@ function activate(context) {
     vscode.languages.registerHoverProvider("ow", {
       provideHover(document, position) {
         try {
-          const hoverRange = document.getWordRangeAtPosition(position)
+          const hoverRange = document.getWordRangeAtPosition(position);
           if (!hoverRange) {
-            return
+            return;
           }
-          const hoverText = document.getText(hoverRange)
-          const scope = UTIL.getScope(document, position)
+          const hoverText = document.getText(hoverRange);
+          const scope = UTIL.getScope(document, position);
           if (scope.name === "扩展") {
             if (MODEL.扩展.hasOwnProperty(hoverText)) {
               return MODEL.buildHover(
@@ -931,42 +933,42 @@ function activate(context) {
                 hoverText,
                 MODEL.扩展[hoverText].标签,
                 MODEL.扩展[hoverText].提示
-              )
+              );
             }
           } else if (scope.name === "事件") {
-            const event = MODEL.规则.事件
+            const event = MODEL.规则.事件;
             console.log(hoverText);
             for (i of event.选项) {
               if (hoverText === i.名称) {
-                return i.悬停
+                return i.悬停;
               }
             }
             for (i of event.队伍) {
               if (hoverText === i.名称) {
-                return i.悬停
+                return i.悬停;
               }
             }
             for (i of event.玩家) {
-              console.log(i.名称)
+              console.log(i.名称);
               if (hoverText === i.名称) {
                 if (i.悬停.hasOwnProperty("深色")) {
                   //双色主题图标
                   const theme =
-                  vscode.window.activeColorTheme.kind ===
-                  vscode.ColorThemeKind.Dark
-                    ? "深色"
-                    : "浅色"
-                  return i.悬停[theme]
+                    vscode.window.activeColorTheme.kind ===
+                    vscode.ColorThemeKind.Dark
+                      ? "深色"
+                      : "浅色";
+                  return i.悬停[theme];
                 } else {
                   //通用主题图标
-                  return i.悬停
+                  return i.悬停;
                 }
               }
             }
-            return matchDynamicHover()
+            return matchDynamicHover();
           } else if (scope.name === "条件") {
             if (MODEL.规则.条件.hasOwnProperty(hoverText)) {
-              return MODEL.规则.条件[hoverText].悬停
+              return MODEL.规则.条件[hoverText].悬停;
             }
             for (i in MODEL.常量) {
               for (j in MODEL.常量[i]) {
@@ -977,22 +979,22 @@ function activate(context) {
                       vscode.window.activeColorTheme.kind ===
                       vscode.ColorThemeKind.Dark
                         ? "深色"
-                        : "浅色"
-                    return MODEL.常量[i][j].悬停[theme]
+                        : "浅色";
+                    return MODEL.常量[i][j].悬停[theme];
                   } else {
                     //通用主题图标
-                    return MODEL.常量[i][j].悬停
+                    return MODEL.常量[i][j].悬停;
                   }
                 }
               }
             }
-            return matchDynamicHover()
+            return matchDynamicHover();
           } else if (scope.name === "动作") {
             if (MODEL.规则.动作.hasOwnProperty(hoverText)) {
-              return MODEL.规则.动作[hoverText].悬停
+              return MODEL.规则.动作[hoverText].悬停;
             }
             if (MODEL.规则.条件.hasOwnProperty(hoverText)) {
-              return MODEL.规则.条件[hoverText].悬停
+              return MODEL.规则.条件[hoverText].悬停;
             }
             for (i in MODEL.常量) {
               for (j in MODEL.常量[i]) {
@@ -1004,33 +1006,33 @@ function activate(context) {
                         vscode.window.activeColorTheme.kind ===
                         vscode.ColorThemeKind.Dark
                           ? "深色"
-                          : "浅色"
-                      return MODEL.常量[i][j].悬停[theme]
+                          : "浅色";
+                      return MODEL.常量[i][j].悬停[theme];
                     } else {
                       //通用主题图标
-                      return MODEL.常量[i][j].悬停
+                      return MODEL.常量[i][j].悬停;
                     }
                   } catch (error) {
-                    console.log(error)
+                    console.log(error);
                   }
                 }
               }
             }
-            return matchDynamicHover()
+            return matchDynamicHover();
           }
 
           //匹配动态悬停
           function matchDynamicHover() {
             if ((match = hoverText.match(/\b[_a-zA-Z][_a-zA-Z0-9]*\b/))) {
-              const range = UTIL.getPrevValidWordRange(document, position)
-              const text = document.getText(range)
-              return buildDynamicHover(UTIL.getDynamicType(text))
+              const range = UTIL.getPrevValidWordRange(document, position);
+              const text = document.getText(range);
+              return buildDynamicHover(UTIL.getDynamicType(text));
             }
           }
 
           //构建动态悬停
           function buildDynamicHover(type) {
-            const dynamicList = UTIL.getDynamicList(document)
+            const dynamicList = UTIL.getDynamicList(document);
             if (type == "全局变量") {
               for (i in dynamicList.全局变量) {
                 if (hoverText === dynamicList.全局变量[i]) {
@@ -1039,7 +1041,7 @@ function activate(context) {
                     hoverText,
                     ["全局变量", i],
                     `一个已定义的全局变量。`
-                  )
+                  );
                 }
               }
             } else if (type == "玩家变量") {
@@ -1050,7 +1052,7 @@ function activate(context) {
                     hoverText,
                     ["玩家变量", i],
                     `一个已定义的玩家变量。`
-                  )
+                  );
                 }
               }
             } else if (type == "子程序") {
@@ -1061,14 +1063,14 @@ function activate(context) {
                     hoverText,
                     ["子程序", i],
                     `一个已定义的子程序。`
-                  )
+                  );
                 }
               }
             }
           }
         } catch (error) {
-          console.log("错误：provideHover 悬停提示能力")
-          console.log(error)
+          console.log("错误：provideHover 悬停提示能力");
+          console.log(error);
         }
       },
     }),
@@ -1079,24 +1081,24 @@ function activate(context) {
       {
         provideCompletionItems(document, position, token, context) {
           try {
-            const scope = UTIL.getScope(document, position)
+            const scope = UTIL.getScope(document, position);
             if (scope.name === "全局") {
-              return getGlobalCompletions()
+              return getGlobalCompletions();
             } else if (scope.name === "扩展") {
-              return getExtensionCompletions()
+              return getExtensionCompletions();
             } else if (scope.name.startsWith("规则")) {
-              return getRuleCompletions()
+              return getRuleCompletions();
             } else if (scope.name === "事件") {
-              return getEventCompletions(scope.index, scope.first)
+              return getEventCompletions(scope.index, scope.first);
             } else if (scope.name === "条件") {
-              return getConditionCompletions()
+              return getConditionCompletions();
             } else if (scope.name === "动作") {
-              return getActionCompletions()
+              return getActionCompletions();
             }
 
             //获取全局补全
             function getGlobalCompletions() {
-              let completionItems = []
+              let completionItems = [];
               for (const i in MODEL.模版.全局) {
                 completionItems.push(
                   MODEL.buildCompletion(
@@ -1109,14 +1111,14 @@ function activate(context) {
                     undefined,
                     new vscode.SnippetString(`${MODEL.模版.全局[i].格式}`)
                   )
-                )
+                );
               }
-              return completionItems
+              return completionItems;
             }
 
             //获取扩展补全
             function getExtensionCompletions() {
-              let completionItems = []
+              let completionItems = [];
               for (const i in MODEL.扩展) {
                 completionItems.push(
                   MODEL.buildCompletion(
@@ -1127,14 +1129,14 @@ function activate(context) {
                     MODEL.扩展[i].标签,
                     MODEL.扩展[i].提示
                   )
-                )
+                );
               }
-              return completionItems
+              return completionItems;
             }
 
             //获取规则补全
             function getRuleCompletions() {
-              let completionItems = []
+              let completionItems = [];
               for (const i in MODEL.模版.规则) {
                 completionItems.push(
                   MODEL.buildCompletion(
@@ -1147,37 +1149,37 @@ function activate(context) {
                     undefined,
                     new vscode.SnippetString(`${MODEL.模版.规则[i].格式}`)
                   )
-                )
+                );
               }
-              return completionItems
+              return completionItems;
             }
 
             //获取事件补全
             function getEventCompletions(index, first) {
               if (index === 0) {
-                return buildStaticCompletions(MODEL.规则.事件.选项)
+                return buildStaticCompletions(MODEL.规则.事件.选项);
               } else if (index === 1) {
                 if (first.startsWith("持续 - 全局")) {
-                  return
+                  return;
                 } else if (first.startsWith("子程序")) {
-                  return buildDynamicCompletions("子程序")
+                  return buildDynamicCompletions("子程序");
                 }
-                return buildStaticCompletions(MODEL.规则.事件.队伍)
+                return buildStaticCompletions(MODEL.规则.事件.队伍);
               } else if (index === 2) {
                 if (first.startsWith("持续 - 全局")) {
-                  return
+                  return;
                 } else if (first.startsWith("子程序")) {
-                  return
+                  return;
                 }
-                return buildStaticCompletions(MODEL.规则.事件.玩家)
+                return buildStaticCompletions(MODEL.规则.事件.玩家);
               }
             }
 
             //获取条件补全
             function getConditionCompletions() {
-              const entry = UTIL.getEntry(document, position, scope)
+              const entry = UTIL.getEntry(document, position, scope);
               if (!entry) {
-                return
+                return;
               }
               if (entry instanceof Object) {
                 if (entry.name == "数组") {
@@ -1185,38 +1187,38 @@ function activate(context) {
                     context.triggerCharacter == "(" ||
                     context.triggerCharacter == ","
                   ) {
-                    return
+                    return;
                   }
-                  return buildStaticCompletions(MODEL.规则.条件)
+                  return buildStaticCompletions(MODEL.规则.条件);
                 } else if (MODEL.规则.条件.hasOwnProperty(entry.name)) {
                   if (MODEL.规则.条件[entry.name].hasOwnProperty("参数")) {
-                    const param = MODEL.规则.条件[entry.name].参数[entry.index]
+                    const param = MODEL.规则.条件[entry.name].参数[entry.index];
                     if (param.类型 == "条件") {
                       if (
                         context.triggerCharacter == "(" ||
                         context.triggerCharacter == ","
                       ) {
-                        return
+                        return;
                       }
-                      return buildStaticCompletions(MODEL.规则.条件)
+                      return buildStaticCompletions(MODEL.规则.条件);
                     } else if (param.hasOwnProperty("选项")) {
-                      return buildStaticCompletions(param.选项)
+                      return buildStaticCompletions(param.选项);
                     }
                   }
                 }
               } else if (entry == "条件") {
-                return buildStaticCompletions(MODEL.规则.条件)
+                return buildStaticCompletions(MODEL.规则.条件);
               } else if (entry.match(/^全局变量|玩家变量|子程序$/)) {
-                return buildDynamicCompletions(entry)
+                return buildDynamicCompletions(entry);
               }
             }
 
             //获取动作补全
             function getActionCompletions() {
               try {
-                const entry = UTIL.getEntry(document, position, scope)
+                const entry = UTIL.getEntry(document, position, scope);
                 if (!entry) {
-                  return
+                  return;
                 }
                 if (entry instanceof Object) {
                   if (entry.name == "数组") {
@@ -1224,57 +1226,57 @@ function activate(context) {
                       context.triggerCharacter == "(" ||
                       context.triggerCharacter == ","
                     ) {
-                      return
+                      return;
                     }
-                    return buildStaticCompletions(MODEL.规则.条件)
+                    return buildStaticCompletions(MODEL.规则.条件);
                   } else if (MODEL.规则.动作.hasOwnProperty(entry.name)) {
                     if (MODEL.规则.动作[entry.name].hasOwnProperty("参数")) {
                       const param =
-                        MODEL.规则.动作[entry.name].参数[entry.index]
+                        MODEL.规则.动作[entry.name].参数[entry.index];
                       if (param.类型 == "条件") {
                         if (
                           context.triggerCharacter == "(" ||
                           context.triggerCharacter == ","
                         ) {
-                          return
+                          return;
                         }
-                        return buildStaticCompletions(MODEL.规则.条件)
+                        return buildStaticCompletions(MODEL.规则.条件);
                       } else if (param.hasOwnProperty("选项")) {
-                        return buildStaticCompletions(param.选项)
+                        return buildStaticCompletions(param.选项);
                       } else if (
                         param.类型.match(/^全局变量|玩家变量|子程序$/)
                       ) {
-                        return buildDynamicCompletions(param.类型)
+                        return buildDynamicCompletions(param.类型);
                       }
                     }
                   } else if (MODEL.规则.条件.hasOwnProperty(entry.name)) {
                     if (MODEL.规则.条件[entry.name].hasOwnProperty("参数")) {
                       const param =
-                        MODEL.规则.条件[entry.name].参数[entry.index]
+                        MODEL.规则.条件[entry.name].参数[entry.index];
                       if (param.类型 == "条件") {
                         if (
                           context.triggerCharacter == "(" ||
                           context.triggerCharacter == ","
                         ) {
-                          return
+                          return;
                         }
-                        return buildStaticCompletions(MODEL.规则.条件)
+                        return buildStaticCompletions(MODEL.规则.条件);
                       } else if (param.hasOwnProperty("选项")) {
-                        return buildStaticCompletions(param.选项)
+                        return buildStaticCompletions(param.选项);
                       }
                     }
                   }
                 } else if (entry == "动作") {
                   return buildStaticCompletions(MODEL.规则.动作).concat(
                     buildStaticCompletions(MODEL.规则.条件)
-                  )
+                  );
                 } else if (entry == "条件") {
-                  return buildStaticCompletions(MODEL.规则.条件)
+                  return buildStaticCompletions(MODEL.规则.条件);
                 } else if (entry.match(/^全局变量|玩家变量|子程序$/)) {
-                  return buildDynamicCompletions(entry)
+                  return buildDynamicCompletions(entry);
                 }
               } catch (error) {
-                console.log(error)
+                console.log(error);
               }
             }
 
@@ -1284,24 +1286,24 @@ function activate(context) {
                 vscode.window.activeColorTheme.kind ===
                 vscode.ColorThemeKind.Dark
                   ? "深色"
-                  : "浅色"
-              let completions = []
+                  : "浅色";
+              let completions = [];
               for (const p in object) {
                 if (object[p].补全.hasOwnProperty("深色")) {
                   //双色主题图标
-                  completions.push(object[p].补全[theme])
+                  completions.push(object[p].补全[theme]);
                 } else {
                   //通用主题图标
-                  completions.push(object[p].补全)
+                  completions.push(object[p].补全);
                 }
               }
-              return completions
+              return completions;
             }
 
             //构建动态补全列表：全局变量/玩家变量/子程序
             function buildDynamicCompletions(type) {
-              const dynamicList = UTIL.getDynamicList(document)
-              let completionItems = []
+              const dynamicList = UTIL.getDynamicList(document);
+              let completionItems = [];
               if (type == "全局变量") {
                 for (const i in dynamicList.全局变量) {
                   let item = MODEL.buildCompletion(
@@ -1316,8 +1318,8 @@ function activate(context) {
                       .join(" "),
                     dynamicList.全局变量[i],
                     i.padStart(3, "0")
-                  )
-                  completionItems.push(item)
+                  );
+                  completionItems.push(item);
                 }
               } else if (type == "玩家变量") {
                 for (const i in dynamicList.玩家变量) {
@@ -1333,8 +1335,8 @@ function activate(context) {
                       .join(" "),
                     dynamicList.玩家变量[i],
                     i.padStart(3, "0")
-                  )
-                  completionItems.push(item)
+                  );
+                  completionItems.push(item);
                 }
               } else if (type == "子程序") {
                 for (const i in dynamicList.子程序) {
@@ -1350,15 +1352,15 @@ function activate(context) {
                       .join(" "),
                     dynamicList.子程序[i],
                     i.padStart(3, "0")
-                  )
-                  completionItems.push(item)
+                  );
+                  completionItems.push(item);
                 }
               }
-              return completionItems
+              return completionItems;
             }
           } catch (error) {
-            console.log("错误：provideCompletionItems 补全建议能力")
-            console.log(error)
+            console.log("错误：provideCompletionItems 补全建议能力");
+            console.log(error);
           }
         },
       },
@@ -1370,34 +1372,34 @@ function activate(context) {
     //补全占位符监视
     vscode.workspace.onDidChangeTextDocument((event) => {
       try {
-        const changes = event.contentChanges
+        const changes = event.contentChanges;
         for (const change of changes) {
           if (
             (change.text === "" && change.rangeLength > 0) ||
             change.text == " "
           ) {
-            const scope = UTIL.getScope(event.document, change.range.start)
+            const scope = UTIL.getScope(event.document, change.range.start);
             if (scope.name == "条件" || scope.name == "动作") {
               const entry = UTIL.getEntry(
                 event.document,
                 change.range.start,
                 scope
-              )
+              );
               if (!entry) {
-                return
+                return;
               }
               if (entry instanceof Object) {
                 if (MODEL.规则.动作.hasOwnProperty(entry.name)) {
-                  const param = MODEL.规则.动作[entry.name].参数[entry.index]
+                  const param = MODEL.规则.动作[entry.name].参数[entry.index];
                   if (param.hasOwnProperty("选项")) {
-                    vscode.commands.executeCommand("ow.command.suggest")
+                    vscode.commands.executeCommand("ow.command.suggest");
                   } else if (param.类型.match(/^全局变量|玩家变量|子程序$/)) {
-                    vscode.commands.executeCommand("ow.command.suggest")
+                    vscode.commands.executeCommand("ow.command.suggest");
                   }
                 } else if (MODEL.规则.条件.hasOwnProperty(entry.name)) {
-                  const param = MODEL.规则.条件[entry.name].参数[entry.index]
+                  const param = MODEL.规则.条件[entry.name].参数[entry.index];
                   if (param.hasOwnProperty("选项")) {
-                    vscode.commands.executeCommand("ow.command.suggest")
+                    vscode.commands.executeCommand("ow.command.suggest");
                   }
                 }
               }
@@ -1405,8 +1407,8 @@ function activate(context) {
           }
         }
       } catch (error) {
-        console.log("错误：onDidChangeTextDocument 补全占位符监视")
-        console.log(error)
+        console.log("错误：onDidChangeTextDocument 补全占位符监视");
+        console.log(error);
       }
     }),
 
@@ -1416,29 +1418,29 @@ function activate(context) {
       {
         provideSignatureHelp(document, position, token, context) {
           try {
-            const scope = UTIL.getScope(document, position)
+            const scope = UTIL.getScope(document, position);
             if (scope.name === "条件") {
-              return getConditionSignature()
+              return getConditionSignature();
             } else if (scope.name === "动作") {
-              return getActionSignature()
+              return getActionSignature();
             }
 
             //获取条件参数签名
             function getConditionSignature() {
-              const entry = UTIL.getEntry(document, position, scope)
+              const entry = UTIL.getEntry(document, position, scope);
               if (!entry) {
-                return
+                return;
               }
               if (entry instanceof Object) {
                 if (entry.name == "数组") {
-                  return
+                  return;
                 } else if (MODEL.规则.条件.hasOwnProperty(entry.name)) {
                   if (MODEL.规则.条件[entry.name].hasOwnProperty("参数")) {
                     return buildSignatureHelp(
                       entry.name,
                       MODEL.规则.条件[entry.name],
                       entry.index
-                    )
+                    );
                   }
                 }
               }
@@ -1446,20 +1448,20 @@ function activate(context) {
 
             //获取动作参数签名
             function getActionSignature() {
-              const entry = UTIL.getEntry(document, position, scope)
+              const entry = UTIL.getEntry(document, position, scope);
               if (!entry) {
-                return
+                return;
               }
               if (entry instanceof Object) {
                 if (entry.name == "数组") {
-                  return
+                  return;
                 } else if (MODEL.规则.动作.hasOwnProperty(entry.name)) {
                   if (MODEL.规则.动作[entry.name].hasOwnProperty("参数")) {
                     return buildSignatureHelp(
                       entry.name,
                       MODEL.规则.动作[entry.name],
                       entry.index
-                    )
+                    );
                   }
                 } else if (MODEL.规则.条件.hasOwnProperty(entry.name)) {
                   if (MODEL.规则.条件[entry.name].hasOwnProperty("参数")) {
@@ -1467,7 +1469,7 @@ function activate(context) {
                       entry.name,
                       MODEL.规则.条件[entry.name],
                       entry.index
-                    )
+                    );
                   }
                 }
               }
@@ -1475,43 +1477,43 @@ function activate(context) {
 
             //构建参数签名
             function buildSignatureHelp(name, object, index) {
-              const signatureHelp = new vscode.SignatureHelp()
-              const signatureInfo = new vscode.SignatureInformation()
-              let label = name + "("
-              const params = object.参数
+              const signatureHelp = new vscode.SignatureHelp();
+              const signatureInfo = new vscode.SignatureInformation();
+              let label = name + "(";
+              const params = object.参数;
               for (i in params) {
-                const param = params[i].签名
+                const param = params[i].签名;
                 param.label = [
                   label.length,
                   label.length + params[i].名称.length,
-                ]
-                signatureInfo.parameters.push(param)
-                label += params[i].名称
+                ];
+                signatureInfo.parameters.push(param);
+                label += params[i].名称;
                 if (i < params.length - 1) {
-                  label += ", "
+                  label += ", ";
                 }
               }
-              signatureInfo.label = label + ")"
-              signatureInfo.documentation = new vscode.MarkdownString()
-              signatureInfo.documentation.isTrusted = true
-              signatureInfo.documentation.supportHtml = true
-              signatureInfo.documentation.supportThemeIcons = true
+              signatureInfo.label = label + ")";
+              signatureInfo.documentation = new vscode.MarkdownString();
+              signatureInfo.documentation.isTrusted = true;
+              signatureInfo.documentation.supportHtml = true;
+              signatureInfo.documentation.supportThemeIcons = true;
               signatureInfo.documentation.appendMarkdown(
                 `\n\n***<span style="color:#c0c;">❖</span>&nbsp;方法&nbsp;:&nbsp;${name}***\n\n`
-              )
+              );
               for (i in object.标签) {
                 signatureInfo.documentation.appendMarkdown(
                   `\`${object.标签[i]}\`&nbsp;`
-                )
+                );
               }
-              signatureInfo.documentation.appendMarkdown(`\n\n${object.提示}`)
-              signatureInfo.activeParameter = index
-              signatureHelp.signatures = [signatureInfo]
-              return signatureHelp
+              signatureInfo.documentation.appendMarkdown(`\n\n${object.提示}`);
+              signatureInfo.activeParameter = index;
+              signatureHelp.signatures = [signatureInfo];
+              return signatureHelp;
             }
           } catch (error) {
-            console.log("错误：provideSignatureHelp 参数提示能力")
-            console.log(error)
+            console.log("错误：provideSignatureHelp 参数提示能力");
+            console.log(error);
           }
         },
       },
@@ -1525,63 +1527,63 @@ function activate(context) {
       "ow",
       {
         provideDocumentSemanticTokens(document) {
-          const builder = new vscode.SemanticTokensBuilder()
+          const builder = new vscode.SemanticTokensBuilder();
           try {
-            let pos = new vscode.Position(0, 0)
+            let pos = new vscode.Position(0, 0);
             while (document.validatePosition(pos)) {
-              const range = document.getWordRangeAtPosition(pos)
+              const range = document.getWordRangeAtPosition(pos);
               if (range) {
-                const word = document.getText(range)
+                const word = document.getText(range);
                 if (
                   (match = word.match(
                     /^(字符串|正在防守|颜色|添加至数组|受治疗者，治疗者及治疗百分比|生命值|上|下|方向，速率，及最大速度)$/
                   ))
                 ) {
-                  const scope = UTIL.getScope(document, pos)
-                  const entry = UTIL.getEntry(document, pos, scope)
+                  const scope = UTIL.getScope(document, pos);
+                  const entry = UTIL.getEntry(document, pos, scope);
                   if (entry instanceof Object) {
                     if (MODEL.规则.动作.hasOwnProperty(entry.name)) {
                       const param =
-                        MODEL.规则.动作[entry.name].参数[entry.index]
+                        MODEL.规则.动作[entry.name].参数[entry.index];
                       if (param && param.hasOwnProperty("选项")) {
                         builder.push(
                           range.start.line,
                           range.start.character,
                           word.length,
                           0
-                        )
+                        );
                       }
                     } else if (MODEL.规则.条件.hasOwnProperty(entry.name)) {
                       const param =
-                        MODEL.规则.条件[entry.name].参数[entry.index]
+                        MODEL.规则.条件[entry.name].参数[entry.index];
                       if (param && param.hasOwnProperty("选项")) {
                         builder.push(
                           range.start.line,
                           range.start.character,
                           word.length,
                           0
-                        )
+                        );
                       }
                     }
                   }
                 }
-                pos = UTIL.getNextValidPosition(document, range.end)
+                pos = UTIL.getNextValidPosition(document, range.end);
                 if (!pos) {
-                  break
+                  break;
                 }
-                continue
+                continue;
               }
-              pos = UTIL.getNextValidPosition(document, pos)
+              pos = UTIL.getNextValidPosition(document, pos);
               if (!pos) {
-                break
+                break;
               }
             }
           } catch (error) {
             console.log(
               "错误：provideDocumentSemanticTokens 语法高亮能力" + error
-            )
+            );
           } finally {
-            return builder.build()
+            return builder.build();
           }
         },
       },
@@ -1592,26 +1594,26 @@ function activate(context) {
     vscode.languages.registerDocumentFormattingEditProvider("ow", {
       provideDocumentFormattingEdits(document, options) {
         try {
-          const text = document.getText()
-          const indentations = {}
+          const text = document.getText();
+          const indentations = {};
           const pattern =
-            /(?:"(?:\\"|[^"])*"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/)|\{|\}|\[|\]|\(|\)|全局:|玩家:|For 全局变量|For 玩家变量|While|If|Else If|Else|End/g
-          let isVariable = false
-          let level = 0
-          let ignore = 0
+            /(?:"(?:\\"|[^"])*"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/)|\{|\}|\[|\]|\(|\)|全局:|玩家:|For 全局变量|For 玩家变量|While|If|Else If|Else|End/g;
+          let isVariable = false;
+          let level = 0;
+          let ignore = 0;
           while ((match = pattern.exec(text))) {
             switch (match[0]) {
               case "[":
               case "(":
                 indentations[document.positionAt(match.index).line + 1] =
-                  --ignore
-                break
+                  --ignore;
+                break;
 
               case "]":
               case ")":
                 indentations[document.positionAt(match.index).line + 1] =
-                  ++ignore == 0 ? level : ignore
-                break
+                  ++ignore == 0 ? level : ignore;
+                break;
 
               case "{":
               case "For 全局变量":
@@ -1619,51 +1621,51 @@ function activate(context) {
               case "While":
               case "If":
                 indentations[document.positionAt(match.index).line + 1] =
-                  ++level
-                break
+                  ++level;
+                break;
 
               case "}":
               case "End":
                 if (isVariable) {
-                  --level
-                  isVariable = false
+                  --level;
+                  isVariable = false;
                 }
-                indentations[document.positionAt(match.index).line] = --level
-                break
+                indentations[document.positionAt(match.index).line] = --level;
+                break;
 
               case "Else If":
               case "Else":
-                indentations[document.positionAt(match.index).line] = --level
+                indentations[document.positionAt(match.index).line] = --level;
                 indentations[document.positionAt(match.index).line + 1] =
-                  ++level
-                break
+                  ++level;
+                break;
 
               case "全局:":
               case "玩家:":
                 if (isVariable) {
-                  indentations[document.positionAt(match.index).line] = --level
+                  indentations[document.positionAt(match.index).line] = --level;
                 }
                 indentations[document.positionAt(match.index).line + 1] =
-                  ++level
-                isVariable = true
-                break
+                  ++level;
+                isVariable = true;
+                break;
             }
           }
 
-          let formatLines = []
-          let indentation = 0
+          let formatLines = [];
+          let indentation = 0;
           for (let i = 0; i < document.lineCount; i++) {
             if (indentations.hasOwnProperty(i)) {
-              indentation = indentations[i]
+              indentation = indentations[i];
             }
             if (indentation < 0) {
-              continue
+              continue;
             }
 
-            const line = document.lineAt(i)
-            const trimText = line.text.trim()
+            const line = document.lineAt(i);
+            const trimText = line.text.trim();
             if (trimText === "") {
-              continue
+              continue;
             }
 
             formatLines.push(
@@ -1673,12 +1675,12 @@ function activate(context) {
                   ? " ".repeat(indentation * options.tabSize)
                   : "\t".repeat(indentation)) + trimText
               )
-            )
+            );
           }
 
-          return formatLines
+          return formatLines;
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       },
     }),
@@ -1687,32 +1689,34 @@ function activate(context) {
     vscode.languages.registerCodeLensProvider("ow", {
       async provideCodeLenses(document) {
         try {
-          const codeLens = []
-          const text = document.getText()
-          const pattern = /(禁用\s*)?规则\s*\(\s*"/g
-          let match
+          const codeLens = [];
+          const text = document.getText();
+          const pattern = /(禁用\s*)?规则\s*\(\s*"/g;
+          let match;
           const processMatchesAsync = async () => {
             while ((match = pattern.exec(text))) {
-              const matchText = match[0]
-              const startPos = document.positionAt(match.index)
-              const endPos = document.positionAt(match.index + matchText.length)
-              const range = new vscode.Range(startPos, endPos)
+              const matchText = match[0];
+              const startPos = document.positionAt(match.index);
+              const endPos = document.positionAt(
+                match.index + matchText.length
+              );
+              const range = new vscode.Range(startPos, endPos);
               const toggleCommand = {
                 title: `切换开关`,
                 command: "ow.toggle.disableRule",
                 arguments: [{ document, range }],
-              }
-              const newCodeLens = new vscode.CodeLens(range, toggleCommand)
-              codeLens.push(newCodeLens)
+              };
+              const newCodeLens = new vscode.CodeLens(range, toggleCommand);
+              codeLens.push(newCodeLens);
               //引入一个小延迟，将控制权交还给事件循环
-              await new Promise((resolve) => setTimeout(resolve, 0.05))
+              await new Promise((resolve) => setTimeout(resolve, 0.05));
             }
-          }
-          await processMatchesAsync()
-          return codeLens
+          };
+          await processMatchesAsync();
+          return codeLens;
         } catch (error) {
-          console.log("错误：provideCodeLenses 切换开关能力")
-          console.log(error)
+          console.log("错误：provideCodeLenses 切换开关能力");
+          console.log(error);
         }
       },
     }),
@@ -1720,19 +1724,19 @@ function activate(context) {
     //切换开关行为
     vscode.commands.registerCommand("ow.toggle.disableRule", (args) => {
       try {
-        const { document, range } = args
-        let text = document.getText(range)
+        const { document, range } = args;
+        let text = document.getText(range);
         if (text.startsWith("禁用")) {
-          text = text.replace(/禁用\s*/, "")
+          text = text.replace(/禁用\s*/, "");
         } else {
-          text = `禁用 ${text}`
+          text = `禁用 ${text}`;
         }
-        const edit = new vscode.WorkspaceEdit()
-        edit.replace(document.uri, range, text)
-        vscode.workspace.applyEdit(edit)
+        const edit = new vscode.WorkspaceEdit();
+        edit.replace(document.uri, range, text);
+        vscode.workspace.applyEdit(edit);
       } catch (error) {
-        console.log("错误：ow.toggle.disableRule 切换开关行为")
-        console.log(error)
+        console.log("错误：ow.toggle.disableRule 切换开关行为");
+        console.log(error);
       }
     }),
 
@@ -1740,13 +1744,13 @@ function activate(context) {
     vscode.window.registerWebviewViewProvider("ow.view.manual", {
       resolveWebviewView(webviewView) {
         try {
-          const extensionUri = vscode.Uri.file(path.join(PATH, "", path.sep))
+          const extensionUri = vscode.Uri.file(path.join(PATH, "", path.sep));
           const styleUri = webviewView.webview.asWebviewUri(
             vscode.Uri.joinPath(extensionUri, "views", "view.css")
-          )
+          );
           const scriptUri = webviewView.webview.asWebviewUri(
             vscode.Uri.joinPath(extensionUri, "views", "script.js")
-          )
+          );
 
           function getHomeHtml() {
             return `<!DOCTYPE html>
@@ -1769,15 +1773,15 @@ function activate(context) {
                       <button style="width: 150px; height: auto;" onclick="navigate('Projectile')">弹道</button>
                     </div>
                     </body>
-                    </html>`
+                    </html>`;
           }
 
           function getModeTableHtml() {
             const mode = MODEL.常量.模式
               .map((element) => {
-                return `<tr><td style="text-align: center;">${element.名称}</td></tr>`
+                return `<tr><td style="text-align: center;">${element.名称}</td></tr>`;
               })
-              .join("")
+              .join("");
             return `<!DOCTYPE html>
                     <html>
                     <head>
@@ -1793,15 +1797,15 @@ function activate(context) {
                     ${mode}
                     </table>
                     </body>
-                    </html>`
+                    </html>`;
           }
 
           function getMapTableHtml() {
             const maps = MODEL.常量.地图
               .map((element) => {
-                return `<tr><td style="text-align: center;">${element.名称}</td></tr>`
+                return `<tr><td style="text-align: center;">${element.名称}</td></tr>`;
               })
-              .join("")
+              .join("");
             return `<!DOCTYPE html>
                     <html>
                     <head>
@@ -1817,19 +1821,19 @@ function activate(context) {
                     ${maps}
                     </table>
                     </body>
-                    </html>`
+                    </html>`;
           }
 
           function getStringTableHtml() {
             const strings = MODEL.常量.字符串
               .map((element, index) => {
                 if (index % 2 === 0) {
-                  return `</tr><tr><td style="text-align: center;">${element.名称}</td>`
+                  return `</tr><tr><td style="text-align: center;">${element.名称}</td>`;
                 } else {
-                  return `<td style="text-align: center;">${element.名称}</td>`
+                  return `<td style="text-align: center;">${element.名称}</td>`;
                 }
               })
-              .join("")
+              .join("");
             return `<!DOCTYPE html>
                     <html>
                     <head>
@@ -1847,7 +1851,7 @@ function activate(context) {
                     </tr>
                     </table>
                     </body>
-                    </html>`
+                    </html>`;
           }
 
           function getColorTableHtml() {
@@ -2028,24 +2032,24 @@ function activate(context) {
                     </tr>
                     </table>
                     </body>
-                    </html>`
+                    </html>`;
           }
 
           function getIconTableHtml() {
-            const numCols = 4
-            const numRows = Math.ceil(36 / numCols)
+            const numCols = 4;
+            const numRows = Math.ceil(36 / numCols);
             const tableRows = Array(numRows)
               .fill()
               .map((_, rowIndex) => {
-                const startImageIndex = rowIndex * numCols + 1
+                const startImageIndex = rowIndex * numCols + 1;
                 const endImageIndex = Math.min(
                   startImageIndex + numCols - 1,
                   36
-                )
+                );
                 const imageCells = Array(endImageIndex - startImageIndex + 1)
                   .fill()
                   .map((_, colIndex) => {
-                    const imageNumber = startImageIndex + colIndex
+                    const imageNumber = startImageIndex + colIndex;
                     const imageSrc = webviewView.webview.asWebviewUri(
                       vscode.Uri.joinPath(
                         extensionUri,
@@ -2054,19 +2058,21 @@ function activate(context) {
                         "icon",
                         `${imageNumber}.png`
                       )
-                    )
-                    const icons = MODEL.常量.图标.map((element) => element.名称)
+                    );
+                    const icons = MODEL.常量.图标.map(
+                      (element) => element.名称
+                    );
                     return `<td style="text-align:center; font-weight: 500;">
                     <img src="${imageSrc}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground));">
 
-                    <br>${icons[imageNumber - 1]}</td>`
+                    <br>${icons[imageNumber - 1]}</td>`;
                   })
-                  .join("")
-                return `<tr>${imageCells}</tr>`
-              })
+                  .join("");
+                return `<tr>${imageCells}</tr>`;
+              });
             const tableHtml = `<table style="min-width: 300px; max-width: 400px;">${tableRows.join(
               ""
-            )}</table>`
+            )}</table>`;
 
             return `
               <!DOCTYPE html>
@@ -2083,7 +2089,7 @@ function activate(context) {
                     <i><h3>图标</h3></i>
                     ${tableHtml}
                   </body>
-              </html>`
+              </html>`;
           }
 
           function getHeroIconTableHtml() {
@@ -2098,7 +2104,7 @@ function activate(context) {
                   "avatar",
                   src
                 )
-              )}" style="height: 48px;/>`
+              )}" style="height: 48px;/>`;
             }
 
             function buildWeapon(src) {
@@ -2112,7 +2118,7 @@ function activate(context) {
                     "ability",
                     src
                   )
-                )}" style="height: 32px;"/>`
+                )}" style="height: 32px;"/>`;
             }
 
             function buildIcon(src) {
@@ -2126,7 +2132,7 @@ function activate(context) {
                   "ability",
                   src
                 )
-              )}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground, var(--vscode-foreground)));"/>`
+              )}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground, var(--vscode-foreground)));"/>`;
             }
 
             /* 参数含义
@@ -2146,10 +2152,17 @@ function activate(context) {
             }
             */
             function buildHero(infos) {
+              console.log(`${buildAvatar(infos["avatar"])}`);
               return `
                 <tr>
+                  <td style="text-align: center;">
                   ${buildAvatar(infos["avatar"])}
+                  
+                  </td>
+                  <td style="text-align: center;">
                   <br>${infos["name"]}<br>
+                  </td>
+
                   <td style="text-align: center;">
                   ${
                     infos.hasOwnProperty("primaryWeapon")
@@ -2208,7 +2221,7 @@ function activate(context) {
                       : ""
                   }
                   </td>
-                </tr>`
+                </tr>`;
             }
 
             return `<!DOCTYPE html>
@@ -2758,25 +2771,25 @@ function activate(context) {
                     </tbody>
                     </table>
                     </body>
-                    </html>`
+                    </html>`;
           }
 
           function getProjectileTableHtml() {
             const projectile = MODEL.常量.弹道
               .map((element, index) => {
-                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`
+                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`;
               })
-              .join("")
+              .join("");
             const projectileExplosion = MODEL.常量.弹道爆炸效果
               .map((element, index) => {
-                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`
+                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`;
               })
-              .join("")
+              .join("");
             const projectileExplosionSound = MODEL.常量.弹道爆炸声音
               .map((element, index) => {
-                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`
+                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`;
               })
-              .join("")
+              .join("");
             return `<!DOCTYPE html>
                     <html>
                     <head>
@@ -2808,25 +2821,25 @@ function activate(context) {
                     </tr>
                     </table>
                     </body>
-                    </html>`
+                    </html>`;
           }
 
           function getEffectTableHtml() {
             const effects = MODEL.常量.效果
               .map((element, index) => {
-                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`
+                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`;
               })
-              .join("")
+              .join("");
             const beamEffects = MODEL.常量.光束效果
               .map((element, index) => {
-                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`
+                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`;
               })
-              .join("")
+              .join("");
             const playerEffects = MODEL.常量.播放效果
               .map((element, index) => {
-                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`
+                return `</tr><tr><td style="text-align: center;">${element.名称}</td>`;
               })
-              .join("")
+              .join("");
             return `<!DOCTYPE html>
                     <html>
                     <head>
@@ -2860,57 +2873,57 @@ function activate(context) {
                     </table>
 
                     </body>
-                    </html>`
+                    </html>`;
           }
 
-          webviewView.webview.html = getHomeHtml()
+          webviewView.webview.html = getHomeHtml();
           webviewView.webview.options = {
             enableScripts: true,
             localResourceRoots: [extensionUri],
-          }
+          };
           webviewView.webview.onDidReceiveMessage((message) => {
             switch (message) {
               case "Home":
-                webviewView.webview.html = getHomeHtml()
-                return
+                webviewView.webview.html = getHomeHtml();
+                return;
               case "HeroIcon":
-                webviewView.webview.html = getHeroIconTableHtml()
-                return
+                webviewView.webview.html = getHeroIconTableHtml();
+                return;
               case "Icon":
-                webviewView.webview.html = getIconTableHtml()
-                return
+                webviewView.webview.html = getIconTableHtml();
+                return;
               case "String":
-                webviewView.webview.html = getStringTableHtml()
-                return
+                webviewView.webview.html = getStringTableHtml();
+                return;
               case "Mode":
-                webviewView.webview.html = getModeTableHtml()
-                return
+                webviewView.webview.html = getModeTableHtml();
+                return;
               case "Map":
-                webviewView.webview.html = getMapTableHtml()
-                return
+                webviewView.webview.html = getMapTableHtml();
+                return;
               case "Color":
-                webviewView.webview.html = getColorTableHtml()
-                return
+                webviewView.webview.html = getColorTableHtml();
+                return;
               case "Projectile":
-                webviewView.webview.html = getProjectileTableHtml()
-                return
+                webviewView.webview.html = getProjectileTableHtml();
+                return;
               case "Effect":
-                webviewView.webview.html = getEffectTableHtml()
-                return
+                webviewView.webview.html = getEffectTableHtml();
+                return;
               default:
-                console.log("Unknown command: " + message.command)
-                return
+                console.log("Unknown command: " + message.command);
+                return;
             }
-          })
+          });
         } catch (error) {
-          console.log("错误：resolveWebviewView 面板手册能力")
-          console.log(error)
+          console.log("错误：resolveWebviewView 面板手册能力");
+          console.log(error);
         }
       },
     })
-  )
+  );
 }
 
 module.exports = {
   activate,
-}
+};
