@@ -117,6 +117,14 @@ function getPrevValidPosition(document, pos) {
       return undefined;
     }
     if (pos.character > 0) {
+      // skip to whitespace start
+      const whitespaceRegex = /\s+$/;
+      const lineText = document.lineAt(pos.line).text;
+      const match = lineText.substr(0, pos.character).match(whitespaceRegex);
+      if (match) {
+        const whitespaceLength = match[0].length;
+        return pos.translate(0, -whitespaceLength);
+      }
       return pos.translate(0, -1);
     } else if (pos.line > 0) {
       return document.lineAt(pos.line - 1).range.end;
@@ -139,6 +147,14 @@ function getNextValidPosition(document, pos) {
       return undefined;
     }
     if (pos.character < document.lineAt(pos.line).range.end.character) {
+      // skip to whitespace end
+      const whitespaceRegex = /^\s+/;
+      const lineText = document.lineAt(pos.line).text;
+      const match = lineText.substr(pos.character).match(whitespaceRegex);
+      if (match) {
+        const whitespaceLength = match[0].length;
+        return pos.translate(0, whitespaceLength);
+      }
       return pos.translate(0, 1);
     } else if (pos.line < document.lineCount - 1) {
       return document.lineAt(pos.line + 1).range.start;
