@@ -2485,7 +2485,7 @@ let 常量 = {
       名称: "朱诺",
       标签: ["英雄", "支援"],
       提示: "每当问题进入朱诺的轨道，她都会用太空时代的科技将其一一化解。",
-      图标: "images/ow/hero/avatar/damage_juno_avatar.png",
+      图标: "images/ow/hero/avatar/support_juno_avatar.png",
       拼音: "Zhu Nuo",
     },
   ],
