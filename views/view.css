@@ -4,8 +4,8 @@
 }
 
 body {
-    background-color: var(--vscode-sideBar-background);
-    color: var(--vscode-sideBar-foreground);
+    background-color: var(--vscode-sideBar-background, var(--vscode-editor-background));
+    color: var(--vscode-sideBar-foreground, var(--vscode-editor-foreground));
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
     font-size: 16px;
     line-height: 1.5;
@@ -125,9 +125,9 @@ table th {
 
 button {
   align-items: center;
-  background-color: var(--vscode-editor-background);
+  background-color: var(--vscode-button-secondaryBackground, var(--vscode-button-hoverBackground));
   border: 1px solid var(--vscode-button-activeBorder);
-  color: var(--vscode-button-activeForeground);
+  color: var(--vscode-button-activeForeground, var(--vscode-editor-foreground));
   border-radius: .25rem;
   box-shadow: var(--vscode-button-secondaryBackground) 0 1px 3px 0;
   box-sizing: border-box;
