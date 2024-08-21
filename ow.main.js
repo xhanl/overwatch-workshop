@@ -2765,6 +2765,18 @@ function activate(context) {
                       melee: "melee.png",
                     })}
 
+                    ${buildHero({
+                      name: "朱诺",
+                      avatar: "support_juno_avatar.png",
+                      primaryWeapon: "support_juno_weapon.png",
+                      secondary: "support_juno_secondaryfire.png",
+                      ultimate: "support_juno_ultimate.png",
+                      ability1: "support_juno_ability1.png",
+                      ability2: "support_juno_ability2.png",
+                      melee: "melee.png",
+                      jump: "support_juno_jump.png",
+                    })}
+
                     </tbody>
                     </table>
                     </body>

@@ -2481,6 +2481,13 @@ let 常量 = {
       图标: "images/ow/hero/avatar/damage_venture_avatar.png",
       拼音: "Tan Qi",
     },
+    {
+      名称: "朱诺",
+      标签: ["英雄", "支援"],
+      提示: "每当问题进入朱诺的轨道，她都会用太空时代的科技将其一一化解。",
+      图标: "images/ow/hero/avatar/damage_juno_avatar.png",
+      拼音: "Zhu Nuo",
+    },
   ],
   HUD位置: [
     {
