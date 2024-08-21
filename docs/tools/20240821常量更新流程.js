@@ -8827,6 +8827,10 @@ const 新常量 = {
 // 3. 对于以中文特殊符号结尾的名称单独排序并收集为一类，如 "）" 和 "”"，join("｜") 为一个字符串
 // 4. 对于剩下的正常名称排序并收集为一类，join("｜") 为一个字符串
 // 5. 打印结果
+
+// 需要更改的位置有：
+// "entity.name.type.rule.event.player.ow" // 记得加上英雄
+// "constant.character.ow"
 const tmLanguageConstant = () => {
   const specialStartChars = ["（", "“"];
   const specialEndChars = ["）", "”"];
