@@ -1,6 +1,17 @@
-.iconBox {
+.icon-box {
   height: 32px;
   overflow: hidden;
+}
+
+.ability-icon {
+  height: 32px;
+  position: relative;
+  display: inline-block;
+}
+
+.ability-icon img {
+  display: block;
+  filter: drop-shadow(0 0 0.9px #000000);
 }
 
 body {
@@ -169,3 +180,4 @@ button:active {
   box-shadow: var(--vscode-button-hoverBackground) 0 2px 12px;
   box-sizing: border-box;
 }
+

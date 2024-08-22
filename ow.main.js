@@ -2109,20 +2109,6 @@ function activate(context) {
 
             function buildWeapon(src) {
               return `
-                <img src="${webviewView.webview.asWebviewUri(
-                  vscode.Uri.joinPath(
-                    extensionUri,
-                    "images",
-                    "ow",
-                    "hero",
-                    "ability",
-                    src
-                  )
-                )}" style="height: 32px;"/>`;
-            }
-
-            function buildIcon(src) {
-              return `
               <img src="${webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(
                   extensionUri,
@@ -2132,7 +2118,23 @@ function activate(context) {
                   "ability",
                   src
                 )
-              )}" style="height: 32px; transform: translateY(-100px); filter: drop-shadow(0px 100px var(--vscode-sideBar-foreground, var(--vscode-foreground)));"/>`;
+              )}" style="height: 32px;"/>`;
+            }
+
+            function buildIcon(src) {
+              return `
+                <div class="ability-icon">
+                  <img src="${webviewView.webview.asWebviewUri(
+                    vscode.Uri.joinPath(
+                      extensionUri,
+                      "images",
+                      "ow",
+                      "hero",
+                      "ability",
+                      src
+                    )
+                  )}" />
+                </div>`;
             }
 
             /* 参数含义
@@ -2237,7 +2239,7 @@ function activate(context) {
                     <i><h3>英雄技能图标</h3></i>
 
                     <h4 style="display: flex; align-items: center;">
-                    <div class="iconBox">
+                    <div class="icon-box">
                       <img src="${webviewView.webview.asWebviewUri(
                         vscode.Uri.joinPath(
                           extensionUri,
@@ -2400,7 +2402,7 @@ function activate(context) {
                     </tbody>
                     </table>
 
-                    <h4 style="display: flex; align-items: center;"><div class="iconBox">
+                    <h4 style="display: flex; align-items: center;"><div class="icon-box">
                       <img src="${webviewView.webview.asWebviewUri(
                         vscode.Uri.joinPath(
                           extensionUri,
@@ -2625,7 +2627,7 @@ function activate(context) {
                     </tbody>
                     </table>
 
-                    <h4 style="display: flex; align-items: center;"><div class="iconBox">
+                    <h4 style="display: flex; align-items: center;"><div class="icon-box">
                       <img src="${webviewView.webview.asWebviewUri(
                         vscode.Uri.joinPath(
                           extensionUri,
