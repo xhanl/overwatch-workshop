@@ -12,7 +12,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/manual.png" align=center width=600 />
+  <img src=".docs/images/readme/manual.png" align=center width=600 />
   </details>
 
 ### **悬停提示**
@@ -21,7 +21,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/hover.png" align=center width=800 />
+  <img src=".docs/images/readme/hover.png" align=center width=800 />
   </details>
 
 ### **补全提示**
@@ -30,7 +30,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/suggest.png" align=center width=850 />
+  <img src=".docs/images/readme/suggest.png" align=center width=850 />
   </details>
 
 ### **参数提示**
@@ -39,7 +39,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/param.png" align=center width=700 />
+  <img src=".docs/images/readme/param.png" align=center width=700 />
   </details>
 
 ### **代码混淆**
@@ -48,7 +48,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/obfuscate.png" align=center width=500 />
+  <img src=".docs/images/readme/obfuscate.png" align=center width=500 />
   </details>
 
 ### **代码整理**
@@ -57,7 +57,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/format.png" align=center width=200 />
+  <img src=".docs/images/readme/format.png" align=center width=200 />
   </details>
 
 ### **代码折叠**
@@ -66,7 +66,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/fold.png" align=center width=400 />
+  <img src=".docs/images/readme/fold.png" align=center width=400 />
   </details>
 
 ### **代码大纲**
@@ -75,7 +75,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/outline.png" align=center width=250 />
+  <img src=".docs/images/readme/outline.png" align=center width=250 />
   </details>
 
 ### **代码高亮**
@@ -84,7 +84,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/highlight.png" align=center width=800 />
+  <img src=".docs/images/readme/highlight.png" align=center width=800 />
   </details>
 
 ### **规则开关**
@@ -93,7 +93,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/switch.png" align=center width=400 />
+  <img src=".docs/images/readme/switch.png" align=center width=400 />
   </details>
 
 ### **调色盘**
@@ -102,7 +102,7 @@
 
   <details>
   <summary>预览图片</summary>
-  <img src="images/readme/color.png" align=center width=400 />
+  <img src=".docs/images/readme/color.png" align=center width=400 />
   </details>
 
 <br>
