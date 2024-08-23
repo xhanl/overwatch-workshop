@@ -14,15 +14,15 @@
     "守望先锋",
     "工坊"
   ],
-  "version": "3.7.1",
+  "version": "3.7.2",
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": [
     "Programming Languages"
   ],
-  "main": "ow.main.js",
   "activationEvents": [],
+  "browser": "./dist/web/extension.js",
   "contributes": {
     "languages": [
       {
@@ -43,7 +43,7 @@
       {
         "language": "ow",
         "scopeName": "source.ow",
-        "path": "ow.tmLanguage.json"
+        "path": "./syntaxes/ow.tmLanguage.json"
       }
     ],
     "commands": [
@@ -56,7 +56,7 @@
         "title": "展开"
       },
       {
-        "command": "ow.command.line",
+        "command": "ow.command.lineBreak",
         "title": "换行"
       },
       {
@@ -64,11 +64,11 @@
         "title": "混淆"
       },
       {
-        "command": "ow.command.copy",
+        "command": "ow.command.export",
         "title": "导出"
       },
       {
-        "command": "ow.command.paste",
+        "command": "ow.command.import",
         "title": "导入"
       }
     ],
@@ -103,7 +103,7 @@
           "group": "navigation@100"
         },
         {
-          "command": "ow.command.line",
+          "command": "ow.command.lineBreak",
           "when": "editorLangId == ow",
           "group": "navigation@101"
         },
@@ -113,12 +113,12 @@
           "group": "navigation@102"
         },
         {
-          "command": "ow.command.copy",
+          "command": "ow.command.export",
           "when": "editorLangId == ow",
           "group": "navigation@103"
         },
         {
-          "command": "ow.command.paste",
+          "command": "ow.command.import",
           "when": "editorLangId == ow",
           "group": "navigation@104"
         }
@@ -130,7 +130,7 @@
           "group": "0@0"
         },
         {
-          "command": "ow.command.line",
+          "command": "ow.command.lineBreak",
           "when": "editorLangId == ow",
           "group": "0@1"
         },
@@ -140,12 +140,12 @@
           "group": "0@2"
         },
         {
-          "command": "ow.command.copy",
+          "command": "ow.command.export",
           "when": "editorLangId == ow",
           "group": "0@3"
         },
         {
-          "command": "ow.command.paste",
+          "command": "ow.command.import",
           "when": "editorLangId == ow",
           "group": "0@4"
         }
@@ -173,5 +173,35 @@
         "path": "themes/ow.light.json"
       }
     ]
+  },
+  "scripts": {
+    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/extensionTests.js",
+    "pretest": "npm run compile-web",
+    "vscode:prepublish": "npm run package-web",
+    "compile-web": "npm run check-types && npm run lint && node esbuild.js",
+    "watch-web": "npm-run-all -p watch-web:*",
+    "watch-web:esbuild": "node esbuild.js --watch",
+    "watch-web:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package-web": "npm run check-types && npm run lint && node esbuild.js --production",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src --ext ts",
+    "run-in-browser": "npm run compile-web && vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@types/assert": "^1.5.10",
+    "@types/mocha": "^10.0.7",
+    "@types/vscode": "^1.92.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vscode/test-web": "^0.0.55",
+    "assert": "^2.1.0",
+    "esbuild": "^0.21.5",
+    "esbuild-copy-static-files": "^0.1.0",
+    "eslint": "^8.57.0",
+    "glob": "^10.4.2",
+    "mocha": "^10.5.2",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.4.5"
   }
 }
