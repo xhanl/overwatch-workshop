@@ -191,7 +191,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@types/assert": "^1.5.10",
     "@types/mocha": "^10.0.7",
-    "@types/vscode": "^1.92.0",
+    "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^7.11.0",
     "@vscode/test-web": "^0.0.55",
