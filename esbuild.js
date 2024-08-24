@@ -1,6 +1,4 @@
 const esbuild = require("esbuild");
-const glob = require("glob");
-const path = require("path");
 const polyfill = require("@esbuild-plugins/node-globals-polyfill");
 
 const production = process.argv.includes("--production");
