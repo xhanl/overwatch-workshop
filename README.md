@@ -241,12 +241,11 @@
 
 ## **_仓库_**
 
-- #### **_源代码仓库，以及镜像仓库_**
+- #### **_源代码仓库_**
 
   | 平台       | 链接                                                                      |
   | :--------- | :------------------------------------------------------------------------ |
   | **GitHub** | _[XHanL/overwatch-workshop](https://github.com/xhanl/overwatch-workshop)_ |
-  | **Gitee**  | _[XHanL/overwatch-workshop](https://gitee.com/xhanl/overwatch-workshop)_  |
 
 <br>
 
