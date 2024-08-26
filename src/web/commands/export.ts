@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { getFileNameFromPath } from "../utils";
 
 //导出修复能力
 const disposable = vscode.commands.registerCommand("ow.command.export", () => {
@@ -18,7 +17,7 @@ const disposable = vscode.commands.registerCommand("ow.command.export", () => {
       );
       vscode.env.clipboard.writeText(text);
       vscode.window.showInformationMessage(
-        `${getFileNameFromPath(document.fileName)} 已导出到剪切板`
+        `${document.fileName} 已导出到剪切板`
       );
     }
   } catch (error) {

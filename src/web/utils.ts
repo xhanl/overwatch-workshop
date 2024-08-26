@@ -24,10 +24,6 @@ function shuffleArray(array: any[]) {
   }
 }
 
-function getFileNameFromPath(path: string) {
-  return path.split("/").pop();
-}
-
 function getAbsolutePath(path: string) {
   return vscode.Uri.joinPath(EXTENSION_URI, path);
 }
@@ -1131,7 +1127,6 @@ function prepareStaticModel(extensionUri: vscode.Uri) {
 export {
   EXTENSION_URI,
   shuffleArray,
-  getFileNameFromPath,
   getRandomInt,
   getRandomNumber,
   getDynamicKind,

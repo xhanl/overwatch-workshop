@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { getFileNameFromPath } from "../utils";
 
 //导入修复能力
 const disposable = vscode.commands.registerCommand(
@@ -24,9 +23,7 @@ const disposable = vscode.commands.registerCommand(
           edit.replace(activeEditor.document.uri, wholeDocumentRange, text);
           vscode.workspace.applyEdit(edit);
           vscode.window.showInformationMessage(
-            `${getFileNameFromPath(
-              activeEditor.document.fileName
-            )} 已导入并修复`
+            `${activeEditor.document.fileName} 已导入并修复`
           );
         });
       }
