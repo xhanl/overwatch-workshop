@@ -687,7 +687,6 @@ ${buildHero({
   name: "艾什",
   avatar: "damage_ashe_avatar.png",
   primaryWeapon: "damage_ashe_weapon.png",
-  secondaryWeapon: "damage_ashe_weapon.png",
   ultimate: "damage_ashe_ultimate.png",
   ability1: "damage_ashe_ability1.png",
   ability2: "damage_ashe_ability2.png",
@@ -701,7 +700,7 @@ ${buildHero({
   secondary: "damage_bastion_secondaryfire.png",
   ultimate: "damage_bastion_ultimate.png",
   ability1: "damage_bastion_ability1.png",
-  ability2: "melee.png",
+  melee: "melee.png",
 })}
 
 ${buildHero({
@@ -780,7 +779,7 @@ ${buildHero({
   ability1: "damage_pharah_ability1.png",
   ability2: "damage_pharah_ability2.png",
   melee: "melee.png",
-  jump: "passive.png",
+  jump: "damage_pharah_jump.png",
 })}
 
 ${buildHero({
@@ -808,7 +807,7 @@ ${buildHero({
   name: "士兵：76",
   avatar: "damage_soldier-76_avatar.png",
   primaryWeapon: "damage_soldier-76_weapon.png",
-  secondaryWeapon: "damage_soldier-76_weapon.png",
+  secondary: "damage_soldier-76_secondaryfire.png",
   ultimate: "damage_soldier-76_ultimate.png",
   ability1: "damage_soldier-76_ability1.png",
   ability2: "damage_soldier-76_ability2.png",
@@ -819,7 +818,7 @@ ${buildHero({
   name: "黑影",
   avatar: "damage_sombra_avatar.png",
   primaryWeapon: "damage_sombra_weapon.png",
-  secondaryWeapon: "damage_sombra_weapon.png",
+  secondary: "damage_sombra_secondaryfire.png",
   ultimate: "damage_sombra_ultimate.png",
   ability1: "damage_sombra_ability1.png",
   ability2: "damage_sombra_ability2.png",
@@ -927,6 +926,7 @@ ${buildHero({
   ability1: "support_baptiste_ability1.png",
   ability2: "support_baptiste_ability2.png",
   melee: "melee.png",
+  jump: "support_baptiste_jump.png",
 })}
 
 ${buildHero({
@@ -949,6 +949,7 @@ ${buildHero({
   ability1: "support_kiriko_ability1.png",
   ability2: "support_kiriko_ability2.png",
   melee: "melee.png",
+  jump: "support_kiriko_jump.png",
 })}
 
 ${buildHero({
@@ -960,6 +961,7 @@ ${buildHero({
   ability1: "support_lucio_ability1.png",
   ability2: "support_lucio_ability2.png",
   melee: "melee.png",
+  jump: "support_lucio_jump.png",
 })}
 
 ${buildHero({
@@ -971,6 +973,7 @@ ${buildHero({
   ability1: "support_mercy_ability1.png",
   ability2: "support_mercy_ability2.png",
   melee: "melee.png",
+  jump: "support_mercy_jump.png",
 })}
 
 ${buildHero({
@@ -992,18 +995,19 @@ ${buildHero({
   ultimate: "support_zenyatta_ultimate.png",
   ability1: "support_zenyatta_ability1.png",
   ability2: "support_zenyatta_ability2.png",
-  melee: "melee.png",
+  melee: "support_zenyatta_melee.png",
 })}
 
 ${buildHero({
   name: "生命之梭",
   avatar: "support_lifeweaver_avatar.png",
   primaryWeapon: "support_lifeweaver_weapon1.png",
-  secondary: "support_lifeweaver_secondaryfire.png",
+  secondaryWeapon: "support_lifeweaver_weapon2.png",
   ultimate: "support_lifeweaver_ultimate.png",
   ability1: "support_lifeweaver_ability1.png",
   ability2: "support_lifeweaver_ability2.png",
   melee: "melee.png",
+  jump: "support_lifeweaver_jump.png",
 })}
 
 ${buildHero({
