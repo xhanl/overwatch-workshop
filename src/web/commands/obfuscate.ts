@@ -35,17 +35,19 @@ const disposable = vscode.commands.registerCommand(
             return;
           }
           const pickItems = [
-            "填充规则（占用更多元素）",
-            "混淆字符（影响字符比较，例如玩家名称或数字）",
-            "混淆索引（影响负载，占用更多元素）",
-            "混淆本地索引（影响帧率表现）",
-          ].map((label, index) => {
-            return {
-              label: label,
-              index: index,
+            { label: "填充规则（占用更多元素）", index: 0, picked: true },
+            {
+              label: "混淆字符（影响字符比较，例如玩家名称或数字）",
+              index: 1,
               picked: true,
-            };
-          });
+            },
+            {
+              label: "混淆索引（影响负载，占用更多元素）",
+              index: 2,
+              picked: true,
+            },
+            { label: "混淆本地索引（影响帧率表现）", index: 3, picked: false },
+          ];
           vscode.window
             .showQuickPick(pickItems, {
               title: "混淆生成   2 / 2",
