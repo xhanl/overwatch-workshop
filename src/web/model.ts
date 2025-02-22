@@ -2682,7 +2682,7 @@ let 常量: 常量类型 = {
       名称: "骇灾",
       标签: ["英雄", "重装"],
       提示: "骇灾是地下反叛界中一颗冉冉升起的新星，他是激进的破坏分子，是不可阻挡的武器，他的战斗要把秩序拆个粉碎。",
-      图标: "images/ow/hero/avatar/骇灾.png",
+      图标: "images/ow/hero/avatar/tank_hazard_avatar.png",
       拼音: "Hai Zai",
     },
   ],

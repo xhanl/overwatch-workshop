@@ -5,7 +5,7 @@
 
 ## Get up and running the Web Extension
 
-- Run `pnpm install`.
+- Run `npm install`.
 - Place breakpoints in `src/web/extension.ts`.
 - Debug via F5 (Run Web Extension).
 - Execute extension code via `F1 > Hello world`.

@@ -6,7 +6,7 @@
   "publisher": "Xcrystal",
   "version": "3.8.0",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.97.0"
   },
   "categories": [
     "Programming Languages"
