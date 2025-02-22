@@ -17,6 +17,26 @@ import { 常量, 规则 } from "./model";
 
 let EXTENSION_URI: vscode.Uri;
 
+function getVariableIndex(prevText: string) {
+  let index;
+  if (prevText.trim() === "全局:") {
+    index = 0;
+  } else if (prevText.trim() === "变量:") {
+    index = 0;
+  } else {
+    let match = prevText.match(/^\s*(\d+):/);
+    if (match === null || match[1] === undefined) {
+      return undefined;
+    }
+    let prevIndex = match[1];
+    index = parseInt(prevIndex) + 1;
+  }
+  if (index > 127) {
+    return undefined;
+  }
+  return index;
+}
+
 function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -331,6 +351,17 @@ function getScope(
   return {
     name: "全局",
   };
+}
+
+function getVariable(text: string) {
+  let match;
+  if ((match = text.match(/^(?:全局|玩家)\s*:$/))) {
+    return "变量";
+  } else if ((match = text.match(/^子程序\s*:$/))) {
+    return "子程序";
+  } else {
+    return "常量";
+  }
 }
 
 type Entry = {
@@ -1127,6 +1158,7 @@ function prepareStaticModel(extensionUri: vscode.Uri) {
 export {
   EXTENSION_URI,
   shuffleArray,
+  getVariableIndex,
   getRandomInt,
   getRandomNumber,
   getDynamicKind,

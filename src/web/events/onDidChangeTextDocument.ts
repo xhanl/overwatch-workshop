@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getEntry, getScope } from "../utils";
+import { getEntry, getScope, getVariableIndex } from "../utils";
 import { 规则 } from "../model";
 
 //补全占位符监视
@@ -38,6 +38,17 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
               }
             }
           }
+        }
+      } else if (change.text.includes("\n") && change.rangeLength === 0) {
+        const scope = getScope(event.document, change.range.start);
+        if (scope.name === "变量") {
+          const line = event.document.lineAt(change.range.end.line);
+          const text = line.text;
+          const index = getVariableIndex(text);
+          if (index === undefined) {
+            return;
+          }
+          vscode.commands.executeCommand("ow.command.suggest");
         }
       }
     }

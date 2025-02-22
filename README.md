@@ -227,15 +227,15 @@
 
 - #### **_整理语法数据和编写 [LSP](https://microsoft.github.io/language-server-protocol) 是两个繁杂的过程，感谢以下大佬的资源和慷慨帮助！_**
 
-  | 大佬             | 贡献              | 链接                                                            |
-  | :--------------- | :---------------- | :-------------------------------------------------------------- |
-  | **掌上天空**     | _授权 & 开源仓库_ | _[SkyinHand/owatch](https://github.com/SkyinHand/owatch)_       |
-  | **CoolP**        | _开源仓库_        | _[qaz075115961/owl-CN](https://github.com/qaz075115961/owl-CN)_ |
-  | **DataWatch**    | _主要数据_        | _[overtools/OWLib](https://github.com/overtools/OWLib)_         |
-  | **春雨实验室**   | _英雄数据_        | _[Overlab](https://overlab.cn)_                                 |
-  | **EbanCycle**    | _荣誉成员_        |
-  | **踏足**         | _荣誉成员_        |
-  | **老王不在橱柜** | _荣誉成员_        |
+  | 大佬             | 贡献       | 链接                                                            |
+  | :--------------- | :--------- | :-------------------------------------------------------------- |
+  | **掌上天空**     | _开源仓库_ | _[SkyinHand/owatch](https://github.com/SkyinHand/owatch)_       |
+  | **CoolP**        | _开源仓库_ | _[qaz075115961/owl-CN](https://github.com/qaz075115961/owl-CN)_ |
+  | **DataWatch**    | _主要数据_ | _[overtools/OWLib](https://github.com/overtools/OWLib)_         |
+  | **春雨实验室**   | _英雄数据_ | _[Overlab](https://overlab.cn)_                                 |
+  | **EbanCycle**    | _荣誉成员_ |                                                                 |
+  | **踏足**         | _荣誉成员_ |                                                                 |
+  | **老王不在橱柜** | _荣誉成员_ |                                                                 |
 
 <br>
 

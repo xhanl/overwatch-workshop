@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { buildCompletion, getDynamicList, getEntry, getScope } from "../utils";
+import { buildCompletion, getDynamicList, getEntry, getScope, getVariableIndex } from "../utils";
 import { 扩展, 模版, 规则 } from "../model";
 
 class CompletionItemProvider implements vscode.CompletionItemProvider {
@@ -7,15 +7,16 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
     document: vscode.TextDocument,
     position: vscode.Position,
     token: vscode.CancellationToken,
-    context: vscode.CompletionContext
+    context: vscode.CompletionContext,
   ): vscode.ProviderResult<
     vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>
   > {
     try {
       const scope = getScope(document, position);
-      
       if (scope.name === "全局") {
         return getGlobalCompletions();
+      } else if (scope.name === "变量") {
+        return getVariableCompletions();
       } else if (scope.name === "扩展") {
         return getExtensionCompletions();
       } else if (scope.name.startsWith("规则")) {
@@ -44,10 +45,34 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
               tags: value.标签,
               details: value.提示,
               insertText: new vscode.SnippetString(`${value.格式}`),
-            })
+            }),
           );
         }
         return completionItems;
+      }
+
+      //获取变量补全
+      function getVariableCompletions() {
+        if (scope.range === undefined) {
+          return [];
+        }
+        let pos = scope.range.end;
+        let line = pos.line;
+        let prevText = document.lineAt(line - 1).text;
+        let index = getVariableIndex(prevText);
+        if (index === undefined) {
+          return [];
+        }
+        return [
+          buildCompletion({
+            label: `变量:${index}`,
+            pinyin: `Bian Liang : ${index}`,
+            kind: vscode.CompletionItemKind.Module,
+            tags: ["模板", "变量"],
+            details: `创建第 ${index} 号变量的模版。`,
+            insertText: new vscode.SnippetString(`${index}: $1`),
+          }),
+        ];
       }
 
       //获取扩展补全
@@ -61,7 +86,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
               kind: vscode.CompletionItemKind.Property,
               tags: value.标签,
               details: value.提示,
-            })
+            }),
           );
         }
         return completionItems;
@@ -79,7 +104,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
               tags: value.标签,
               details: value.提示,
               insertText: new vscode.SnippetString(`${value.格式}`),
-            })
+            }),
           );
         }
         return completionItems;
@@ -153,7 +178,6 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
           }
 
           console.log("getActionCompletions", entry);
-          
 
           if (entry.kind === "数组") {
             if (
@@ -201,7 +225,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
             }
           } else if (entry.kind === "动作") {
             return buildStaticCompletions(规则.动作).concat(
-              buildStaticCompletions(规则.条件)
+              buildStaticCompletions(规则.条件),
             );
           } else if (entry.kind === "条件") {
             return buildStaticCompletions(规则.条件);
@@ -291,7 +315,7 @@ const disposable = vscode.languages.registerCompletionItemProvider(
   new CompletionItemProvider(),
   "(",
   ",",
-  "."
+  ".",
 );
 
 export default disposable;

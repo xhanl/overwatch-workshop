@@ -1,7 +1,5 @@
-.DS_Store
-**/.DS_Store
-**/*.vsix
-node_modules/**
-dist/**
-.vscode-test-web
-package-lock.json
+out
+dist
+node_modules
+.vscode-test-web/
+*.vsix
