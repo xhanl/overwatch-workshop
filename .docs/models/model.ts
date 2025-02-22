@@ -2577,7 +2577,7 @@ let 常量: 常量类型 = {
       名称: "士兵：76",
       标签: ["英雄", "输出"],
       提示: "被全球通缉的独行侠“士兵：76”独自一人发动了一场旨在查出守望先锋解散真相的战争。",
-      图标: "images/ow/hero/avatar/damage_soldier-76_avatar.png",
+      图标: "images/ow/hero/avatar/damage_soldier76_avatar.png",
       拼音: "Shi Bing ： 7 6",
     },
     {
@@ -2677,6 +2677,13 @@ let 常量: 常量类型 = {
       提示: "每当问题进入朱诺的轨道，她都会用太空时代的科技将其一一化解。",
       图标: "images/ow/hero/avatar/support_juno_avatar.png",
       拼音: "Zhu Nuo",
+    },
+    {
+      名称: "骇灾",
+      标签: ["英雄", "重装"],
+      提示: "骇灾是地下反叛界中一颗冉冉升起的新星，他是激进的破坏分子，是不可阻挡的武器，他的战斗要把秩序拆个粉碎。",
+      图标: "images/ow/hero/avatar/骇灾.png",
+      拼音: "Hai Zai",
     },
   ],
   HUD位置: [

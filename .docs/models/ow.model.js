@@ -2387,7 +2387,7 @@ let 常量 = {
       名称: "士兵：76",
       标签: ["英雄", "输出"],
       提示: "被全球通缉的独行侠“士兵：76”独自一人发动了一场旨在查出守望先锋解散真相的战争。",
-      图标: "images/ow/hero/avatar/damage_soldier-76_avatar.png",
+      图标: "images/ow/hero/avatar/damage_soldier76_avatar.png",
       拼音: "Shi Bing ： 7 6",
     },
     {

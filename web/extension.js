@@ -4141,7 +4141,7 @@ var \u5E38\u91CF = {
       \u540D\u79F0: "\u58EB\u5175\uFF1A76",
       \u6807\u7B7E: ["\u82F1\u96C4", "\u8F93\u51FA"],
       \u63D0\u793A: "\u88AB\u5168\u7403\u901A\u7F09\u7684\u72EC\u884C\u4FA0\u201C\u58EB\u5175\uFF1A76\u201D\u72EC\u81EA\u4E00\u4EBA\u53D1\u52A8\u4E86\u4E00\u573A\u65E8\u5728\u67E5\u51FA\u5B88\u671B\u5148\u950B\u89E3\u6563\u771F\u76F8\u7684\u6218\u4E89\u3002",
-      \u56FE\u6807: "images/ow/hero/avatar/damage_soldier-76_avatar.png",
+      \u56FE\u6807: "images/ow/hero/avatar/damage_soldier76_avatar.png",
       \u62FC\u97F3: "Shi Bing \uFF1A 7 6"
     },
     {
@@ -22454,12 +22454,12 @@ ${buildHero({
 
 ${buildHero({
           name: "\u58EB\u5175\uFF1A76",
-          avatar: "damage_soldier-76_avatar.png",
-          primaryWeapon: "damage_soldier-76_weapon.png",
-          secondary: "damage_soldier-76_secondaryfire.png",
-          ultimate: "damage_soldier-76_ultimate.png",
-          ability1: "damage_soldier-76_ability1.png",
-          ability2: "damage_soldier-76_ability2.png",
+          avatar: "damage_soldier76_avatar.png",
+          primaryWeapon: "damage_soldier76_weapon.png",
+          secondary: "damage_soldier76_secondaryfire.png",
+          ultimate: "damage_soldier76_ultimate.png",
+          ability1: "damage_soldier76_ability1.png",
+          ability2: "damage_soldier76_ability2.png",
           melee: "melee.png"
         })}
 

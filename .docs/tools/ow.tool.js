@@ -6,6 +6,8 @@ function sortAndFilterChineseKeyword(s) {
   console.log(arr.join("|"));
 }
 
+//node ow.tool.js
+
 //调试工具：正则字符串
 function getModelString() {
   let str = "";

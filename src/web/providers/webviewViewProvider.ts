@@ -653,6 +653,18 @@ ${buildHero({
   melee: "melee.png",
 })}
 
+${buildHero({
+  name: "骇灾",
+  avatar: "骇灾.png",
+  primaryWeapon: "骇灾-骨刺.png",
+  secondary: "骇灾-尖刺护体.png",
+  ultimate: "骇灾-千针雨.png",
+  ability1: "骇灾-狂跃.png",
+  ability2: "骇灾-尖刺墙.png",
+  melee: "melee.png",
+  jump: "骇灾-翻越.png",
+})}
+
 </tbody>
 </table>
 
@@ -805,12 +817,12 @@ ${buildHero({
 
 ${buildHero({
   name: "士兵：76",
-  avatar: "damage_soldier-76_avatar.png",
-  primaryWeapon: "damage_soldier-76_weapon.png",
-  secondary: "damage_soldier-76_secondaryfire.png",
-  ultimate: "damage_soldier-76_ultimate.png",
-  ability1: "damage_soldier-76_ability1.png",
-  ability2: "damage_soldier-76_ability2.png",
+  avatar: "damage_soldier76_avatar.png",
+  primaryWeapon: "damage_soldier76_weapon.png",
+  secondary: "damage_soldier76_secondaryfire.png",
+  ultimate: "damage_soldier76_ultimate.png",
+  ability1: "damage_soldier76_ability1.png",
+  ability2: "damage_soldier76_ability2.png",
   melee: "melee.png",
 })}
 

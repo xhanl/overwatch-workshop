@@ -21,7 +21,7 @@ function getVariableIndex(prevText: string) {
   let index;
   if (prevText.trim() === "全局:") {
     index = 0;
-  } else if (prevText.trim() === "变量:") {
+  } else if (prevText.trim() === "玩家:") {
     index = 0;
   } else {
     let match = prevText.match(/^\s*(\d+):/);
