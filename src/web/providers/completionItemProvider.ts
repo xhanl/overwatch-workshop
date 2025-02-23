@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { buildCompletion, getDynamicList, getEntry, getScope, getVariableIndex } from "../utils";
+import { buildCompletion, getDynamicList, getEntry, getScope, getSubprogramIndex, getVariableIndex } from "../utils";
 import { 扩展, 模版, 规则 } from "../model";
 
 class CompletionItemProvider implements vscode.CompletionItemProvider {
@@ -17,6 +17,8 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         return getGlobalCompletions();
       } else if (scope.name === "变量") {
         return getVariableCompletions();
+      } else if (scope.name === "子程序") {
+        return getSubprogramCompletions();
       } else if (scope.name === "扩展") {
         return getExtensionCompletions();
       } else if (scope.name.startsWith("规则")) {
@@ -70,6 +72,30 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
             kind: vscode.CompletionItemKind.Module,
             tags: ["模板", "变量"],
             details: `创建第 ${index} 号变量的模版。`,
+            insertText: new vscode.SnippetString(`${index}: $1`),
+          }),
+        ];
+      }
+
+      //获取子程序补全
+      function getSubprogramCompletions() {
+        if (scope.range === undefined) {
+          return [];
+        }
+        let pos = scope.range.end;
+        let line = pos.line;
+        let prevText = document.lineAt(line - 1).text;
+        let index = getSubprogramIndex(prevText);
+        if (index === undefined) {
+          return [];
+        }
+        return [
+          buildCompletion({
+            label: `子程序:${index}`,
+            pinyin: `Zi Cheng Xu : ${index}`,
+            kind: vscode.CompletionItemKind.Module,
+            tags: ["模板", "子程序"],
+            details: `创建第 ${index} 号子程序。`,
             insertText: new vscode.SnippetString(`${index}: $1`),
           }),
         ];

@@ -37,6 +37,24 @@ function getVariableIndex(prevText: string) {
   return index;
 }
 
+function getSubprogramIndex(prevText: string) {
+  let index;
+  if (prevText.trim() === "{") {
+    index = 0;
+  } else {
+    let match = prevText.match(/^\s*(\d+):/);
+    if (match === null || match[1] === undefined) {
+      return undefined;
+    }
+    let prevIndex = match[1];
+    index = parseInt(prevIndex) + 1;
+  }
+  if (index > 127) {
+    return undefined;
+  }
+  return index;
+}
+
 function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -1159,6 +1177,7 @@ export {
   EXTENSION_URI,
   shuffleArray,
   getVariableIndex,
+  getSubprogramIndex,
   getRandomInt,
   getRandomNumber,
   getDynamicKind,
