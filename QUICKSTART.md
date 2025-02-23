@@ -10,7 +10,12 @@
 - Debug via F5 (Run Web Extension).
 - Execute extension code via `F1 > Hello world`.
 
-- Run `vsce package` for package
+## Package
+
+```sh
+npm run package-web
+vsce package
+```
 
 ## Make changes
 
