@@ -4,9 +4,9 @@
   "displayName": "Overwatch Workshop",
   "description": "守望先锋® 工坊语言支持（中文）",
   "publisher": "Xcrystal",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "engines": {
-    "vscode": "^1.97.0"
+    "vscode": "^1.86.0"
   },
   "categories": [
     "Programming Languages"
@@ -188,7 +188,7 @@
     "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
   },
   "devDependencies": {
-    "@types/vscode": "^1.97.0",
+    "@types/vscode": "^1.86.0",
     "@types/mocha": "^10.0.10",
     "@types/assert": "^1.5.11",
     "eslint": "^9.19.0",

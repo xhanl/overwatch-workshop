@@ -34,7 +34,7 @@ _`2025/2/23`_
 
 **引擎版本**
 
-- VS Code `1.97.0`
+- VSCode January 2024 (version 1.86)
 
 <br>
 
