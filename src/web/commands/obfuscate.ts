@@ -13,19 +13,17 @@ const disposable = vscode.commands.registerCommand(
     try {
       vscode.window
         .showInputBox({
-          title: "混淆生成   1 / 2",
-          placeHolder: "留空使用默认值 30000",
+          title: "混淆生成  1 / 2",
+          placeHolder: "如何获取：地图工坊 → 显示诊断结果 → 总计元素数量",
           prompt: "请提供原生代码的总元素数量",
           validateInput: (value) => {
-            if (value === "") {
-              //使用默认值
-              return;
-            }
             const intValue = parseInt(value);
             if (isNaN(intValue)) {
               return "无效输入";
             } else if (intValue > 32768) {
               return `超出游戏限制 (最多32768个)`;
+            } else if (intValue < 1) {
+              return `低于最低限制 (最少1个)`;
             }
           },
         })
@@ -35,23 +33,35 @@ const disposable = vscode.commands.registerCommand(
             return;
           }
           const pickItems = [
-            { label: "填充规则（占用更多元素）", index: 0, picked: true },
             {
-              label: "混淆字符（影响字符比较，例如玩家名称或数字）",
+              label: "混淆规则",
+              description: "阻止游戏内编辑，将填满元素",
+              index: 0,
+              picked: true,
+            },
+            {
+              label: "混淆字符",
+              description: "隐藏字符串，但影响字符比较，例如字符串比较玩家名称。使用注释标记 `/* @SKIP_OBFUSCATE_STRING */` 和 `/* @SKIP_OBFUSCATE_STRING_END */` 来跳过这些",
               index: 1,
               picked: true,
             },
             {
-              label: "混淆索引（影响负载，占用更多元素）",
+              label: "混淆索引",
+              description: "使二次复制的代码索引数值损毁，但影响服务器负载",
               index: 2,
               picked: true,
             },
-            { label: "混淆本地索引（影响帧率表现）", index: 3, picked: false },
+            {
+              label: "混淆本地索引",
+              description: "使本地索引数值不可读，但影响客户端帧率",
+              index: 3,
+              picked: false,
+            },
           ];
           vscode.window
             .showQuickPick(pickItems, {
-              title: "混淆生成   2 / 2",
-              placeHolder: "过滤增强选项",
+              title: "混淆生成  2 / 2",
+              placeHolder: "增强选项",
               canPickMany: true,
             })
             .then((selected) => {
@@ -142,6 +152,7 @@ const disposable = vscode.commands.registerCommand(
                 }
 
                 //替换字符内容 / 移除注释 / 替换禁用（同时进行并为字符串设置高优先级避免冲突，例如字符串中可能包含注释格式//但不应该被解析为注释）
+                let skip_obfuscate_string = false;
                 rules = rules.replace(
                   /(?:(?:(?:自定义字符串|字符串|规则)\s*\(\s*)?"((?:\\"|[^"])*)"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/|禁用\s+)/g,
                   (match, string: string) => {
@@ -155,23 +166,24 @@ const disposable = vscode.commands.registerCommand(
                     ) {
                       //替换混淆字符
                       //console.log(`替换字符：${string} → ❖`);
+
                       strings.push(
-                        options.includes(1)
+                        (options.includes(1) && !skip_obfuscate_string)
                           ? string.replace(
-                              /\{[0-2]\}|(\\[abfnrtv'"\\\\])+|./g,
-                              (char) => {
-                                if (char.length === 1) {
-                                  if (char.match(/[\x00-\x1F\x7F-\x9F\xAD]/g)) {
-                                    //忽略隐形字符
-                                    return char;
-                                  }
-                                  return String.fromCodePoint(
-                                    char.charCodeAt(0) + 0xe0000
-                                  );
+                            /\{[0-2]\}|(\\[abfnrtv'"\\\\])+|./g,
+                            (char) => {
+                              if (char.length === 1) {
+                                if (char.match(/[\x00-\x1F\x7F-\x9F\xAD]/g)) {
+                                  //忽略隐形字符
+                                  return char;
                                 }
-                                return char;
+                                return String.fromCodePoint(
+                                  char.charCodeAt(0) + 0xe0000
+                                );
                               }
-                            )
+                              return char;
+                            }
+                          )
                           : string
                       );
                       return "自定义字符串(❖";
@@ -183,9 +195,18 @@ const disposable = vscode.commands.registerCommand(
                       match.startsWith("//") ||
                       match.startsWith("/*")
                     ) {
+                      if (match === "/* @SKIP_OBFUSCATE_STRING */") {
+                        //跳过混淆字符开始标记
+                        skip_obfuscate_string = true;
+                      } else if (match === "/* @SKIP_OBFUSCATE_STRING_END */") {
+                        //跳过混淆字符结束标记
+                        skip_obfuscate_string = false;
+                      }
+
                       //移除单行和多行注释
                       //console.log(`移除行注释：${match} → 🗑️`);
                       return "";
+
                     } else if (match.startsWith("禁用")) {
                       //替换禁用
                       //console.log(`替换禁用：${match} → ⟁`);
@@ -447,22 +468,22 @@ const disposable = vscode.commands.registerCommand(
                               //混淆索引
                               return options.includes(2)
                                 ? entry.replace(
-                                    /\[(\d+)\]/g,
-                                    (match, number) => {
-                                      // 预留330 = 查看器警告2 + 篡改保护25 + 填充规则300 + 允许继续的自身3
-                                      if (
-                                        elementCount >=
-                                        (options.includes(0) ? 330 : 30)
-                                      ) {
-                                        //加密服务端计算条目其它索引
-                                        elementCount -= 3;
-                                        return `[乘(10000000, ${(
-                                          parseInt(number) * 0.0000001
-                                        ).toFixed(7)})]`;
-                                      }
-                                      return match;
+                                  /\[(\d+)\]/g,
+                                  (match, number) => {
+                                    // 预留330 = 查看器警告2 + 篡改保护25 + 填充规则300 + 允许继续的自身3
+                                    if (
+                                      elementCount >=
+                                      (options.includes(0) ? 330 : 30)
+                                    ) {
+                                      //加密服务端计算条目其它索引
+                                      elementCount -= 3;
+                                      return `[乘(10000000, ${(
+                                        parseInt(number) * 0.0000001
+                                      ).toFixed(7)})]`;
                                     }
-                                  )
+                                    return match;
+                                  }
+                                )
                                 : entry;
                             })
                             .join("\n");
@@ -525,11 +546,10 @@ const disposable = vscode.commands.registerCommand(
                                         //加密服务端计算条目其它索引
                                         elementCount -= 3;
                                         const value = parseInt(number);
-                                        return `[乘(10000000, ${
-                                          value === 0
-                                            ? 0
-                                            : (value * 0.0000001).toFixed(7)
-                                        })]`;
+                                        return `[乘(10000000, ${value === 0
+                                          ? 0
+                                          : (value * 0.0000001).toFixed(7)
+                                          })]`;
                                       }
                                       return match;
                                     }
@@ -600,19 +620,20 @@ const disposable = vscode.commands.registerCommand(
                   return `"${strings.shift()}"`;
                 });
 
-                //混淆规则名称
-                //拟合 (17388 - 总规则数量) / 总规则数量 = 单规则名称倍率
-                const nameLength =
-                  (17388 - obfuscatedRules.length) / obfuscatedRules.length;
-                rules = rules.replace(
-                  /规则\(""\)/g,
-                  () =>
-                    `规则("${`\n${
-                      obfuscatedNames[
+                if (options.includes(0)) {
+                  //混淆规则名称
+                  //拟合 (17388 - 总规则数量) / 总规则数量 = 单规则名称倍率
+                  const nameLength =
+                    (17388 - obfuscatedRules.length) / obfuscatedRules.length;
+                  rules = rules.replace(
+                    /规则\(""\)/g,
+                    () =>
+                      `规则("${`\n${obfuscatedNames[
                         Math.floor(Math.random() * obfuscatedNames.length)
                       ]
-                    }`.repeat(getRandomInt(nameLength, nameLength + 2))}")`
-                );
+                        }`.repeat(getRandomInt(nameLength, nameLength + 2))}")`
+                  );
+                }
 
                 //混淆子程序列表
                 if (obfuscatedList.子程序.length > 0) {

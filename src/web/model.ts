@@ -2684,6 +2684,13 @@ let 常量: 常量类型 = {
       图标: "images/ow/hero/avatar/tank_hazard_avatar.png",
       拼音: "Hai Zai",
     },
+    {
+      名称: "弗蕾娅",
+      标签: ["英雄", "输出"],
+      提示: "弗蕾娅曾经是守望先锋搜救小队的一员，在守望先锋解散后，成为了赏金猎人。",
+      图标: "images/ow/hero/avatar/damage_freja_avatar.png",
+      拼音: "Fu Lei Ya",
+    },
   ],
   HUD位置: [
     {

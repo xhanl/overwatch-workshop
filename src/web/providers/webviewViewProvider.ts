@@ -887,6 +887,17 @@ ${buildHero({
           melee: "damage_venture_melee.png",
         })}
 
+${buildHero({
+          name: "弗蕾娅",
+          avatar: "damage_freja_avatar.png",
+          primaryWeapon: "damage_freja_weapon.png",
+          secondary: "damage_freja_secondaryfire.png",
+          ultimate: "damage_freja_ultimate.png",
+          ability1: "damage_freja_ability1.png",
+          ability2: "damage_freja_ability2.png",
+          melee: "melee.png",
+        })}
+
 </tbody>
 </table>
 
