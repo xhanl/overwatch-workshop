@@ -620,20 +620,18 @@ const disposable = vscode.commands.registerCommand(
                   return `"${strings.shift()}"`;
                 });
 
-                if (options.includes(0)) {
-                  //混淆规则名称
-                  //拟合 (17388 - 总规则数量) / 总规则数量 = 单规则名称倍率
-                  const nameLength =
-                    (17388 - obfuscatedRules.length) / obfuscatedRules.length;
-                  rules = rules.replace(
-                    /规则\(""\)/g,
-                    () =>
-                      `规则("${`\n${obfuscatedNames[
-                        Math.floor(Math.random() * obfuscatedNames.length)
-                      ]
-                        }`.repeat(getRandomInt(nameLength, nameLength + 2))}")`
-                  );
-                }
+                //混淆规则名称
+                //拟合 (17388 - 总规则数量) / 总规则数量 = 单规则名称倍率
+                const nameLength =
+                  (17388 - obfuscatedRules.length) / obfuscatedRules.length;
+                rules = rules.replace(
+                  /规则\(""\)/g,
+                  () =>
+                    `规则("${options.includes(0) ? `\n${obfuscatedNames[
+                      Math.floor(Math.random() * obfuscatedNames.length)
+                    ]
+                      }`.repeat(getRandomInt(nameLength, nameLength + 2)) : ""}")`
+                );
 
                 //混淆子程序列表
                 if (obfuscatedList.子程序.length > 0) {

@@ -9,7 +9,6 @@ const disposable = vscode.commands.registerCommand(
       vscode.window
         .showSaveDialog({
           filters: {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             "ow Files": ["ow"],
           },
         })
