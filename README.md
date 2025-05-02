@@ -252,4 +252,4 @@
 
 - ### **MIT License**
 
-  _Copyright (c) 2025 present Crvia Platform_
+  _Copyright (c) 2025 present CRVIA platform_
