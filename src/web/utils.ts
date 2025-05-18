@@ -37,7 +37,7 @@ function getVariableIndex(prevText: string) {
   return index;
 }
 
-function getSubprogramIndex(prevText: string) {
+function getSubroutineIndex(prevText: string) {
   let index;
   if (prevText.trim() === "{") {
     index = 0;
@@ -79,14 +79,16 @@ function getRandomNumber(min: number, max: number) {
 //获取动态类型
 function getDynamicKind(text: string) {
   let match;
-  if (
+  if ((match = text.match(/^子程序|调用子程序|开始规则$/))) {
+    return "子程序";
+  } else if ((match = text.match(/^当前数组元素$/))) {
+    return "所有变量";
+  } else if (
     (match = text.match(
       /^全局|For 全局变量|设置全局变量|修改全局变量|在索引处设置全局变量|在索引处修改全局变量|持续追踪全局变量|追踪全局变量频率|停止追踪全局变量$/
     ))
   ) {
     return "全局变量";
-  } else if ((match = text.match(/^子程序|调用子程序|开始规则$/))) {
-    return "子程序";
   } else {
     return "玩家变量";
   }
@@ -99,6 +101,7 @@ function getDynamicList(document: vscode.TextDocument) {
   let globalVariables: Record<string, string> = {};
   let playerVariables: Record<string, string> = {};
   let subroutines: Record<string, string> = {};
+
   for (let i = 0; i < document.lineCount; i++) {
     const line = document.lineAt(i);
     const text = line.text.trim();
@@ -1177,7 +1180,7 @@ export {
   EXTENSION_URI,
   shuffleArray,
   getVariableIndex,
-  getSubprogramIndex,
+  getSubroutineIndex,
   getRandomInt,
   getRandomNumber,
   getDynamicKind,

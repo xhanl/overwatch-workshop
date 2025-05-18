@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getEntry, getScope, getSubprogramIndex, getVariableIndex } from "../utils";
+import { getEntry, getScope, getSubroutineIndex, getVariableIndex } from "../utils";
 import { 规则 } from "../model";
 
 //补全占位符监视
@@ -52,7 +52,7 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
         } else if (scope.name === "子程序") {
           const line = event.document.lineAt(change.range.end.line);
           const text = line.text;
-          const index = getSubprogramIndex(text);
+          const index = getSubroutineIndex(text);
           if (index === undefined) {
             return;
           }

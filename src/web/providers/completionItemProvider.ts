@@ -1,6 +1,15 @@
 import * as vscode from "vscode";
-import { buildCompletion, getDynamicList, getEntry, getScope, getSubprogramIndex, getVariableIndex } from "../utils";
+import {
+  buildCompletion,
+  getDynamicList,
+  getEntry,
+  getScope,
+  getSubroutineIndex,
+  getVariableIndex,
+} from "../utils";
 import { 扩展, 模版, 规则 } from "../model";
+
+const DYNAMIC_ENTRY_KIND_RE = /^所有变量|全局变量|玩家变量|子程序$/;
 
 class CompletionItemProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(
@@ -85,7 +94,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         let pos = scope.range.end;
         let line = pos.line;
         let prevText = document.lineAt(line - 1).text;
-        let index = getSubprogramIndex(prevText);
+        let index = getSubroutineIndex(prevText);
         if (index === undefined) {
           return [];
         }
@@ -190,7 +199,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
           }
         } else if (entry.kind === "条件") {
           return buildStaticCompletions(规则.条件);
-        } else if (entry.kind.match(/^全局变量|玩家变量|子程序$/)) {
+        } else if (entry.kind.match(DYNAMIC_ENTRY_KIND_RE)) {
           return buildDynamicCompletions(entry.kind);
         }
       }
@@ -228,7 +237,9 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
                 return buildStaticCompletions(规则.条件);
               } else if (param.选项) {
                 return buildStaticCompletions(param.选项);
-              } else if (param.类型.match(/^全局变量|玩家变量|子程序$/)) {
+              } else if (
+                param.类型.match(DYNAMIC_ENTRY_KIND_RE)
+              ) {
                 return buildDynamicCompletions(param.类型);
               }
             }
@@ -255,7 +266,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
             );
           } else if (entry.kind === "条件") {
             return buildStaticCompletions(规则.条件);
-          } else if (entry.kind.match(/^全局变量|玩家变量|子程序$/)) {
+          } else if (entry.kind.match(DYNAMIC_ENTRY_KIND_RE)) {
             return buildDynamicCompletions(entry.kind);
           }
         } catch (error) {
@@ -282,37 +293,53 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         return completions;
       }
 
-      //构建动态补全列表：全局变量/玩家变量/子程序
+      //构建动态补全列表：所有变量/全局变量/玩家变量/子程序
       function buildDynamicCompletions(type: string) {
         const dynamicList = getDynamicList(document);
-        let completionItems = [];
-        if (type === "全局变量") {
+        let completionItems: vscode.CompletionItem[] = [];
+        if (type === "所有变量") {
+          buildGlobalVariableCompletions();
+          buildPlayerVariableCompletions();
+        } else if (type === "全局变量") {
+          buildGlobalVariableCompletions();
+        } else if (type === "玩家变量") {
+          buildPlayerVariableCompletions();
+        } else if (type === "子程序") {
+          buildSubroutineCompletions();
+        }
+        return completionItems;
+
+        function buildGlobalVariableCompletions() {
           for (const [key, value] of Object.entries(dynamicList.全局变量)) {
             let item = buildCompletion({
-              label: key.padStart(3, "0") + ": " + value,
+              label: value,
               kind: vscode.CompletionItemKind.Variable,
               tags: ["全局变量", key],
               details: `一个已定义的全局变量。`,
               filterText: (key.padStart(3, "0") + value).split("").join(" "),
               insertText: value,
-              sortText: key.padStart(3, "0") + value,
+              sortText: "G" + key.padStart(3, "0") + value,
             });
             completionItems.push(item);
           }
-        } else if (type === "玩家变量") {
+        }
+
+        function buildPlayerVariableCompletions() {
           for (const [key, value] of Object.entries(dynamicList.玩家变量)) {
             let item = buildCompletion({
-              label: key.padStart(3, "0") + ": " + value,
+              label: value,
               kind: vscode.CompletionItemKind.Variable,
               tags: ["玩家变量", key],
               details: `一个已定义的玩家变量。`,
               filterText: (key.padStart(3, "0") + value).split("").join(" "),
               insertText: value,
-              sortText: key.padStart(3, "0") + value,
+              sortText: "P" + key.padStart(3, "0") + value,
             });
             completionItems.push(item);
           }
-        } else if (type === "子程序") {
+        }
+
+        function buildSubroutineCompletions() {
           for (const [key, value] of Object.entries(dynamicList.子程序)) {
             let item = buildCompletion({
               label: key.padStart(3, "0") + ": " + value,
@@ -326,7 +353,6 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
             completionItems.push(item);
           }
         }
-        return completionItems;
       }
     } catch (error) {
       console.log("错误：provideCompletionItems 补全建议能力");

@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import {
   buildHover,
-  getDynamicList,
   getDynamicKind,
+  getDynamicList,
   getPrevValidWordRange,
   getScope,
 } from "../utils";
@@ -12,7 +12,7 @@ class HoverProvider implements vscode.HoverProvider {
   provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,
-    token: vscode.CancellationToken
+    token: vscode.CancellationToken,
   ): vscode.ProviderResult<vscode.Hover> {
     try {
       const hoverRange = document.getWordRangeAtPosition(position);
@@ -103,46 +103,106 @@ class HoverProvider implements vscode.HoverProvider {
       }
 
       //匹配动态悬停
-      function matchDynamicHover() {
+      function matchDynamicHover(): vscode.Hover | undefined {
         let match;
         if ((match = hoverText.match(/\b[_a-zA-Z][_a-zA-Z0-9]*\b/))) {
           const range = getPrevValidWordRange(document, position);
           const text = document.getText(range);
-          return buildDynamicHover(getDynamicKind(text));
-        }
-      }
+          const dynamicList = getDynamicList(document);
+          const dynamicKind = getDynamicKind(text);
 
-      //构建动态悬停
-      function buildDynamicHover(type: string) {
-        const dynamicList = getDynamicList(document);
-        if (type === "全局变量") {
-          for (const i in dynamicList.全局变量) {
-            if (hoverText === dynamicList.全局变量[i]) {
+          // vscode.window.showInformationMessage(`文本：${text}, 类型：${dynamicKind}`); // 调试
+
+          if (dynamicKind === "所有变量") {
+            return buildVariableHover();
+          } else if (dynamicKind === "全局变量") {
+            return buildGlobalVariableHover();
+          } else if (dynamicKind === "玩家变量") {
+            return buildPlayerVariableHover();
+          } else if (dynamicKind === "子程序") {
+            return buildSubroutineHover();
+          }
+          return;
+
+          function buildVariableHover(): vscode.Hover | undefined {
+            let globalVariableIndex = "";
+            for (const i in dynamicList.全局变量) {
+              if (hoverText === dynamicList.全局变量[i]) {
+                globalVariableIndex = i;
+                break;
+              }
+            }
+
+            let playerVariableIndex = "";
+            for (const i in dynamicList.玩家变量) {
+              if (hoverText === dynamicList.玩家变量[i]) {
+                playerVariableIndex = i;
+                break;
+              }
+            }
+
+            const globalVariableExists = globalVariableIndex.length > 0;
+            const playerVariableExists = playerVariableIndex.length > 0;
+
+            if (globalVariableExists && playerVariableExists) {
               return buildHover({
                 name: hoverText,
-                tags: ["全局变量", i],
+                tags: [
+                  "全局变量",
+                  globalVariableIndex,
+                  "玩家变量",
+                  playerVariableIndex,
+                ],
+                details: `一个已定义的全局变量或玩家变量。`,
+              });
+            } else if (globalVariableExists) {
+              return buildHover({
+                name: hoverText,
+                tags: ["全局变量", globalVariableIndex],
                 details: `一个已定义的全局变量。`,
               });
-            }
-          }
-        } else if (type === "玩家变量") {
-          for (const i in dynamicList.玩家变量) {
-            if (hoverText === dynamicList.玩家变量[i]) {
+            } else if (playerVariableExists) {
               return buildHover({
                 name: hoverText,
-                tags: ["玩家变量", i],
+                tags: ["玩家变量", playerVariableIndex],
                 details: `一个已定义的玩家变量。`,
               });
             }
           }
-        } else if (type === "子程序") {
-          for (const i in dynamicList.子程序) {
-            if (hoverText === dynamicList.子程序[i]) {
-              return buildHover({
-                name: hoverText,
-                tags: ["子程序", i],
-                details: `一个已定义的子程序。`,
-              });
+
+          function buildGlobalVariableHover(): vscode.Hover | undefined {
+            for (const i in dynamicList.全局变量) {
+              if (hoverText === dynamicList.全局变量[i]) {
+                return buildHover({
+                  name: hoverText,
+                  tags: ["全局变量", i],
+                  details: `一个已定义的全局变量。`,
+                });
+              }
+            }
+          }
+
+          function buildPlayerVariableHover(): vscode.Hover | undefined {
+            for (const i in dynamicList.玩家变量) {
+              if (hoverText === dynamicList.玩家变量[i]) {
+                return buildHover({
+                  name: hoverText,
+                  tags: ["玩家变量", i],
+                  details: `一个已定义的玩家变量。`,
+                });
+              }
+            }
+          }
+
+          function buildSubroutineHover(): vscode.Hover | undefined {
+            for (const i in dynamicList.子程序) {
+              if (hoverText === dynamicList.子程序[i]) {
+                return buildHover({
+                  name: hoverText,
+                  tags: ["子程序", i],
+                  details: `一个已定义的子程序。`,
+                });
+              }
             }
           }
         }
@@ -157,7 +217,7 @@ class HoverProvider implements vscode.HoverProvider {
 //悬停提示能力
 const disposable = vscode.languages.registerHoverProvider(
   "ow",
-  new HoverProvider()
+  new HoverProvider(),
 );
 
 export default disposable;
