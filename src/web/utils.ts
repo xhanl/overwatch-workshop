@@ -178,7 +178,7 @@ function getPrevValidPosition(
     // skip to whitespace start
     const whitespaceRegex = /\s+$/;
     const lineText = document.lineAt(pos.line).text;
-    const match = lineText.substr(0, pos.character).match(whitespaceRegex);
+    const match = lineText.substring(0, pos.character).match(whitespaceRegex);
     if (match) {
       const whitespaceLength = match[0].length;
       return pos.translate(0, -whitespaceLength);
@@ -205,7 +205,7 @@ function getNextValidPosition(
     // skip to whitespace end
     const whitespaceRegex = /^\s+/;
     const lineText = document.lineAt(pos.line).text;
-    const match = lineText.substr(pos.character).match(whitespaceRegex);
+    const match = lineText.substring(pos.character).match(whitespaceRegex);
     if (match) {
       const whitespaceLength = match[0].length;
       return pos.translate(0, whitespaceLength);

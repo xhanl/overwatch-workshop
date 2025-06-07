@@ -115,9 +115,14 @@ const disposable = vscode.commands.registerCommand(
                       block = match[0];
                     }
                     range = line.range;
+
+                    // 兼容行尾括号格式
+                    if (trimText.endsWith("{")) {
+                      stack++;
+                    }
                   } else if (trimText === "{") {
                     stack++;
-                  } else if (trimText === "}") {
+                  } else if (trimText === "}" || trimText.endsWith("}")) { // 兼容行尾括号格式
                     stack--;
                     if (stack === 0) {
                       switch (block) {
