@@ -4,7 +4,7 @@
   "displayName": "Overwatch Workshop",
   "description": "守望先锋® 工坊语言支持（中文）",
   "publisher": "Xcrystal",
-  "version": "3.9.2",
+  "version": "3.9.3",
   "engines": {
     "vscode": "^1.86.0"
   },
