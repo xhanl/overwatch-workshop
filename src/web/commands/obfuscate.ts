@@ -122,11 +122,20 @@ const disposable = vscode.commands.registerCommand(
 
                     // 兼容行尾括号格式
                     if (trimText.endsWith("{")) {
+                      vscode.window.showWarningMessage(
+                        `格式不标准：请为第 ${i + 1} 行中的 "{" 单独换行，否则可能导致解析错误`
+                      );
                       stack++;
                     }
                   } else if (trimText === "{") {
                     stack++;
-                  } else if (trimText === "}" || trimText.endsWith("}")) { // 兼容行尾括号格式
+                  } else if (trimText.endsWith("}")) { // 兼容行尾括号格式
+                    if (trimText !== "}") {
+                      vscode.window.showWarningMessage(
+                        `格式不标准：请为第 ${i + 1} 行中的 "}" 单独换行，否则可能导致解析错误`
+                      );
+                    }
+
                     stack--;
                     if (stack === 0) {
                       switch (block) {
