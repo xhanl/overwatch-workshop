@@ -106,13 +106,17 @@ const disposable = vscode.commands.registerCommand(
                   if (
                     stack === 0 &&
                     (match = trimText.match(
-                      /^(?:设置|变量|子程序|(?:禁用\s*)?规则.*)$/
+                      /^(?:设置|变量|子程序|(?:禁用\s*)?规则).*$/
                     ))
                   ) {
-                    if (match[0].length > 3) {
+                    if (trimText.startsWith("设置")) {
+                      block = "设置";
+                    } else if (trimText.startsWith("变量")) {
+                      block = "变量";
+                    } else if (trimText.startsWith("子程序")) {
+                      block = "子程序";
+                    } else if (trimText.startsWith("禁用") || trimText.startsWith("规则")) {
                       block = "规则";
-                    } else {
-                      block = match[0];
                     }
                     range = line.range;
 
