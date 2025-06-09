@@ -94,7 +94,7 @@ const disposable = vscode.commands.registerCommand(
               //获取用户配置
               const rememberOption = selected.find(option => option.index === -1);
               const shouldRemember = rememberOption !== undefined;
-              
+
               const options = selected
                 .filter(option => option.index >= 0)
                 .map(option => option.index);
@@ -180,6 +180,7 @@ const disposable = vscode.commands.registerCommand(
                             settings = document.getText(
                               range.union(line.range)
                             );
+                            //vscode.window.showInformationMessage(settings);
                           }
                           break;
                         case "变量":
@@ -190,7 +191,7 @@ const disposable = vscode.commands.registerCommand(
                             variables = document.getText(
                               range.union(line.range)
                             );
-                            vscode.window.showInformationMessage(variables);
+                            //vscode.window.showInformationMessage(variables);
                           }
                           break;
                         case "子程序":
@@ -201,7 +202,7 @@ const disposable = vscode.commands.registerCommand(
                             subroutines = document.getText(
                               range.union(line.range)
                             );
-                            vscode.window.showInformationMessage(subroutines);
+                            //vscode.window.showInformationMessage(subroutines);
                           }
                           break;
                         case "规则":
@@ -213,6 +214,7 @@ const disposable = vscode.commands.registerCommand(
                             rules = document.getText(
                               range.union(document.lineAt(i).range)
                             );
+                            //vscode.window.showInformationMessage(rules);
                           }
                           break;
                       }
