@@ -11,11 +11,18 @@ const disposable = vscode.commands.registerCommand(
   "ow.command.obfuscate",
   () => {
     try {
+      // 获取配置
+      const config = vscode.workspace.getConfiguration('ow.obfuscate');
+      const rememberSettings = config.get<boolean>('enableMemory', true);
+      const lastElementCount = config.get<number | null>('lastElementCount', null);
+      const lastOptions = config.get<number[]>('lastOptions', [0, 1, 2, 3]);
+
       vscode.window
         .showInputBox({
           title: "混淆生成  1 / 2",
           placeHolder: "如何获取：地图工坊 → 显示诊断结果 → 总计元素数量",
           prompt: "请提供原生代码的总元素数量",
+          value: rememberSettings ? lastElementCount?.toString() : undefined,
           validateInput: (value) => {
             const intValue = parseInt(value);
             if (isNaN(intValue)) {
@@ -32,30 +39,44 @@ const disposable = vscode.commands.registerCommand(
             //用户取消
             return;
           }
+
+          // 添加记忆功能选项
           const pickItems = [
             {
+              label: "记住设置",
+              description: "记住本次输入的元素数量和选项，下次自动填入",
+              index: -1,
+              picked: rememberSettings,
+            },
+            {
               label: "混淆规则",
-              description: "阻止游戏内编辑，将填满元素",
+              description: "填充虚假规则",
               index: 0,
-              picked: true,
+              picked: rememberSettings ? lastOptions.includes(0) : true,
+            },
+            {
+              label: "混淆变量",
+              description: "修改变量和子程序名称为不可读文本，填充虚假变量",
+              index: 1,
+              picked: rememberSettings ? lastOptions.includes(1) : true,
             },
             {
               label: "混淆字符",
               description: "隐藏字符串，但影响字符比较，例如字符串比较玩家名称。使用注释标记 `/* @SKIP_OBFUSCATE_STRING */` 和 `/* @SKIP_OBFUSCATE_STRING_END */` 来跳过这些",
-              index: 1,
-              picked: true,
+              index: 2,
+              picked: rememberSettings ? lastOptions.includes(2) : true,
             },
             {
               label: "混淆索引",
               description: "使二次复制的代码索引数值损毁，但影响服务器负载",
-              index: 2,
-              picked: true,
+              index: 3,
+              picked: rememberSettings ? lastOptions.includes(3) : true,
             },
             {
               label: "混淆本地索引",
               description: "使本地索引数值不可读，但影响客户端帧率",
-              index: 3,
-              picked: false,
+              index: 4,
+              picked: rememberSettings ? lastOptions.includes(4) : false,
             },
           ];
           vscode.window
@@ -71,9 +92,21 @@ const disposable = vscode.commands.registerCommand(
               }
 
               //获取用户配置
-              const options = selected.map((option) => {
-                return option.index;
-              });
+              const rememberOption = selected.find(option => option.index === -1);
+              const shouldRemember = rememberOption !== undefined;
+              
+              const options = selected
+                .filter(option => option.index >= 0)
+                .map(option => option.index);
+
+              // 保存设置
+              if (shouldRemember) {
+                config.update('rememberSettings', true, vscode.ConfigurationTarget.Global);
+                config.update('lastElementCount', parseInt(value), vscode.ConfigurationTarget.Global);
+                config.update('lastOptions', options, vscode.ConfigurationTarget.Global);
+              } else {
+                config.update('rememberSettings', false, vscode.ConfigurationTarget.Global);
+              }
 
               //最大元素数量
               const input = parseInt(value);
@@ -150,8 +183,26 @@ const disposable = vscode.commands.registerCommand(
                           }
                           break;
                         case "变量":
+                          {
+                            if (range === undefined) {
+                              throw new Error("无法获取设置范围");
+                            }
+                            variables = document.getText(
+                              range.union(line.range)
+                            );
+                            vscode.window.showInformationMessage(variables);
+                          }
                           break;
                         case "子程序":
+                          {
+                            if (range === undefined) {
+                              throw new Error("无法获取设置范围");
+                            }
+                            subroutines = document.getText(
+                              range.union(line.range)
+                            );
+                            vscode.window.showInformationMessage(subroutines);
+                          }
                           break;
                         case "规则":
                           {
@@ -186,7 +237,7 @@ const disposable = vscode.commands.registerCommand(
                       //console.log(`替换字符：${string} → ❖`);
 
                       strings.push(
-                        (options.includes(1) && !skip_obfuscate_string)
+                        (options.includes(2) && !skip_obfuscate_string)
                           ? string.replace(
                             /\{[0-2]\}|(\\[abfnrtv'"\\\\])+|./g,
                             (char) => {
@@ -263,202 +314,229 @@ const disposable = vscode.commands.registerCommand(
                 );
 
                 //获取混淆名称
-                const obfuscatedNames = getObfuscatedNames(128);
-                let obfuscatedList: {
-                  子程序: string[];
-                  全局变量: string[];
-                  玩家变量: string[];
-                } = {
-                  子程序: [],
-                  全局变量: [],
-                  玩家变量: [],
-                };
+                if (options.includes(1)) {
+                  const obfuscatedNames = getObfuscatedNames(128);
+                  let obfuscatedList: {
+                    子程序: string[];
+                    全局变量: string[];
+                    玩家变量: string[];
+                  } = {
+                    子程序: [],
+                    全局变量: [],
+                    玩家变量: [],
+                  };
 
-                //混淆子程序
-                for (const i in dynamicList.子程序) {
-                  const index = parseInt(i);
+                  //混淆子程序
+                  for (const i in dynamicList.子程序) {
+                    const index = parseInt(i);
 
-                  //更新混淆列表
-                  obfuscatedList.子程序.push(obfuscatedNames[index]);
+                    //更新混淆列表
+                    obfuscatedList.子程序.push(obfuscatedNames[index]);
 
-                  //事件
-                  rules = rules.replace(
-                    RegExp(`^\\b${dynamicList.子程序[index]}\\b;$`, "gm"),
-                    `${obfuscatedNames[index]};`
-                  );
-                  //开始规则
-                  rules = rules.replace(
-                    RegExp(
-                      `开始规则\\(\\b${dynamicList.子程序[index]}\\b,(.*)\\);`,
-                      "g"
-                    ),
-                    `开始规则(${obfuscatedNames[index]},$1);`
-                  );
-                  //调用子程序
-                  rules = rules.replace(
-                    RegExp(
-                      `调用子程序\\(\\b${dynamicList.子程序[index]}\\b\\);`,
-                      "g"
-                    ),
-                    `调用子程序(${obfuscatedNames[index]});`
-                  );
-                }
+                    //事件
+                    rules = rules.replace(
+                      RegExp(`^\\b${dynamicList.子程序[index]}\\b;$`, "gm"),
+                      `${obfuscatedNames[index]};`
+                    );
+                    //开始规则
+                    rules = rules.replace(
+                      RegExp(
+                        `开始规则\\(\\b${dynamicList.子程序[index]}\\b,(.*)\\);`,
+                        "g"
+                      ),
+                      `开始规则(${obfuscatedNames[index]},$1);`
+                    );
+                    //调用子程序
+                    rules = rules.replace(
+                      RegExp(
+                        `调用子程序\\(\\b${dynamicList.子程序[index]}\\b\\);`,
+                        "g"
+                      ),
+                      `调用子程序(${obfuscatedNames[index]});`
+                    );
+                  }
 
-                //混淆全局变量
-                for (const i in dynamicList.全局变量) {
-                  const index = parseInt(i);
+                  //混淆全局变量
+                  for (const i in dynamicList.全局变量) {
+                    const index = parseInt(i);
 
-                  //更新混淆列表
-                  obfuscatedList.全局变量.push(obfuscatedNames[index]);
+                    //更新混淆列表
+                    obfuscatedList.全局变量.push(obfuscatedNames[index]);
 
-                  //前缀为 "全局."
-                  rules = rules.replace(
-                    RegExp(`全局\\.\\b${dynamicList.全局变量[index]}\\b`, "g"),
-                    `全局.${obfuscatedNames[index]}`
-                  );
+                    //前缀为 "全局."
+                    rules = rules.replace(
+                      RegExp(`全局\\.\\b${dynamicList.全局变量[index]}\\b`, "g"),
+                      `全局.${obfuscatedNames[index]}`
+                    );
 
-                  //For 全局变量
-                  rules = rules.replace(
-                    RegExp(
-                      `For 全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `For 全局变量(${obfuscatedNames[index]},$1,$2,$3);`
-                  );
-                  //设置全局变量
-                  rules = rules.replace(
-                    RegExp(
-                      `设置全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*)\\);`,
-                      "g"
-                    ),
-                    `设置全局变量(${obfuscatedNames[index]},$1);`
-                  );
-                  //修改全局变量
-                  rules = rules.replace(
-                    RegExp(
-                      `修改全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `修改全局变量(${obfuscatedNames[index]},$1,$2);`
-                  );
-                  //在索引处设置全局变量
-                  rules = rules.replace(
-                    RegExp(
-                      `在索引处设置全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `在索引处设置全局变量(${obfuscatedNames[index]},$1,$2);`
-                  );
-                  //在索引处修改全局变量
-                  rules = rules.replace(
-                    RegExp(
-                      `在索引处修改全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `在索引处修改全局变量(${obfuscatedNames[index]},$1,$2,$3);`
-                  );
-                  //持续追踪全局变量
-                  rules = rules.replace(
-                    RegExp(
-                      `持续追踪全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `持续追踪全局变量(${obfuscatedNames[index]},$1,$2,$3);`
-                  );
-                  //追踪全局变量频率
-                  rules = rules.replace(
-                    RegExp(
-                      `追踪全局变量频率\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `追踪全局变量频率(${obfuscatedNames[index]},$1,$2,$3);`
-                  );
-                  //停止追踪全局变量
-                  rules = rules.replace(
-                    RegExp(
-                      `停止追踪全局变量\\(\\b${dynamicList.全局变量[index]}\\b\\);`,
-                      "g"
-                    ),
-                    `停止追踪全局变量(${obfuscatedNames[index]});`
-                  );
-                }
+                    //For 全局变量
+                    rules = rules.replace(
+                      RegExp(
+                        `For 全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `For 全局变量(${obfuscatedNames[index]},$1,$2,$3);`
+                    );
+                    //设置全局变量
+                    rules = rules.replace(
+                      RegExp(
+                        `设置全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*)\\);`,
+                        "g"
+                      ),
+                      `设置全局变量(${obfuscatedNames[index]},$1);`
+                    );
+                    //修改全局变量
+                    rules = rules.replace(
+                      RegExp(
+                        `修改全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `修改全局变量(${obfuscatedNames[index]},$1,$2);`
+                    );
+                    //在索引处设置全局变量
+                    rules = rules.replace(
+                      RegExp(
+                        `在索引处设置全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `在索引处设置全局变量(${obfuscatedNames[index]},$1,$2);`
+                    );
+                    //在索引处修改全局变量
+                    rules = rules.replace(
+                      RegExp(
+                        `在索引处修改全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `在索引处修改全局变量(${obfuscatedNames[index]},$1,$2,$3);`
+                    );
+                    //持续追踪全局变量
+                    rules = rules.replace(
+                      RegExp(
+                        `持续追踪全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `持续追踪全局变量(${obfuscatedNames[index]},$1,$2,$3);`
+                    );
+                    //追踪全局变量频率
+                    rules = rules.replace(
+                      RegExp(
+                        `追踪全局变量频率\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `追踪全局变量频率(${obfuscatedNames[index]},$1,$2,$3);`
+                    );
+                    //停止追踪全局变量
+                    rules = rules.replace(
+                      RegExp(
+                        `停止追踪全局变量\\(\\b${dynamicList.全局变量[index]}\\b\\);`,
+                        "g"
+                      ),
+                      `停止追踪全局变量(${obfuscatedNames[index]});`
+                    );
+                  }
 
-                //混淆玩家变量
-                for (const i in dynamicList.玩家变量) {
-                  const index = parseInt(i);
+                  //混淆玩家变量
+                  for (const i in dynamicList.玩家变量) {
+                    const index = parseInt(i);
 
-                  //更新混淆列表
-                  obfuscatedList.玩家变量.push(obfuscatedNames[index]);
+                    //更新混淆列表
+                    obfuscatedList.玩家变量.push(obfuscatedNames[index]);
 
-                  //前缀为 "."
-                  rules = rules.replace(
-                    RegExp(`\\.\\b${dynamicList.玩家变量[index]}\\b`, "g"),
-                    `.${obfuscatedNames[index]}`
-                  );
-                  //For 玩家变量
-                  rules = rules.replace(
-                    RegExp(
-                      `For 玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `For 玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
-                  );
-                  //设置玩家变量
-                  rules = rules.replace(
-                    RegExp(
-                      `设置玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*)\\);`,
-                      "g"
-                    ),
-                    `设置玩家变量($1,${obfuscatedNames[index]},$2);`
-                  );
-                  //修改玩家变量
-                  rules = rules.replace(
-                    RegExp(
-                      `修改玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `修改玩家变量($1,${obfuscatedNames[index]},$2,$3);`
-                  );
-                  //在索引处设置玩家变量
-                  rules = rules.replace(
-                    RegExp(
-                      `在索引处设置玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `在索引处设置玩家变量($1,${obfuscatedNames[index]},$2,$3);`
-                  );
-                  //在索引处修改玩家变量
-                  rules = rules.replace(
-                    RegExp(
-                      `在索引处修改玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `在索引处修改玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
-                  );
-                  //持续追踪玩家变量
-                  rules = rules.replace(
-                    RegExp(
-                      `持续追踪玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `持续追踪玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
-                  );
-                  //追踪玩家变量频率
-                  rules = rules.replace(
-                    RegExp(
-                      `追踪玩家变量频率\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
-                      "g"
-                    ),
-                    `追踪玩家变量频率($1,${obfuscatedNames[index]},$2,$3,$4);`
-                  );
-                  //停止追踪玩家变量
-                  rules = rules.replace(
-                    RegExp(
-                      `停止追踪玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b\\);`,
-                      "g"
-                    ),
-                    `停止追踪玩家变量($1,${obfuscatedNames[index]});`
-                  );
+                    //前缀为 "."
+                    rules = rules.replace(
+                      RegExp(`\\.\\b${dynamicList.玩家变量[index]}\\b`, "g"),
+                      `.${obfuscatedNames[index]}`
+                    );
+                    //For 玩家变量
+                    rules = rules.replace(
+                      RegExp(
+                        `For 玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `For 玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
+                    );
+                    //设置玩家变量
+                    rules = rules.replace(
+                      RegExp(
+                        `设置玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*)\\);`,
+                        "g"
+                      ),
+                      `设置玩家变量($1,${obfuscatedNames[index]},$2);`
+                    );
+                    //修改玩家变量
+                    rules = rules.replace(
+                      RegExp(
+                        `修改玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `修改玩家变量($1,${obfuscatedNames[index]},$2,$3);`
+                    );
+                    //在索引处设置玩家变量
+                    rules = rules.replace(
+                      RegExp(
+                        `在索引处设置玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `在索引处设置玩家变量($1,${obfuscatedNames[index]},$2,$3);`
+                    );
+                    //在索引处修改玩家变量
+                    rules = rules.replace(
+                      RegExp(
+                        `在索引处修改玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `在索引处修改玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
+                    );
+                    //持续追踪玩家变量
+                    rules = rules.replace(
+                      RegExp(
+                        `持续追踪玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `持续追踪玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
+                    );
+                    //追踪玩家变量频率
+                    rules = rules.replace(
+                      RegExp(
+                        `追踪玩家变量频率\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        "g"
+                      ),
+                      `追踪玩家变量频率($1,${obfuscatedNames[index]},$2,$3,$4);`
+                    );
+                    //停止追踪玩家变量
+                    rules = rules.replace(
+                      RegExp(
+                        `停止追踪玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b\\);`,
+                        "g"
+                      ),
+                      `停止追踪玩家变量($1,${obfuscatedNames[index]});`
+                    );
+                  }
+
+                  //混淆子程序列表
+                  subroutines = `子程序{\n`;
+                  shuffleArray(obfuscatedNames);
+                  for (const i in obfuscatedNames) {
+                    subroutines += `${i}: ${obfuscatedNames[i]}\n`;
+                  }
+                  subroutines += `}`;
+
+                  //混淆变量列表
+                  variables = `变量{\n`;
+
+                  shuffleArray(obfuscatedNames);
+                  variables += `全局:\n`;
+                  for (const i in obfuscatedNames) {
+                    variables += `${i}: ${obfuscatedNames[i]}\n`;
+                  }
+
+                  shuffleArray(obfuscatedNames);
+                  variables += `玩家:\n`;
+                  for (const i in obfuscatedNames) {
+                    variables += `${i}: ${obfuscatedNames[i]}\n`;
+                  }
+
+                  variables += `}`;
                 }
 
                 //清洗空行
@@ -484,7 +562,7 @@ const disposable = vscode.commands.registerCommand(
                             .split("✂")
                             .map((entry) => {
                               //混淆索引
-                              return options.includes(2)
+                              return options.includes(3)
                                 ? entry.replace(
                                   /\[(\d+)\]/g,
                                   (match, number) => {
@@ -538,7 +616,7 @@ const disposable = vscode.commands.registerCommand(
                                   "设置目标点描述",
                                 ].some((name) => entry.startsWith(name))
                               ) {
-                                if (options.includes(3)) {
+                                if (options.includes(4)) {
                                   //加密客户端计算条目索引
                                   entry = entry.replace(
                                     /\[(\d+)\]/g,
@@ -552,7 +630,7 @@ const disposable = vscode.commands.registerCommand(
                                   );
                                 }
                               } else {
-                                if (options.includes(2)) {
+                                if (options.includes(3)) {
                                   entry = entry.replace(
                                     /\[(\d+)\]/g,
                                     (match, number) => {
@@ -637,47 +715,6 @@ const disposable = vscode.commands.registerCommand(
                 rules = rules.replace(/❖/g, () => {
                   return `"${strings.shift()}"`;
                 });
-
-                //混淆规则名称
-                //拟合 (17388 - 总规则数量) / 总规则数量 = 单规则名称倍率
-                const nameLength =
-                  (17388 - obfuscatedRules.length) / obfuscatedRules.length;
-                rules = rules.replace(
-                  /规则\(""\)/g,
-                  () =>
-                    `规则("${options.includes(0) ? `\n${obfuscatedNames[
-                      Math.floor(Math.random() * obfuscatedNames.length)
-                    ]
-                      }`.repeat(getRandomInt(nameLength, nameLength + 2)) : ""}")`
-                );
-
-                //混淆子程序列表
-                if (obfuscatedList.子程序.length > 0) {
-                  shuffleArray(obfuscatedList.子程序);
-                  subroutines += `子程序{\n`;
-                  for (const i in obfuscatedList.子程序) {
-                    subroutines += `${i}: ${obfuscatedList.子程序[i]}\n`;
-                  }
-                  subroutines += `}`;
-                }
-
-                //混淆变量列表
-                variables += `变量{\n`;
-                if (obfuscatedList.全局变量.length > 0) {
-                  shuffleArray(obfuscatedList.全局变量);
-                  variables += `全局:\n`;
-                  for (const i in obfuscatedList.全局变量) {
-                    variables += `${i}: ${obfuscatedList.全局变量[i]}\n`;
-                  }
-                }
-                if (obfuscatedList.玩家变量.length > 0) {
-                  shuffleArray(obfuscatedList.玩家变量);
-                  variables += `玩家:\n`;
-                  for (const i in obfuscatedList.玩家变量) {
-                    variables += `${i}: ${obfuscatedList.玩家变量[i]}\n`;
-                  }
-                }
-                variables += `}`;
 
                 vscode.env.clipboard.writeText(
                   `${settings}\n${variables}\n${subroutines}\n${rules}`

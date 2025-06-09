@@ -4,7 +4,7 @@
   "displayName": "Overwatch Workshop",
   "description": "守望先锋® 工坊语言支持（中文）",
   "publisher": "Xcrystal",
-  "version": "3.9.3",
+  "version": "3.10.0",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -24,6 +24,25 @@
   "activationEvents": [],
   "browser": "./dist/web/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Overwatch Workshop",
+      "properties": {
+        "ow.obfuscate.enableMemory": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否记住上次的设置"
+        },
+        "ow.obfuscate.lastElementCount": {
+          "type": "number",
+          "description": "上次输入的元素数量"
+        },
+        "ow.obfuscate.lastOptions": {
+          "type": "array",
+          "default": [0, 1, 2, 3],
+          "description": "上次选择的混淆选项"
+        }
+      }
+    },
     "languages": [
       {
         "id": "ow",
