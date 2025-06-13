@@ -22,12 +22,12 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
       function getDocumentSymbol() {
         let symbol:
           | {
-              prevLineText: string;
-              nextLineText: string;
-              kind: vscode.SymbolKind;
-              start: vscode.Position;
-              children?: vscode.DocumentSymbol[];
-            }
+            prevLineText: string;
+            nextLineText: string;
+            kind: vscode.SymbolKind;
+            start: vscode.Position;
+            children?: vscode.DocumentSymbol[];
+          }
           | undefined;
         while (i < document.lineCount) {
           const line = document.lineAt(i);
@@ -82,17 +82,27 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
                   /^(禁用\s*)?规则\s*\(\s*"(.*)"\s*\)$/
                 ))
               ) {
+                let nextLineText = "";
+                for (let j = i + 1; j <= i + 5; j++) {
+                  const nextLine = document.lineAt(j);
+                  nextLineText = nextLine.text.trim();
+                  const eventMatch = nextLineText.match(/^(持续 - 全局|持续 - 每名玩家|玩家造成伤害|玩家造成最后一击|玩家造成治疗|玩家造成击退|玩家阵亡|玩家参与消灭|玩家加入比赛|玩家离开比赛|玩家受到治疗|玩家受到击退|玩家受到伤害|子程序);$/);
+                  if (eventMatch) {
+                    nextLineText = eventMatch[1];
+                    break;
+                  }
+                }
                 if (match[1] === undefined) {
                   symbol = {
-                    prevLineText: "规则",
-                    nextLineText: `${match[2]}`,
+                    prevLineText: `${match[2]}`,
+                    nextLineText,
                     kind: vscode.SymbolKind.Module,
                     start: prevLine.range.start,
                   };
                 } else {
                   symbol = {
-                    prevLineText: "规则",
-                    nextLineText: `⟁ ${match[2]}`,
+                    prevLineText: `⟁ ${match[2]}`,
+                    nextLineText,
                     kind: vscode.SymbolKind.Module,
                     start: prevLine.range.start,
                   };
