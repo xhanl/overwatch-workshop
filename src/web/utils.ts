@@ -77,12 +77,10 @@ function getRandomNumber(min: number, max: number) {
 }
 
 //获取动态类型
-function getDynamicKind(text: string) {
+function getRuleDynamicKind(text: string) {
   let match;
   if ((match = text.match(/^子程序|调用子程序|开始规则$/))) {
     return "子程序";
-  } else if ((match = text.match(/^当前数组元素$/))) {
-    return "所有变量";
   } else if (
     (match = text.match(
       /^全局|For 全局变量|设置全局变量|修改全局变量|在索引处设置全局变量|在索引处修改全局变量|持续追踪全局变量|追踪全局变量频率|停止追踪全局变量$/
@@ -94,13 +92,26 @@ function getDynamicKind(text: string) {
   }
 }
 
-//获取动态列表：[0]扩展，[1]全局变量，[2]玩家变量，[3]子程序
+//获取动态列表：扩展，全局变量，玩家变量，子程序
 function getDynamicList(document: vscode.TextDocument) {
   let type = 0;
   let extensions: string[] = [];
-  let globalVariables: Record<string, string> = {};
-  let playerVariables: Record<string, string> = {};
-  let subroutines: Record<string, string> = {};
+  let globalVariables: Record<string, { name: string, range: vscode.Range }> = {};
+  let playerVariables: Record<string, { name: string, range: vscode.Range }> = {};
+  let subroutines: Record<string, { name: string, range: vscode.Range }> = {};
+
+  // 内部函数：计算匹配项在原始行文本中的准确位置
+  function calculateRange(line: vscode.TextLine, match: RegExpMatchArray, lineIndex: number): vscode.Range {
+    const lineText = line.text;
+    const trimStart = lineText.length - lineText.trimStart().length; // 计算前导空格长度
+    const targetName = match[2]; // 变量名或子程序名
+    // 在trim后的文本中找到目标名称的相对位置，然后加上前导空格的偏移
+    const trimmedIndex = match.index! + match[0].indexOf(targetName);
+    const targetStartIndex = trimStart + trimmedIndex;
+    const startPos = new vscode.Position(lineIndex, targetStartIndex);
+    const endPos = new vscode.Position(lineIndex, targetStartIndex + targetName.length);
+    return new vscode.Range(startPos, endPos);
+  }
 
   for (let i = 0; i < document.lineCount; i++) {
     const line = document.lineAt(i);
@@ -140,21 +151,21 @@ function getDynamicList(document: vscode.TextDocument) {
         /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b/
       ))
     ) {
-      globalVariables[match[1]] = match[2];
+      globalVariables[match[1]] = { name: match[2], range: calculateRange(line, match, i) };
     } else if (
       type === 5 &&
       (match = text.match(
         /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b/
       ))
     ) {
-      playerVariables[match[1]] = match[2];
+      playerVariables[match[1]] = { name: match[2], range: calculateRange(line, match, i) };
     } else if (
       type === 3 &&
       (match = text.match(
         /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b/
       ))
     ) {
-      subroutines[match[1]] = match[2];
+      subroutines[match[1]] = { name: match[2], range: calculateRange(line, match, i) };
     }
   }
   return {
@@ -490,7 +501,7 @@ function getEntry(
           return;
         }
         return {
-          kind: getDynamicKind(name),
+          kind: getRuleDynamicKind(name),
         };
       } else if (
         (match = charText.match(/[\[\+\-\*\/\^\%\<\>\=\!\?\|\&\:]/)) &&
@@ -1183,7 +1194,7 @@ export {
   getSubroutineIndex,
   getRandomInt,
   getRandomNumber,
-  getDynamicKind,
+  getRuleDynamicKind,
   getDynamicList,
   getPrevValidPosition,
   getNextValidPosition,

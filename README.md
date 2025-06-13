@@ -96,6 +96,15 @@
   <img src=".docs/images/readme/switch.png" align=center width=400 />
   </details>
 
+### **重命名**
+
+- 批量修改全局变量，玩家变量，子程序名称
+
+  <details>
+  <summary>预览图片</summary>
+  <img src=".docs/images/readme/rename.png" align=center width=400 />
+  </details>
+
 ### **调色盘**
 
 - 针对自定义颜色的预览和调制能力

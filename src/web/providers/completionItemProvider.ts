@@ -311,14 +311,15 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 
         function buildGlobalVariableCompletions() {
           for (const [key, value] of Object.entries(dynamicList.全局变量)) {
+            const name = value.name;
             let item = buildCompletion({
-              label: value,
+              label: name,
               kind: vscode.CompletionItemKind.Variable,
               tags: ["全局变量", key],
               details: `一个已定义的全局变量。`,
-              filterText: (key.padStart(3, "0") + value).split("").join(" "),
-              insertText: value,
-              sortText: "G" + key.padStart(3, "0") + value,
+              filterText: (key.padStart(3, "0") + name).split("").join(" "),
+              insertText: name,
+              sortText: "G" + key.padStart(3, "0") + name,
             });
             completionItems.push(item);
           }
@@ -326,14 +327,15 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 
         function buildPlayerVariableCompletions() {
           for (const [key, value] of Object.entries(dynamicList.玩家变量)) {
+            const name = value.name;
             let item = buildCompletion({
-              label: value,
+              label: name,
               kind: vscode.CompletionItemKind.Variable,
               tags: ["玩家变量", key],
               details: `一个已定义的玩家变量。`,
-              filterText: (key.padStart(3, "0") + value).split("").join(" "),
-              insertText: value,
-              sortText: "P" + key.padStart(3, "0") + value,
+              filterText: (key.padStart(3, "0") + name).split("").join(" "),
+              insertText: name,
+              sortText: "P" + key.padStart(3, "0") + name,
             });
             completionItems.push(item);
           }
@@ -341,14 +343,15 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 
         function buildSubroutineCompletions() {
           for (const [key, value] of Object.entries(dynamicList.子程序)) {
+            const name = value.name;
             let item = buildCompletion({
-              label: key.padStart(3, "0") + ": " + value,
+              label: key.padStart(3, "0") + ": " + name,
               kind: vscode.CompletionItemKind.Function,
               tags: ["子程序", key],
               details: `一个已定义的子程序。`,
-              filterText: (key.padStart(3, "0") + value).split("").join(" "),
-              insertText: value,
-              sortText: key.padStart(3, "0") + value,
+              filterText: (key.padStart(3, "0") + name).split("").join(" "),
+              insertText: name,
+              sortText: key.padStart(3, "0") + name,
             });
             completionItems.push(item);
           }

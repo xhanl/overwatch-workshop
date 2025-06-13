@@ -444,9 +444,9 @@ const disposable = vscode.commands.registerCommand(
                     //更新混淆列表
                     obfuscatedList.玩家变量.push(obfuscatedNames[index]);
 
-                    //前缀为 "."
+                    //前缀为 "." 但不为 "全局."
                     rules = rules.replace(
-                      RegExp(`\\.\\b${dynamicList.玩家变量[index]}\\b`, "g"),
+                      RegExp(`(?<!全局)\\.\\b${dynamicList.玩家变量[index]}\\b`, "g"),
                       `.${obfuscatedNames[index]}`
                     );
                     //For 玩家变量

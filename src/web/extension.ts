@@ -15,11 +15,15 @@ import documentFormattingEditProvider from "./providers/documentFormattingEditPr
 import documentSemanticTokensProvider from "./providers/documentSemanticTokensProvider";
 import documentSymbolProvider from "./providers/documentSymbolProvider";
 import hoverProvider from "./providers/hoverProvider";
+import renameProvider from "./providers/renameProvider";
 import signatureHelpProvider from "./providers/signatureHelpProvider";
 import webviewViewProvider from "./providers/webviewViewProvider";
 
 export function activate(context: vscode.ExtensionContext) {
+  //准备静态模型
   prepareStaticModel(context.extensionUri);
+
+  //注册自定义命令
   context.subscriptions.push(
     disableRuleCommand,
     exportCommand,
@@ -28,7 +32,15 @@ export function activate(context: vscode.ExtensionContext) {
     newFileCommand,
     obfuscateCommand,
     suggestCommand,
-    onDidChangeTextDocument,
+  );
+
+  //注册事件处理
+  context.subscriptions.push(
+    onDidChangeTextDocument
+  );
+
+  //注册 LSP实现
+  context.subscriptions.push(
     codeLensProvider,
     completionItemProvider,
     documentColorProvider,
@@ -36,9 +48,10 @@ export function activate(context: vscode.ExtensionContext) {
     documentSemanticTokensProvider,
     documentSymbolProvider,
     hoverProvider,
+    renameProvider,
     signatureHelpProvider,
     webviewViewProvider
   );
 }
 
-export function deactivate() {}
+export function deactivate() { }
