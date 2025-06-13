@@ -331,187 +331,193 @@ const disposable = vscode.commands.registerCommand(
                   //混淆子程序
                   for (const i in dynamicList.子程序) {
                     const index = parseInt(i);
+                    const name = dynamicList.子程序[index].name;
+                    const obfuscatedName = obfuscatedNames[index];
 
                     //更新混淆列表
-                    obfuscatedList.子程序.push(obfuscatedNames[index]);
+                    obfuscatedList.子程序.push(obfuscatedName);
 
                     //事件
                     rules = rules.replace(
-                      RegExp(`^\\b${dynamicList.子程序[index]}\\b;$`, "gm"),
-                      `${obfuscatedNames[index]};`
+                      RegExp(`^\\b${name}\\b;$`, "gm"),
+                      `${obfuscatedName};`
                     );
                     //开始规则
                     rules = rules.replace(
                       RegExp(
-                        `开始规则\\(\\b${dynamicList.子程序[index]}\\b,(.*)\\);`,
+                        `开始规则\\(\\b${name}\\b,(.*)\\);`,
                         "g"
                       ),
-                      `开始规则(${obfuscatedNames[index]},$1);`
+                      `开始规则(${obfuscatedName},$1);`
                     );
                     //调用子程序
                     rules = rules.replace(
                       RegExp(
-                        `调用子程序\\(\\b${dynamicList.子程序[index]}\\b\\);`,
+                        `调用子程序\\(\\b${name}\\b\\);`,
                         "g"
                       ),
-                      `调用子程序(${obfuscatedNames[index]});`
+                      `调用子程序(${obfuscatedName});`
                     );
                   }
 
                   //混淆全局变量
                   for (const i in dynamicList.全局变量) {
                     const index = parseInt(i);
+                    const name = dynamicList.全局变量[index].name;
+                    const obfuscatedName = obfuscatedNames[index];
 
                     //更新混淆列表
-                    obfuscatedList.全局变量.push(obfuscatedNames[index]);
+                    obfuscatedList.全局变量.push(obfuscatedName);
 
                     //前缀为 "全局."
                     rules = rules.replace(
-                      RegExp(`全局\\.\\b${dynamicList.全局变量[index]}\\b`, "g"),
-                      `全局.${obfuscatedNames[index]}`
+                      RegExp(`全局\\.\\b${name}\\b`, "g"),
+                      `全局.${obfuscatedName}`
                     );
 
                     //For 全局变量
                     rules = rules.replace(
                       RegExp(
-                        `For 全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `For 全局变量\\(\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `For 全局变量(${obfuscatedNames[index]},$1,$2,$3);`
+                      `For 全局变量(${obfuscatedName},$1,$2,$3);`
                     );
                     //设置全局变量
                     rules = rules.replace(
                       RegExp(
-                        `设置全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*)\\);`,
+                        `设置全局变量\\(\\b${name}\\b,(.*)\\);`,
                         "g"
                       ),
-                      `设置全局变量(${obfuscatedNames[index]},$1);`
+                      `设置全局变量(${obfuscatedName},$1);`
                     );
                     //修改全局变量
                     rules = rules.replace(
                       RegExp(
-                        `修改全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*)\\);`,
+                        `修改全局变量\\(\\b${name}\\b,(.*),(.*)\\);`,
                         "g"
                       ),
-                      `修改全局变量(${obfuscatedNames[index]},$1,$2);`
+                      `修改全局变量(${obfuscatedName},$1,$2);`
                     );
                     //在索引处设置全局变量
                     rules = rules.replace(
                       RegExp(
-                        `在索引处设置全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*)\\);`,
+                        `在索引处设置全局变量\\(\\b${name}\\b,(.*),(.*)\\);`,
                         "g"
                       ),
-                      `在索引处设置全局变量(${obfuscatedNames[index]},$1,$2);`
+                      `在索引处设置全局变量(${obfuscatedName},$1,$2);`
                     );
                     //在索引处修改全局变量
                     rules = rules.replace(
                       RegExp(
-                        `在索引处修改全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `在索引处修改全局变量\\(\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `在索引处修改全局变量(${obfuscatedNames[index]},$1,$2,$3);`
+                      `在索引处修改全局变量(${obfuscatedName},$1,$2,$3);`
                     );
                     //持续追踪全局变量
                     rules = rules.replace(
                       RegExp(
-                        `持续追踪全局变量\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `持续追踪全局变量\\(\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `持续追踪全局变量(${obfuscatedNames[index]},$1,$2,$3);`
+                      `持续追踪全局变量(${obfuscatedName},$1,$2,$3);`
                     );
                     //追踪全局变量频率
                     rules = rules.replace(
                       RegExp(
-                        `追踪全局变量频率\\(\\b${dynamicList.全局变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `追踪全局变量频率\\(\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `追踪全局变量频率(${obfuscatedNames[index]},$1,$2,$3);`
+                      `追踪全局变量频率(${obfuscatedName},$1,$2,$3);`
                     );
                     //停止追踪全局变量
                     rules = rules.replace(
                       RegExp(
-                        `停止追踪全局变量\\(\\b${dynamicList.全局变量[index]}\\b\\);`,
+                        `停止追踪全局变量\\(\\b${name}\\b\\);`,
                         "g"
                       ),
-                      `停止追踪全局变量(${obfuscatedNames[index]});`
+                      `停止追踪全局变量(${obfuscatedName});`
                     );
                   }
 
                   //混淆玩家变量
                   for (const i in dynamicList.玩家变量) {
                     const index = parseInt(i);
+                    const name = dynamicList.玩家变量[index].name;
+                    const obfuscatedName = obfuscatedNames[index];
 
                     //更新混淆列表
-                    obfuscatedList.玩家变量.push(obfuscatedNames[index]);
+                    obfuscatedList.玩家变量.push(obfuscatedName);
 
                     //前缀为 "." 但不为 "全局."
                     rules = rules.replace(
-                      RegExp(`(?<!全局)\\.\\b${dynamicList.玩家变量[index]}\\b`, "g"),
-                      `.${obfuscatedNames[index]}`
+                      RegExp(`(?<!全局)\\.\\b${name}\\b`, "g"),
+                      `.${obfuscatedName}`
                     );
                     //For 玩家变量
                     rules = rules.replace(
                       RegExp(
-                        `For 玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `For 玩家变量\\((.*),\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `For 玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
+                      `For 玩家变量($1,${obfuscatedName},$2,$3,$4);`
                     );
                     //设置玩家变量
                     rules = rules.replace(
                       RegExp(
-                        `设置玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*)\\);`,
+                        `设置玩家变量\\((.*),\\b${name}\\b,(.*)\\);`,
                         "g"
                       ),
-                      `设置玩家变量($1,${obfuscatedNames[index]},$2);`
+                      `设置玩家变量($1,${obfuscatedName},$2);`
                     );
                     //修改玩家变量
                     rules = rules.replace(
                       RegExp(
-                        `修改玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*)\\);`,
+                        `修改玩家变量\\((.*),\\b${name}\\b,(.*),(.*)\\);`,
                         "g"
                       ),
-                      `修改玩家变量($1,${obfuscatedNames[index]},$2,$3);`
+                      `修改玩家变量($1,${obfuscatedName},$2,$3);`
                     );
                     //在索引处设置玩家变量
                     rules = rules.replace(
                       RegExp(
-                        `在索引处设置玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*)\\);`,
+                        `在索引处设置玩家变量\\((.*),\\b${name}\\b,(.*),(.*)\\);`,
                         "g"
                       ),
-                      `在索引处设置玩家变量($1,${obfuscatedNames[index]},$2,$3);`
+                      `在索引处设置玩家变量($1,${obfuscatedName},$2,$3);`
                     );
                     //在索引处修改玩家变量
                     rules = rules.replace(
                       RegExp(
-                        `在索引处修改玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `在索引处修改玩家变量\\((.*),\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `在索引处修改玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
+                      `在索引处修改玩家变量($1,${obfuscatedName},$2,$3,$4);`
                     );
                     //持续追踪玩家变量
                     rules = rules.replace(
                       RegExp(
-                        `持续追踪玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `持续追踪玩家变量\\((.*),\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `持续追踪玩家变量($1,${obfuscatedNames[index]},$2,$3,$4);`
+                      `持续追踪玩家变量($1,${obfuscatedName},$2,$3,$4);`
                     );
                     //追踪玩家变量频率
                     rules = rules.replace(
                       RegExp(
-                        `追踪玩家变量频率\\((.*),\\b${dynamicList.玩家变量[index]}\\b,(.*),(.*),(.*)\\);`,
+                        `追踪玩家变量频率\\((.*),\\b${name}\\b,(.*),(.*),(.*)\\);`,
                         "g"
                       ),
-                      `追踪玩家变量频率($1,${obfuscatedNames[index]},$2,$3,$4);`
+                      `追踪玩家变量频率($1,${obfuscatedName},$2,$3,$4);`
                     );
                     //停止追踪玩家变量
                     rules = rules.replace(
                       RegExp(
-                        `停止追踪玩家变量\\((.*),\\b${dynamicList.玩家变量[index]}\\b\\);`,
+                        `停止追踪玩家变量\\((.*),\\b${name}\\b\\);`,
                         "g"
                       ),
-                      `停止追踪玩家变量($1,${obfuscatedNames[index]});`
+                      `停止追踪玩家变量($1,${obfuscatedName});`
                     );
                   }
 
