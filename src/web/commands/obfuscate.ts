@@ -119,6 +119,9 @@ const disposable = vscode.commands.registerCommand(
                 //文档数据
                 const document = activeEditor.document;
                 const dynamicList = getDynamicList(document);
+                if (dynamicList === undefined) {
+                  return;
+                }
 
                 //混淆内容
                 let settings = "";
@@ -330,9 +333,8 @@ const disposable = vscode.commands.registerCommand(
 
                   //混淆子程序
                   for (const i in dynamicList.子程序) {
-                    const index = parseInt(i);
-                    const name = dynamicList.子程序[index].name;
-                    const obfuscatedName = obfuscatedNames[index];
+                    const name = dynamicList.子程序[i].name;
+                    const obfuscatedName = obfuscatedNames[i];
 
                     //更新混淆列表
                     obfuscatedList.子程序.push(obfuscatedName);
@@ -362,9 +364,8 @@ const disposable = vscode.commands.registerCommand(
 
                   //混淆全局变量
                   for (const i in dynamicList.全局变量) {
-                    const index = parseInt(i);
-                    const name = dynamicList.全局变量[index].name;
-                    const obfuscatedName = obfuscatedNames[index];
+                    const name = dynamicList.全局变量[i].name;
+                    const obfuscatedName = obfuscatedNames[i];
 
                     //更新混淆列表
                     obfuscatedList.全局变量.push(obfuscatedName);
@@ -443,9 +444,8 @@ const disposable = vscode.commands.registerCommand(
 
                   //混淆玩家变量
                   for (const i in dynamicList.玩家变量) {
-                    const index = parseInt(i);
-                    const name = dynamicList.玩家变量[index].name;
-                    const obfuscatedName = obfuscatedNames[index];
+                    const name = dynamicList.玩家变量[i].name;
+                    const obfuscatedName = obfuscatedNames[i];
 
                     //更新混淆列表
                     obfuscatedList.玩家变量.push(obfuscatedName);

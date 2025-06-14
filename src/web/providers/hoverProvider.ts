@@ -5,6 +5,7 @@ import {
   getDynamicList,
   getPrevValidWordRange,
   getScope,
+  DynamicList,
 } from "../utils";
 import { 常量, 扩展, 规则 } from "../model";
 
@@ -117,6 +118,9 @@ class HoverProvider implements vscode.HoverProvider {
             return;
           }
           const dynamicList = getDynamicList(document);
+          if (dynamicList === undefined) {
+            return;
+          }
 
           let dynamicKind;
           if (scope.name === "变量") {
@@ -142,15 +146,15 @@ class HoverProvider implements vscode.HoverProvider {
           // vscode.window.showInformationMessage(`文本：${text}, 类型：${dynamicKind}`); // 调试
 
           if (dynamicKind === "全局变量") {
-            return buildGlobalVariableHover();
+            return buildGlobalVariableHover(dynamicList);
           } else if (dynamicKind === "玩家变量") {
-            return buildPlayerVariableHover();
+            return buildPlayerVariableHover(dynamicList);
           } else if (dynamicKind === "子程序") {
-            return buildSubroutineHover();
+            return buildSubroutineHover(dynamicList);
           }
           return;
 
-          function buildGlobalVariableHover(): vscode.Hover | undefined {
+          function buildGlobalVariableHover(dynamicList: DynamicList): vscode.Hover | undefined {
             for (const i in dynamicList.全局变量) {
               if (hoverText === dynamicList.全局变量[i].name) {
                 return buildHover({
@@ -162,7 +166,7 @@ class HoverProvider implements vscode.HoverProvider {
             }
           }
 
-          function buildPlayerVariableHover(): vscode.Hover | undefined {
+          function buildPlayerVariableHover(dynamicList: DynamicList): vscode.Hover | undefined {
             for (const i in dynamicList.玩家变量) {
               if (hoverText === dynamicList.玩家变量[i].name) {
                 return buildHover({
@@ -174,7 +178,7 @@ class HoverProvider implements vscode.HoverProvider {
             }
           }
 
-          function buildSubroutineHover(): vscode.Hover | undefined {
+          function buildSubroutineHover(dynamicList: DynamicList): vscode.Hover | undefined {
             for (const i in dynamicList.子程序) {
               if (hoverText === dynamicList.子程序[i].name) {
                 return buildHover({

@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import {
   buildCompletion,
+  DynamicList,
   getDynamicList,
   getEntry,
   getScope,
@@ -296,62 +297,66 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
       //构建动态补全列表：所有变量/全局变量/玩家变量/子程序
       function buildDynamicCompletions(type: string) {
         const dynamicList = getDynamicList(document);
+        if (dynamicList === undefined) {
+          return [];
+        }
+        
         let completionItems: vscode.CompletionItem[] = [];
         if (type === "所有变量") {
-          buildGlobalVariableCompletions();
-          buildPlayerVariableCompletions();
+          buildGlobalVariableCompletions(dynamicList);
+          buildPlayerVariableCompletions(dynamicList);
         } else if (type === "全局变量") {
-          buildGlobalVariableCompletions();
+          buildGlobalVariableCompletions(dynamicList);
         } else if (type === "玩家变量") {
-          buildPlayerVariableCompletions();
+          buildPlayerVariableCompletions(dynamicList);
         } else if (type === "子程序") {
-          buildSubroutineCompletions();
+          buildSubroutineCompletions(dynamicList);
         }
         return completionItems;
 
-        function buildGlobalVariableCompletions() {
-          for (const [key, value] of Object.entries(dynamicList.全局变量)) {
-            const name = value.name;
+        function buildGlobalVariableCompletions(dynamicList: DynamicList) {
+          for (const i in dynamicList.全局变量) {
+            const name = dynamicList.全局变量[i].name;
             let item = buildCompletion({
               label: name,
               kind: vscode.CompletionItemKind.Variable,
-              tags: ["全局变量", key],
+              tags: ["全局变量", i],
               details: `一个已定义的全局变量。`,
-              filterText: (key.padStart(3, "0") + name).split("").join(" "),
+              filterText: (i.padStart(3, "0") + name).split("").join(" "),
               insertText: name,
-              sortText: "G" + key.padStart(3, "0") + name,
+              sortText: "G" + i.padStart(3, "0") + name,
             });
             completionItems.push(item);
           }
         }
 
-        function buildPlayerVariableCompletions() {
-          for (const [key, value] of Object.entries(dynamicList.玩家变量)) {
-            const name = value.name;
+        function buildPlayerVariableCompletions(dynamicList: DynamicList) {
+          for (const i in dynamicList.玩家变量) {
+            const name = dynamicList.玩家变量[i].name;
             let item = buildCompletion({
               label: name,
               kind: vscode.CompletionItemKind.Variable,
-              tags: ["玩家变量", key],
+              tags: ["玩家变量", i],
               details: `一个已定义的玩家变量。`,
-              filterText: (key.padStart(3, "0") + name).split("").join(" "),
+              filterText: (i.padStart(3, "0") + name).split("").join(" "),
               insertText: name,
-              sortText: "P" + key.padStart(3, "0") + name,
+              sortText: "P" + i.padStart(3, "0") + name,
             });
             completionItems.push(item);
           }
         }
 
-        function buildSubroutineCompletions() {
-          for (const [key, value] of Object.entries(dynamicList.子程序)) {
-            const name = value.name;
+        function buildSubroutineCompletions(dynamicList: DynamicList) {
+          for (const i in dynamicList.子程序) {
+            const name = dynamicList.子程序[i].name;
             let item = buildCompletion({
-              label: key.padStart(3, "0") + ": " + name,
+              label: i + ": " + name,
               kind: vscode.CompletionItemKind.Function,
-              tags: ["子程序", key],
+              tags: ["子程序", i],
               details: `一个已定义的子程序。`,
-              filterText: (key.padStart(3, "0") + name).split("").join(" "),
+              filterText: (i.padStart(3, "0") + name).split("").join(" "),
               insertText: name,
-              sortText: key.padStart(3, "0") + name,
+              sortText: i.padStart(3, "0") + name,
             });
             completionItems.push(item);
           }

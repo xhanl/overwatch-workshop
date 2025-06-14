@@ -51,6 +51,9 @@ class RenameProvider implements vscode.RenameProvider {
                 //vscode.window.showInformationMessage(`dynamicKind: ${dynamicKind}`); // 调试
 
                 const dynamicList = getDynamicList(document);
+                if (dynamicList === undefined) {
+                    return;
+                }
 
                 if (dynamicKind === "全局变量") {
                     for (const i in dynamicList.全局变量) {
@@ -62,7 +65,9 @@ class RenameProvider implements vscode.RenameProvider {
                             let match: RegExpExecArray | null;
 
                             // 0. 全局变量声明
-                            workspaceEdit.replace(document.uri, range, newName);
+                            if (range) {
+                                workspaceEdit.replace(document.uri, range, newName);
+                            }
 
                             // 1. 前缀为 "全局."
                             const globalPrefixPattern = new RegExp(`全局\\.\\b${renameText}\\b`, "g");
@@ -158,7 +163,9 @@ class RenameProvider implements vscode.RenameProvider {
                             let match: RegExpExecArray | null;
 
                             // 0. 玩家变量声明
-                            workspaceEdit.replace(document.uri, range, newName);
+                            if (range) {
+                                workspaceEdit.replace(document.uri, range, newName);
+                            }
 
                             // 1. 前缀为 "." 但不为 "全局."
                             const playerPrefixPattern = new RegExp(`(?<!全局)\\.\\b${renameText}\\b`, "g");
@@ -259,7 +266,9 @@ class RenameProvider implements vscode.RenameProvider {
                             let match: RegExpExecArray | null;
 
                             // 0. 子程序声明
-                            workspaceEdit.replace(document.uri, range, newName);
+                            if (range) {
+                                workspaceEdit.replace(document.uri, range, newName);
+                            }
 
                             // 1. 事件
                             const eventPattern = new RegExp(`^(\\s*)(${renameText})\\s*;\\s*$`, "gm");
