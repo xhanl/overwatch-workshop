@@ -92,16 +92,22 @@ class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
                     break;
                   }
                 }
+
+                let ruleName = "未命名规则";
+                if (match[2]) {
+                  ruleName = match[2];
+                }
+
                 if (match[1] === undefined) {
                   symbol = {
-                    prevLineText: `${match[2]}`,
+                    prevLineText: ruleName,
                     nextLineText,
                     kind: vscode.SymbolKind.Module,
                     start: prevLine.range.start,
                   };
                 } else {
                   symbol = {
-                    prevLineText: `⟁ ${match[2]}`,
+                    prevLineText: `⟁ ${ruleName}`,
                     nextLineText,
                     kind: vscode.SymbolKind.Module,
                     start: prevLine.range.start,
