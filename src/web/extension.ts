@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
     onDidChangeTextDocument
   );
 
-  //注册 LSP实现
+  //注册LSP实现
   context.subscriptions.push(
     codeLensProvider,
     completionItemProvider,
