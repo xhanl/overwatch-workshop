@@ -97,8 +97,6 @@ class DefinitionProvider implements vscode.DefinitionProvider {
               );
             }
           }
-
-          vscode.window.showWarningMessage(`是否忘记声明为变量/子程序？`);
         }
       }
     } catch (error) {
