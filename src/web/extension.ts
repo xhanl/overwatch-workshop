@@ -10,6 +10,7 @@ import suggestCommand from "./commands/suggest";
 import onDidChangeTextDocument from "./events/onDidChangeTextDocument";
 import codeLensProvider from "./providers/codeLensProvider";
 import completionItemProvider from "./providers/completionItemProvider";
+import definitionProvider from "./providers/definitionProvider";
 import documentColorProvider from "./providers/documentColorProvider";
 import documentFormattingEditProvider from "./providers/documentFormattingEditProvider";
 import documentSemanticTokensProvider from "./providers/documentSemanticTokensProvider";
@@ -36,13 +37,14 @@ export function activate(context: vscode.ExtensionContext) {
 
   //注册事件处理
   context.subscriptions.push(
-    onDidChangeTextDocument
+    onDidChangeTextDocument,
   );
 
   //注册LSP实现
   context.subscriptions.push(
     codeLensProvider,
     completionItemProvider,
+    definitionProvider,
     documentColorProvider,
     documentFormattingEditProvider,
     documentSemanticTokensProvider,
@@ -50,8 +52,8 @@ export function activate(context: vscode.ExtensionContext) {
     hoverProvider,
     renameProvider,
     signatureHelpProvider,
-    webviewViewProvider
+    webviewViewProvider,
   );
 }
 
-export function deactivate() { }
+export function deactivate() {}

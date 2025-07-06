@@ -4,25 +4,25 @@ import { getRuleDynamicKind, getDynamicList, getPrevValidWordRange, getScope } f
 class RenameProvider implements vscode.RenameProvider {
     provideRenameEdits(document: vscode.TextDocument, position: vscode.Position, newName: string, token: vscode.CancellationToken): vscode.ProviderResult<vscode.WorkspaceEdit> {
         try {
-            const renameRange = document.getWordRangeAtPosition(position);
-            if (!renameRange) {
+            const wordRange = document.getWordRangeAtPosition(position);
+            if (!wordRange) {
                 return;
             }
 
-            const renameText = document.getText(renameRange);
-            if (renameText === "") {
+            const wordText = document.getText(wordRange);
+            if (wordText === "") {
                 return;
             }
 
             let match;
-            if ((match = renameText.match(/\b[_a-zA-Z][_a-zA-Z0-9]*\b/))) {
-                const prevRange = getPrevValidWordRange(document, position);
-                if (!prevRange) {
+            if ((match = wordText.match(/\b[_a-zA-Z][_a-zA-Z0-9]*\b/))) {
+                const prevWordRange = getPrevValidWordRange(document, position);
+                if (!prevWordRange) {
                     return;
                 }
 
-                const prevText = document.getText(prevRange);
-                if (prevText === "") {
+                const prevWordText = document.getText(prevWordRange);
+                if (prevWordText === "") {
                     return;
                 }
 
@@ -45,7 +45,7 @@ class RenameProvider implements vscode.RenameProvider {
                 } else if (scope.name === "子程序") {
                     dynamicKind = "子程序";
                 } else {
-                    dynamicKind = getRuleDynamicKind(prevText);
+                    dynamicKind = getRuleDynamicKind(prevWordText);
                 }
 
                 //vscode.window.showInformationMessage(`dynamicKind: ${dynamicKind}`); // 调试
@@ -59,7 +59,7 @@ class RenameProvider implements vscode.RenameProvider {
                     for (const i in dynamicList.全局变量) {
                         const name = dynamicList.全局变量[i].name;
                         const range = dynamicList.全局变量[i].range;
-                        if (renameText === name) {
+                        if (wordText === name) {
                             const workspaceEdit = new vscode.WorkspaceEdit();
                             const fullText = document.getText();
                             let match: RegExpExecArray | null;
@@ -70,7 +70,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 1. 前缀为 "全局."
-                            const globalPrefixPattern = new RegExp(`全局\\.\\b${renameText}\\b`, "g");
+                            const globalPrefixPattern = new RegExp(`全局\\.\\b${wordText}\\b`, "g");
                             while ((match = globalPrefixPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -79,7 +79,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 2. For 全局变量
-                            const forGlobalPattern = new RegExp(`For 全局变量\\(\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const forGlobalPattern = new RegExp(`For 全局变量\\(\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = forGlobalPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -88,7 +88,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 3. 设置全局变量
-                            const setGlobalPattern = new RegExp(`设置全局变量\\(\\b${renameText}\\b,([^)]*)\\)`, "g");
+                            const setGlobalPattern = new RegExp(`设置全局变量\\(\\b${wordText}\\b,([^)]*)\\)`, "g");
                             while ((match = setGlobalPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -97,7 +97,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 4. 修改全局变量
-                            const modifyGlobalPattern = new RegExp(`修改全局变量\\(\\b${renameText}\\b,([^,]*),([^)]*)\\)`, "g");
+                            const modifyGlobalPattern = new RegExp(`修改全局变量\\(\\b${wordText}\\b,([^,]*),([^)]*)\\)`, "g");
                             while ((match = modifyGlobalPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -106,7 +106,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 5. 在索引处设置全局变量
-                            const setGlobalAtPattern = new RegExp(`在索引处设置全局变量\\(\\b${renameText}\\b,([^,]*),([^)]*)\\)`, "g");
+                            const setGlobalAtPattern = new RegExp(`在索引处设置全局变量\\(\\b${wordText}\\b,([^,]*),([^)]*)\\)`, "g");
                             while ((match = setGlobalAtPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -115,7 +115,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 6. 在索引处修改全局变量
-                            const modifyGlobalAtPattern = new RegExp(`在索引处修改全局变量\\(\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const modifyGlobalAtPattern = new RegExp(`在索引处修改全局变量\\(\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = modifyGlobalAtPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -124,7 +124,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 7. 持续追踪全局变量
-                            const trackGlobalPattern = new RegExp(`持续追踪全局变量\\(\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const trackGlobalPattern = new RegExp(`持续追踪全局变量\\(\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = trackGlobalPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -133,7 +133,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 8. 追踪全局变量频率
-                            const trackGlobalRatePattern = new RegExp(`追踪全局变量频率\\(\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const trackGlobalRatePattern = new RegExp(`追踪全局变量频率\\(\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = trackGlobalRatePattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -142,7 +142,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 9. 停止追踪全局变量
-                            const stopTrackGlobalPattern = new RegExp(`停止追踪全局变量\\(\\b${renameText}\\b\\)`, "g");
+                            const stopTrackGlobalPattern = new RegExp(`停止追踪全局变量\\(\\b${wordText}\\b\\)`, "g");
                             while ((match = stopTrackGlobalPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -157,7 +157,7 @@ class RenameProvider implements vscode.RenameProvider {
                     for (const i in dynamicList.玩家变量) {
                         const name = dynamicList.玩家变量[i].name;
                         const range = dynamicList.玩家变量[i].range;
-                        if (renameText === name) {
+                        if (wordText === name) {
                             const workspaceEdit = new vscode.WorkspaceEdit();
                             const fullText = document.getText();
                             let match: RegExpExecArray | null;
@@ -168,7 +168,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 1. 前缀为 "." 但不为 "全局."
-                            const playerPrefixPattern = new RegExp(`(?<!全局)\\.\\b${renameText}\\b`, "g");
+                            const playerPrefixPattern = new RegExp(`(?<!全局)\\.\\b${wordText}\\b`, "g");
                             while ((match = playerPrefixPattern.exec(fullText)) !== null) {
                                 vscode.window.showInformationMessage(`玩家变量 ${match[0]}`); // 调试
                                 const startPos = document.positionAt(match.index);
@@ -178,7 +178,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 2. For 玩家变量
-                            const forPlayerPattern = new RegExp(`For 玩家变量\\(([^,]*),\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const forPlayerPattern = new RegExp(`For 玩家变量\\(([^,]*),\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = forPlayerPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -187,7 +187,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 3. 设置玩家变量
-                            const setPlayerPattern = new RegExp(`设置玩家变量\\(([^,]*),\\b${renameText}\\b,([^)]*)\\)`, "g");
+                            const setPlayerPattern = new RegExp(`设置玩家变量\\(([^,]*),\\b${wordText}\\b,([^)]*)\\)`, "g");
                             while ((match = setPlayerPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -196,7 +196,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 4. 修改玩家变量
-                            const modifyPlayerPattern = new RegExp(`修改玩家变量\\(([^,]*),\\b${renameText}\\b,([^,]*),([^)]*)\\)`, "g");
+                            const modifyPlayerPattern = new RegExp(`修改玩家变量\\(([^,]*),\\b${wordText}\\b,([^,]*),([^)]*)\\)`, "g");
                             while ((match = modifyPlayerPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -205,7 +205,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 5. 在索引处设置玩家变量
-                            const setPlayerAtPattern = new RegExp(`在索引处设置玩家变量\\(([^,]*),\\b${renameText}\\b,([^,]*),([^)]*)\\)`, "g");
+                            const setPlayerAtPattern = new RegExp(`在索引处设置玩家变量\\(([^,]*),\\b${wordText}\\b,([^,]*),([^)]*)\\)`, "g");
                             while ((match = setPlayerAtPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -214,7 +214,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 6. 在索引处修改玩家变量
-                            const modifyPlayerAtPattern = new RegExp(`在索引处修改玩家变量\\(([^,]*),\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const modifyPlayerAtPattern = new RegExp(`在索引处修改玩家变量\\(([^,]*),\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = modifyPlayerAtPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -223,7 +223,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 7. 持续追踪玩家变量
-                            const trackPlayerPattern = new RegExp(`持续追踪玩家变量\\(([^,]*),\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const trackPlayerPattern = new RegExp(`持续追踪玩家变量\\(([^,]*),\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = trackPlayerPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -232,7 +232,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 8. 追踪玩家变量频率
-                            const trackPlayerRatePattern = new RegExp(`追踪玩家变量频率\\(([^,]*),\\b${renameText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
+                            const trackPlayerRatePattern = new RegExp(`追踪玩家变量频率\\(([^,]*),\\b${wordText}\\b,([^,]*),([^,]*),([^)]*)\\)`, "g");
                             while ((match = trackPlayerRatePattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -241,7 +241,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 9. 停止追踪玩家变量
-                            const stopTrackPlayerPattern = new RegExp(`停止追踪玩家变量\\(([^,]*),\\b${renameText}\\b\\)`, "g");
+                            const stopTrackPlayerPattern = new RegExp(`停止追踪玩家变量\\(([^,]*),\\b${wordText}\\b\\)`, "g");
                             while ((match = stopTrackPlayerPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -256,7 +256,7 @@ class RenameProvider implements vscode.RenameProvider {
                     for (const i in dynamicList.子程序) {
                         const name = dynamicList.子程序[i].name;
                         const range = dynamicList.子程序[i].range;
-                        if (renameText === name) {
+                        if (wordText === name) {
                             const fullText = document.getText();
                             if (fullText === "") {
                                 return;
@@ -271,7 +271,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 1. 事件
-                            const eventPattern = new RegExp(`^(\\s*)(${renameText})\\s*;\\s*$`, "gm");
+                            const eventPattern = new RegExp(`^(\\s*)(${wordText})\\s*;\\s*$`, "gm");
                             while ((match = eventPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index + match[1].length);
                                 const endPos = document.positionAt(match.index + match[1].length + match[2].length);
@@ -280,7 +280,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 2. 开始规则
-                            const startRulePattern = new RegExp(`开始规则\\(\\b${renameText}\\b,([^)]*)\\)`, "g");
+                            const startRulePattern = new RegExp(`开始规则\\(\\b${wordText}\\b,([^)]*)\\)`, "g");
                             while ((match = startRulePattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
@@ -289,7 +289,7 @@ class RenameProvider implements vscode.RenameProvider {
                             }
 
                             // 3. 调用子程序
-                            const callSubPattern = new RegExp(`调用子程序\\(\\b${renameText}\\b\\)`, "g");
+                            const callSubPattern = new RegExp(`调用子程序\\(\\b${wordText}\\b\\)`, "g");
                             while ((match = callSubPattern.exec(fullText)) !== null) {
                                 const startPos = document.positionAt(match.index);
                                 const endPos = document.positionAt(match.index + match[0].length);
