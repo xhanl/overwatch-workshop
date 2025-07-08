@@ -243,9 +243,13 @@ function getDynamicList(
   }
 
   // 对于全局变量和玩家变量，按A-Z顺序填入未被用户占用的默认变量名
-  for (let nameIndex = 0; nameIndex < DEFAULT_VARIABLE_NAMES.length; nameIndex++) {
+  for (
+    let nameIndex = 0;
+    nameIndex < DEFAULT_VARIABLE_NAMES.length;
+    nameIndex++
+  ) {
     const defaultName = DEFAULT_VARIABLE_NAMES[nameIndex];
-    
+
     // 全局变量：如果名称未被占用，分配到第一个空闲索引位置
     if (!usedGlobalVariables.has(defaultName)) {
       for (let i = 0; i < 128; i++) {
@@ -256,7 +260,7 @@ function getDynamicList(
         }
       }
     }
-    
+
     // 玩家变量：如果名称未被占用，分配到第一个空闲索引位置
     if (!usedPlayerVariables.has(defaultName)) {
       for (let i = 0; i < 128; i++) {
