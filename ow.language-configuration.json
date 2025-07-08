@@ -3,13 +3,25 @@
     // symbol used for single line comment. Remove this entry if your language does not support line comments
     "lineComment": "//",
     // symbols used for start and end a block comment. Remove this entry if your language does not support block comments
-    "blockComment": ["/*", "*/"]
+    "blockComment": [
+      "/*",
+      "*/"
+    ]
   },
   // symbols used as brackets
   "brackets": [
-    ["{", "}"],
-    ["[", "]"],
-    ["(", ")"]
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ]
   ],
   // symbols that are auto closed when typing
   "autoClosingPairs": [
@@ -28,21 +40,37 @@
     {
       "open": "\"",
       "close": "\"",
-      "notIn": ["string"]
+      "notIn": [
+        "string"
+      ]
     },
     {
       "open": "/**",
       "close": " */",
-      "notIn": ["string"]
+      "notIn": [
+        "string"
+      ]
     }
   ],
   "autoCloseBefore": ";:.,=}])> \n\t",
   // symbols that can be used to surround a selection
   "surroundingPairs": [
-    ["{", "}"],
-    ["[", "]"],
-    ["(", ")"],
-    ["\"", "\""]
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ],
+    [
+      "\"",
+      "\""
+    ]
   ],
   "folding": {
     "markers": {
@@ -51,11 +79,20 @@
     }
   },
   "colorizedBracketPairs": [
-    ["{", "}"],
-    ["(", ")"],
-    ["[", "]"]
+    [
+      "{",
+      "}"
+    ],
+    [
+      "(",
+      ")"
+    ],
+    [
+      "[",
+      "]"
+    ]
   ],
-  "wordPattern": "正在使用技能 [12]|栏位\\s+(10|11|[0-9])|(禁用)?\\s*规则\\(\".*\"\\)|(D.Va自毁爆炸效果|D.Va自毁爆炸声音|D.Va微型飞弹爆炸效果|D.Va微型飞弹爆炸声音|D.Va|Else If|For 全局变量|For 玩家变量|持续 - 全局|持续 - 每名玩家)|(-?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\#\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)",
+  "wordPattern": "正在使用技能 [12]|栏位\\s+(10|11|[0-9])|(禁用)?\\s*规则\\(\".*\"\\)|(D.Va自毁爆炸效果|D.Va自毁爆炸声音|D.Va微型飞弹爆炸效果|D.Va微型飞弹爆炸声音|D.Va|Else If|For 全局变量|For 玩家变量|持续 - 全局|持续 - 每名玩家)|(-?\\d*\\.\\d\\w*)|([^\\!\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)",
   "indentationRules": {
     "increaseIndentPattern": "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
     "decreaseIndentPattern": "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$"
@@ -63,19 +100,27 @@
   "onEnterRules": [
     {
       "beforeText": "^\\s*全局\\s*:\\s*$",
-      "action": { "indent": "indent" }
+      "action": {
+        "indent": "indent"
+      }
     },
     {
       "beforeText": "^\\s*玩家\\s*:\\s*$",
-      "action": { "indent": "indent" }
+      "action": {
+        "indent": "indent"
+      }
     },
     {
       "beforeText": "^\\s*(Else If|If|While|For 全局变量|For 玩家变量).*?;\\s*$",
-      "action": { "indent": "indent" }
+      "action": {
+        "indent": "indent"
+      }
     },
     {
       "beforeText": "^\\s*Else\\s*;\\s*$",
-      "action": { "indent": "indent" }
+      "action": {
+        "indent": "indent"
+      }
     }
   ]
 }

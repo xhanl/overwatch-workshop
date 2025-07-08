@@ -21,8 +21,9 @@ class HoverProvider implements vscode.HoverProvider {
         return;
       }
       const hoverText = document.getText(hoverRange);
-      //vscode.window.showInformationMessage(hoverText); // 调试
+      //vscode.window.showInformationMessage(`hoverText: ${hoverText}`); // 调试
       const scope = getScope(document, position);
+      //vscode.window.showInformationMessage(`scope: ${JSON.stringify(scope, null, 2)}`); // 调试
       const theme =
         vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Dark
           ? "深色"

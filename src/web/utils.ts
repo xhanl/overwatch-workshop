@@ -608,10 +608,11 @@ function getEntry(
         const range = getPrevValidWordRange(
           document,
           charStart,
-          undefined,
+          RegExp("正在使用技能 [12]|栏位\\s+(10|11|[0-9])|(禁用)?\\s*规则\\(\".*\"\\)|(D.Va自毁爆炸效果|D.Va自毁爆炸声音|D.Va微型飞弹爆炸效果|D.Va微型飞弹爆炸声音|D.Va|Else If|For 全局变量|For 玩家变量|持续 - 全局|持续 - 每名玩家)|(-?\\d*\\.\\d\\w*)|([^\\!\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)|[\\]]"),
           true,
         );
         const name = document.getText(range);
+        //vscode.window.showInformationMessage(`range: ${range}, name: ${name}`); // 调试
         if (name === "" || name.match(/^-?\d+$/)) {
           return;
         }
@@ -777,11 +778,10 @@ function prepareConstants() {
       case "英雄":
         {
           Object.values(value as 常量英雄类型[]).forEach((heroValue) => {
-            let description = `<img src="${
-              getAbsolutePath(
-                heroValue.图标,
-              )
-            }" width=48 height=48/><br>${heroValue.提示}`;
+            let description = `<img src="${getAbsolutePath(
+              heroValue.图标,
+            )
+              }" width=48 height=48/><br>${heroValue.提示}`;
 
             heroValue.悬停 = buildHover({
               name: heroValue.名称,
@@ -803,16 +803,14 @@ function prepareConstants() {
         {
           Object.values(value as 常量图标类型[]).forEach((iconValue) => {
             const details = {
-              深色: `<img src="${
-                getAbsolutePath(
-                  iconValue.图标.深色,
-                )
-              }" width=36 height=36/><br>${iconValue.提示}`,
-              浅色: `<img src="${
-                getAbsolutePath(
-                  iconValue.图标.浅色,
-                )
-              }" width=36 height=36/><br>${iconValue.提示}`,
+              深色: `<img src="${getAbsolutePath(
+                iconValue.图标.深色,
+              )
+                }" width=36 height=36/><br>${iconValue.提示}`,
+              浅色: `<img src="${getAbsolutePath(
+                iconValue.图标.浅色,
+              )
+                }" width=36 height=36/><br>${iconValue.提示}`,
             };
 
             iconValue.悬停 = {
@@ -854,19 +852,17 @@ function prepareConstants() {
               深色: `
 |||
 |:-|:-|
-<img src="${
-                getAbsolutePath(
-                  buttonValue.图标.深色,
-                )
-              }" width=32 height=32/>&nbsp;&nbsp;|${buttonValue.提示}`,
+<img src="${getAbsolutePath(
+                buttonValue.图标.深色,
+              )
+                }" width=32 height=32/>&nbsp;&nbsp;|${buttonValue.提示}`,
               浅色: `
 |||
 |:-|:-|
-<img src="${
-                getAbsolutePath(
-                  buttonValue.图标.浅色,
-                )
-              }" width=32 height=32/>&nbsp;&nbsp;|${buttonValue.提示}`,
+<img src="${getAbsolutePath(
+                buttonValue.图标.浅色,
+              )
+                }" width=32 height=32/>&nbsp;&nbsp;|${buttonValue.提示}`,
             };
 
             buttonValue.悬停 = {
@@ -907,11 +903,10 @@ function prepareConstants() {
             const details = `
 |||
 |:-|:-|
-<img src="${
-              getAbsolutePath(
-                colorValue.图标,
-              )
-            }" width=32 height=32/>&nbsp;&nbsp;|${colorValue.提示}`;
+<img src="${getAbsolutePath(
+              colorValue.图标,
+            )
+              }" width=32 height=32/>&nbsp;&nbsp;|${colorValue.提示}`;
 
             colorValue.悬停 = buildHover({
               name: colorValue.名称,
@@ -1052,11 +1047,10 @@ function prepareRules() {
 
                       hero.标签 = ["事件", "玩家"];
 
-                      let description = `<img src="${
-                        getAbsolutePath(
-                          hero.图标,
-                        )
-                      }" width=48 height=48/><br>${hero.提示}`;
+                      let description = `<img src="${getAbsolutePath(
+                        hero.图标,
+                      )
+                        }" width=48 height=48/><br>${hero.提示}`;
 
                       hero.悬停 = buildHover({
                         name: hero.名称,
