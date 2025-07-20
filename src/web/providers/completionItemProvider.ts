@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import {
+  type DynamicList,
+  type Definition,
   buildCompletion,
-  DynamicList,
   getDynamicList,
   getEntry,
   getScope,
@@ -300,7 +301,7 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         if (dynamicList === undefined) {
           return [];
         }
-        
+
         let completionItems: vscode.CompletionItem[] = [];
         if (type === "所有变量") {
           buildGlobalVariableCompletions(dynamicList);
@@ -316,50 +317,35 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
 
         function buildGlobalVariableCompletions(dynamicList: DynamicList) {
           for (const i in dynamicList.全局变量) {
-            const name = dynamicList.全局变量[i].name;
-            let item = buildCompletion({
-              label: name,
-              kind: vscode.CompletionItemKind.Variable,
-              tags: ["全局变量", i],
-              details: `一个已定义的全局变量。`,
-              filterText: (i.padStart(3, "0") + name).split("").join(" "),
-              insertText: name,
-              sortText: "G" + i.padStart(3, "0") + name,
-            });
+            let item = buildDefinitionCompletions("全局变量", dynamicList.全局变量[i], i);
             completionItems.push(item);
           }
         }
 
         function buildPlayerVariableCompletions(dynamicList: DynamicList) {
           for (const i in dynamicList.玩家变量) {
-            const name = dynamicList.玩家变量[i].name;
-            let item = buildCompletion({
-              label: name,
-              kind: vscode.CompletionItemKind.Variable,
-              tags: ["玩家变量", i],
-              details: `一个已定义的玩家变量。`,
-              filterText: (i.padStart(3, "0") + name).split("").join(" "),
-              insertText: name,
-              sortText: "P" + i.padStart(3, "0") + name,
-            });
+            let item = buildDefinitionCompletions("玩家变量", dynamicList.玩家变量[i], i);
             completionItems.push(item);
           }
         }
 
         function buildSubroutineCompletions(dynamicList: DynamicList) {
           for (const i in dynamicList.子程序) {
-            const name = dynamicList.子程序[i].name;
-            let item = buildCompletion({
-              label: i + ": " + name,
-              kind: vscode.CompletionItemKind.Function,
-              tags: ["子程序", i],
-              details: `一个已定义的子程序。`,
-              filterText: (i.padStart(3, "0") + name).split("").join(" "),
-              insertText: name,
-              sortText: i.padStart(3, "0") + name,
-            });
+            let item = buildDefinitionCompletions("子程序", dynamicList.子程序[i], i);
             completionItems.push(item);
           }
+        }
+
+        function buildDefinitionCompletions(type: string, definition: Definition, index: string): vscode.CompletionItem {
+          return buildCompletion({
+            label: definition.name,
+            kind: vscode.CompletionItemKind.Function,
+            tags: [type, index],
+            details: `一个已定义的${type}。` + (definition.comment ? `\n\n***<span style="color:#7c0;">⬘</span>&nbsp;注释***\n\n${definition.comment}` : ""),
+            filterText: (index.padStart(3, "0") + definition.name).split("").join(" "),
+            insertText: definition.name,
+            sortText: type + index.padStart(3, "0") + definition.name,
+          });
         }
       }
     } catch (error) {

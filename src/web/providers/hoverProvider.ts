@@ -5,7 +5,8 @@ import {
   getDynamicList,
   getPrevValidWordRange,
   getScope,
-  DynamicList,
+  type DynamicList,
+  type Definition,
 } from "../utils";
 import { 常量, 扩展, 规则 } from "../model";
 
@@ -158,11 +159,7 @@ class HoverProvider implements vscode.HoverProvider {
           function buildGlobalVariableHover(dynamicList: DynamicList): vscode.Hover | undefined {
             for (const i in dynamicList.全局变量) {
               if (hoverText === dynamicList.全局变量[i].name) {
-                return buildHover({
-                  name: hoverText,
-                  tags: ["全局变量", i],
-                  details: `一个已定义的全局变量。`,
-                });
+                return buildDefinitionHover("全局变量", dynamicList.全局变量[i], i);
               }
             }
           }
@@ -170,11 +167,7 @@ class HoverProvider implements vscode.HoverProvider {
           function buildPlayerVariableHover(dynamicList: DynamicList): vscode.Hover | undefined {
             for (const i in dynamicList.玩家变量) {
               if (hoverText === dynamicList.玩家变量[i].name) {
-                return buildHover({
-                  name: hoverText,
-                  tags: ["玩家变量", i],
-                  details: `一个已定义的玩家变量。`,
-                });
+                return buildDefinitionHover("玩家变量", dynamicList.玩家变量[i], i);
               }
             }
           }
@@ -182,13 +175,17 @@ class HoverProvider implements vscode.HoverProvider {
           function buildSubroutineHover(dynamicList: DynamicList): vscode.Hover | undefined {
             for (const i in dynamicList.子程序) {
               if (hoverText === dynamicList.子程序[i].name) {
-                return buildHover({
-                  name: hoverText,
-                  tags: ["子程序", i],
-                  details: `一个已定义的子程序。`,
-                });
+                return buildDefinitionHover("子程序", dynamicList.子程序[i], i);
               }
             }
+          }
+
+          function buildDefinitionHover(type: string, definition: Definition, index: string): vscode.Hover {
+            return buildHover({
+              name: definition.name,
+              tags: [type, index],
+              details: `一个已定义的${type}。` + (definition.comment ? `\n\n---\n\n***<span style="color:#7c0;">⬘</span>&nbsp;注释***\n\n${definition.comment}` : ""),
+            });
           }
         }
       }

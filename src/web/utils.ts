@@ -123,9 +123,15 @@ function getRuleDynamicKind(text: string) {
 
 type DynamicList = {
   扩展: string[];
-  全局变量: { name: string; range?: vscode.Range }[];
-  玩家变量: { name: string; range?: vscode.Range }[];
-  子程序: { name: string; range?: vscode.Range }[];
+  全局变量: Definition[];
+  玩家变量: Definition[];
+  子程序: Definition[];
+};
+
+type Definition = {
+  name: string;
+  range?: vscode.Range;
+  comment?: string;
 };
 
 //获取动态列表：扩展，全局变量，玩家变量，子程序
@@ -134,13 +140,13 @@ function getDynamicList(
 ): DynamicList | undefined {
   let type = 0;
   let extensions: string[] = [];
-  let globalVariables: { name: string; range?: vscode.Range }[] = [];
-  let playerVariables: { name: string; range?: vscode.Range }[] = [];
-  let subroutines: { name: string; range?: vscode.Range }[] = [];
+  let globalVariables: Definition[] = [];
+  let playerVariables: Definition[] = [];
+  let subroutines: Definition[] = [];
 
-  let usedGlobalVariables: Set<string> = new Set<string>();
-  let usedPlayerVariables: Set<string> = new Set<string>();
-  let usedSubroutines: Set<string> = new Set<string>();
+  let usedGlobalVariables: Set<string> = new Set();
+  let usedPlayerVariables: Set<string> = new Set();
+  let usedSubroutines: Set<string> = new Set();
 
   // 内部函数：计算匹配项在原始行文本中的准确位置
   function calculateRange(
@@ -197,7 +203,7 @@ function getDynamicList(
     } else if (
       type === 4 &&
       (match = text.match(
-        /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b/,
+        /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b(?:\s*\/\/\s*(.*))?/,
       ))
     ) {
       if (usedGlobalVariables.has(match[2])) {
@@ -208,11 +214,12 @@ function getDynamicList(
       globalVariables[parseInt(match[1])] = {
         name: match[2],
         range: calculateRange(line, match, i),
+        comment: match[3]?.trim() || undefined,
       };
     } else if (
       type === 5 &&
       (match = text.match(
-        /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b/,
+        /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b(?:\s*\/\/\s*(.*))?/,
       ))
     ) {
       if (usedPlayerVariables.has(match[2])) {
@@ -223,11 +230,12 @@ function getDynamicList(
       playerVariables[parseInt(match[1])] = {
         name: match[2],
         range: calculateRange(line, match, i),
+        comment: match[3]?.trim() || undefined,
       };
     } else if (
       type === 3 &&
       (match = text.match(
-        /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b/,
+        /^((?:[0-9]{1,2}|1[01][0-9]|12[0-7]))\s*:\s*\b([_a-zA-Z][_a-zA-Z0-9]*)\b(?:\s*\/\/\s*(.*))?/,
       ))
     ) {
       if (usedSubroutines.has(match[2])) {
@@ -238,6 +246,7 @@ function getDynamicList(
       subroutines[parseInt(match[1])] = {
         name: match[2],
         range: calculateRange(line, match, i),
+        comment: match[3]?.trim() || undefined,
       };
     }
   }
@@ -1319,6 +1328,7 @@ export {
   buildHover,
   buildParameter,
   type DynamicList,
+  type Definition,
   EXTENSION_URI,
   getDynamicList,
   getEntry,
