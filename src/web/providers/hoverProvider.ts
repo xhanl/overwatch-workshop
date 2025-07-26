@@ -7,6 +7,7 @@ import {
   getScope,
   type DynamicList,
   type Definition,
+  getEntry,
 } from "../utils";
 import { 常量, 扩展, 规则 } from "../model";
 
@@ -29,6 +30,8 @@ class HoverProvider implements vscode.HoverProvider {
         vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Dark
           ? "深色"
           : "浅色";
+
+      //vscode.window.showInformationMessage(`scope: ${JSON.stringify(scope, null, 2)}`); // 调试
 
       if (scope.name === "扩展") {
         if (扩展.hasOwnProperty(hoverText)) {
@@ -58,52 +61,122 @@ class HoverProvider implements vscode.HoverProvider {
         }
         return matchDynamicHover();
       } else if (scope.name === "条件") {
+
+        // 条件的函数悬停
         if (规则.条件.hasOwnProperty(hoverText)) {
           return 规则.条件[hoverText].悬停;
         }
-        const constantHover = matchConstantHover();
-        if (constantHover) {
-          return constantHover;
+
+        // 参数悬停
+        const entry = getEntry(document, position, scope);
+        if (entry && entry.hasOwnProperty("index")) {
+          //vscode.window.showInformationMessage(`entry: ${JSON.stringify(entry, null, 2)}`); // 调试      
+
+          // 条件的参数悬停
+          if (规则.条件.hasOwnProperty(entry.kind)) {
+            const constant = 规则.条件[entry.kind].参数![entry.index!]!;
+            if (constant.选项) {
+              // 条件的常量参数
+              for (const c of constant.选项) {
+                if (c.名称 === hoverText) {
+                  if (c.悬停) {
+                    if (c.悬停?.hasOwnProperty(theme)) {
+                      return c.悬停[
+                        theme as keyof typeof c.悬停
+                      ];
+                    } else {
+                      return c.悬停 as vscode.Hover;
+                    }
+                  } else {
+                    throw new Error("条件的参数选项悬停未定义");
+                  }
+                }
+              }
+            } else if (constant.类型 === "条件") {
+              // 条件的条件参数
+              return 规则.条件[hoverText].悬停;
+            }
+          }
         }
+
+        // 动态悬停
         const dynamicHover = matchDynamicHover();
         if (dynamicHover) {
           return dynamicHover;
         }
       } else if (scope.name === "动作") {
+        // 动作的函数悬停
         if (规则.动作.hasOwnProperty(hoverText)) {
           return 规则.动作[hoverText].悬停;
         }
+
+        // 条件的函数悬停
         if (规则.条件.hasOwnProperty(hoverText)) {
           return 规则.条件[hoverText].悬停;
         }
-        const constantHover = matchConstantHover();
-        if (constantHover) {
-          return constantHover;
-        }
-        const dynamicHover = matchDynamicHover();
-        if (dynamicHover) {
-          return dynamicHover;
-        }
-      }
 
-      //匹配常量悬停
-      function matchConstantHover() {
-        for (const value of Object.values(常量)) {
-          for (const constantValue of Object.values(value)) {
-            if (constantValue.名称 === hoverText) {
-              if (constantValue.悬停) {
-                if (constantValue.悬停?.hasOwnProperty(theme)) {
-                  return constantValue.悬停[
-                    theme as keyof typeof constantValue.悬停
-                  ];
-                } else {
-                  return constantValue.悬停;
+        // 参数悬停
+        const entry = getEntry(document, position, scope);
+        if (entry && entry.hasOwnProperty("index")) {
+          //vscode.window.showInformationMessage(`entry: ${JSON.stringify(entry, null, 2)}`); // 调试
+
+          // 动作的参数悬停
+          if (规则.动作.hasOwnProperty(entry.kind)) {
+            const constant = 规则.动作[entry.kind].参数![entry.index!]!;
+            if (constant.选项) {
+              // 动作的常量参数
+              for (const c of constant.选项) {
+                if (c.名称 === hoverText) {
+                  if (c.悬停) {
+                    if (c.悬停?.hasOwnProperty(theme)) {
+                      return c.悬停[
+                        theme as keyof typeof c.悬停
+                      ];
+                    } else {
+                      return c.悬停 as vscode.Hover;
+                    }
+                  } else {
+                    throw new Error("动作的参数选项悬停未定义");
+                  }
                 }
-              } else {
-                throw new Error("常量.悬停 未定义");
               }
+            } else if (constant.类型 === "条件") {
+              // 动作的条件参数
+              return 规则.条件[hoverText].悬停;
             }
           }
+
+          // 条件的参数悬停
+          if (规则.条件.hasOwnProperty(entry.kind)) {
+            const constant = 规则.条件[entry.kind].参数![entry.index!]!;
+            if (constant.选项) {
+              // 条件的常量参数
+              for (const c of constant.选项) {
+                if (c.名称 === hoverText) {
+                  if (c.悬停) {
+                    if (c.悬停?.hasOwnProperty(theme)) {
+                      return c.悬停[
+                        theme as keyof typeof c.悬停
+                      ];
+                    } else {
+                      return c.悬停 as vscode.Hover;
+                    }
+                  } else {
+                    throw new Error("条件的参数选项悬停未定义");
+                  }
+                }
+              }
+            } else if (constant.类型 === "条件") {
+              // 条件的条件参数
+              return 规则.条件[hoverText].悬停;
+            }
+          }
+        }
+
+        // 动态悬停
+        const dynamicHover = matchDynamicHover();
+        if (dynamicHover) {
+          return dynamicHover; // 动态悬停
         }
       }
 

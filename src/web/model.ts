@@ -162,14 +162,14 @@ type 规则事件玩家类型 = {
   拼音: string;
   悬停?: vscode.Hover | { 深色: vscode.Hover; 浅色: vscode.Hover };
   补全?:
-    | vscode.CompletionItem
-    | { 深色: vscode.CompletionItem; 浅色: vscode.CompletionItem };
+  | vscode.CompletionItem
+  | { 深色: vscode.CompletionItem; 浅色: vscode.CompletionItem };
 };
 
 type 参数类型 = {
   名称: string;
   类型: string;
-  选项?: Object;
+  选项?: 常量英雄类型[] | 常量图标类型[] | 常量按钮类型[] | 常量颜色类型[] | 常量字符串类型[] | 常量通用类型[];
   默认?: string;
   提示: string;
   签名?: vscode.ParameterInformation;
