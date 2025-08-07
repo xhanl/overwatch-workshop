@@ -19,8 +19,8 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
             return;
           }
 
-          vscode.window.showInformationMessage(`scope: ${JSON.stringify(scope)}`); // 调试
-          vscode.window.showInformationMessage(`entry: ${JSON.stringify(entry)}`); // 调试
+          //vscode.window.showInformationMessage(`scope: ${JSON.stringify(scope)}`); // 调试
+          //vscode.window.showInformationMessage(`entry: ${JSON.stringify(entry)}`); // 调试
           if (scope.range === undefined) {
             return;
           }
