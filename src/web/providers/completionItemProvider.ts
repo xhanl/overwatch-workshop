@@ -174,6 +174,16 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
         if (entry === undefined) {
           return;
         }
+
+        // 非参数
+        if (entry.index === undefined) {
+          if (entry.kind.match(DYNAMIC_ENTRY_KIND_RE)) {
+            return buildDynamicCompletions(entry.kind);
+          }
+          return buildStaticCompletions(规则.条件);
+        }
+
+        // 参数
         if (entry.kind === "数组") {
           if (
             context.triggerCharacter === "(" ||
@@ -214,8 +224,17 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
             return;
           }
 
-          console.log("getActionCompletions", entry);
+          // 非参数
+          if (entry.index === undefined) {
+            if (entry.kind.match(DYNAMIC_ENTRY_KIND_RE)) {
+              return buildDynamicCompletions(entry.kind);
+            }
+            return buildStaticCompletions(规则.动作).concat(
+              buildStaticCompletions(规则.条件),
+            );
+          }
 
+          // 参数
           if (entry.kind === "数组") {
             if (
               context.triggerCharacter === "(" ||

@@ -613,21 +613,49 @@ function getEntry(
       ) {
         commasCount++;
       } else if (charText === "." && commasCount === 0) {
-        //决定变量
-        const range = getPrevValidWordRange(
-          document,
-          charStart,
-          RegExp("正在使用技能 [12]|栏位\\s+(10|11|[0-9])|(禁用)?\\s*规则\\(\".*\"\\)|(D.Va自毁爆炸效果|D.Va自毁爆炸声音|D.Va微型飞弹爆炸效果|D.Va微型飞弹爆炸声音|D.Va|Else If|For 全局变量|For 玩家变量|持续 - 全局|持续 - 每名玩家)|(-?\\d*\\.\\d\\w*)|([^\\!\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)|[\\]]"),
-          true,
-        );
-        const name = document.getText(range);
+        //决定变量 - 改进光标定位逻辑
+        const wordPattern = RegExp("正在使用技能 [12]|栏位\\s+(10|11|[0-9])|(禁用)?\\s*规则\\(\".*\"\\)|(D.Va自毁爆炸效果|D.Va自毁爆炸声音|D.Va微型飞弹爆炸效果|D.Va微型飞弹爆炸声音|D.Va|Else If|For 全局变量|For 玩家变量|持续 - 全局|持续 - 每名玩家)|(-?\\d*\\.\\d\\w*)|([^\\!\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)|[\\]]");
+
+        let range: vscode.Range | undefined;
+        let name: string;
+
+        // 检查光标是在点号前
+        if (position.isBeforeOrEqual(charStart)) {
+          range = getPrevValidWordRange(document, charStart, wordPattern, true);
+          if (!range) {
+            return;
+          }
+
+          name = document.getText(range);
         //vscode.window.showInformationMessage(`range: ${range}, name: ${name}`); // 调试
-        if (name === "" || name.match(/^-?\d+$/)) {
+
+          // 忽略数字
+          if (name.match(/^-?\d+$/)) {
           return;
         }
+
+          return {
+            kind: "条件",
+          };
+        } else {
+          // 光标在点号后
+          range = getNextValidWordRange(document, charEnd, wordPattern, true);
+          if (!range) {
+            return;
+          }
+
+          name = document.getText(range);
+          //vscode.window.showInformationMessage(`range: ${range}, name: ${name}`); // 调试
+
+          // 忽略数字
+          if (name.match(/^-?\d+$/)) {
+            return;
+          }
+
         return {
           kind: getRuleDynamicKind(name),
         };
+        }
       } else if (
         (match = charText.match(/[\[\+\-\*\/\^\%\<\>\=\!\?\|\&\:]/)) &&
         commasCount === 0
