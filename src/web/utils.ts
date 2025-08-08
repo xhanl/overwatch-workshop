@@ -620,8 +620,9 @@ function getEntry(
           RegExp("正在使用技能 [12]|栏位\\s+(10|11|[0-9])|(禁用)?\\s*规则\\(\".*\"\\)|(D.Va自毁爆炸效果|D.Va自毁爆炸声音|D.Va微型飞弹爆炸效果|D.Va微型飞弹爆炸声音|D.Va|Else If|For 全局变量|For 玩家变量|持续 - 全局|持续 - 每名玩家)|(-?\\d*\\.\\d\\w*)|([^\\!\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)|[\\]]"),
           true,
         );
+        //vscode.window.showInformationMessage(`range: ${JSON.stringify(range, null, 2)}`); // 调试
         const name = document.getText(range);
-        //vscode.window.showInformationMessage(`range: ${range}, name: ${name}`); // 调试
+        //vscode.window.showInformationMessage(`name: ${name}`); // 调试
         if (name === "" || name.match(/^-?\d+$/)) {
           return;
         }
@@ -639,21 +640,19 @@ function getEntry(
         (match = charText.match(/[\[\+\-\*\/\^\%\<\>\=\!\?\|\&\:]/)) &&
         commasCount === 0
       ) {
-        const prevCharText = document.getText(
-          new vscode.Range(
-            charStart.translate(0, -1),
-            charEnd.translate(0, -1),
-          ),
-        );
-
-        if (prevCharText === ".") {
-          //跳过变量
-          continue;
-        } else {
-          return {
-            kind: "条件",
-          };
+        //跳过变量
+        const prevWordRange = document.getWordRangeAtPosition(position, /[.][a-zA-Z_][a-zA-Z0-9_]*|[\[\+\-\*\/\^\%\<\>\=\!\?\|\&\:]/);
+        if (prevWordRange) {
+          const prevWord = document.getText(prevWordRange);
+          //vscode.window.showInformationMessage(`prevWord: ${prevWord}`); // 调试
+          if (prevWord.startsWith(".")) {
+            continue;
+          }
         }
+
+        return {
+          kind: "条件",
+        };
       }
     }
   }
