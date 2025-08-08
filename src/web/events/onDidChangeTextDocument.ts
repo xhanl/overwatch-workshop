@@ -27,7 +27,7 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
           }
 
           if (entry.index === undefined) {
-            const wordRange = getPrevValidWordRange(event.document, change.range.start, /\s|[.\{\}\[\]\(\)\+\-\*\/\^\%\<\>\=\!\?\|\&\:\;\"]|[_a-zA-Z0-9\u4e00-\u9fa5]/, true);
+            const wordRange = getPrevValidWordRange(event.document, change.range.start, /\s|\/\/.*?$|\*\/|[.\{\}\[\]\(\)\+\-\*\/\^\%\<\>\=\!\?\|\&\:\;\"]|[_a-zA-Z0-9\u4e00-\u9fa5]/, true);
             if (wordRange === undefined) {
               return;
             }
@@ -38,9 +38,15 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
             //vscode.window.showInformationMessage(`word: ${word}`); // 调试
 
             if (word.trim().length === 0) {
-              return;
+              // 检查整行是否空的
+              const line = event.document.lineAt(change.range.start.line);
+              const lineText = line.text;
+              if (lineText.trim().length === 0) {
+                return;
+              }
             }
-            if (word === "{" || word === ";" || word === "\"") {
+
+            if (word.startsWith("//") || word === "*/" || word === "{" || word === ";" || word === "\"" || word === ")" || word === "]" || word === "}") {
               return;
             }
           }
@@ -64,6 +70,7 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
           const inString = quoteCount % 2 === 1;
 
           if (!inComment && !inString) {
+            //vscode.window.showInformationMessage(`beforeText: ${beforeText}`); // 调试
             vscode.commands.executeCommand("ow.command.suggest");
           }
         }
