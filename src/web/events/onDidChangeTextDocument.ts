@@ -57,7 +57,7 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
           const inString = quoteCount % 2 === 1;
 
           if (!inComment && !inString) {
-                vscode.commands.executeCommand("ow.command.suggest");
+            vscode.commands.executeCommand("ow.command.suggest");
           }
         }
       } else if (change.text.includes("\n") && change.rangeLength === 0) {
