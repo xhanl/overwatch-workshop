@@ -627,7 +627,7 @@ function getEntry(
           return;
         }
 
-        if (position.isBefore(charStart)) {
+        if (position.isBeforeOrEqual(charStart)) {
           return {
             kind: "条件",
           };
@@ -641,10 +641,10 @@ function getEntry(
         commasCount === 0
       ) {
         //跳过变量
-        const prevWordRange = document.getWordRangeAtPosition(position, /[.][a-zA-Z_][a-zA-Z0-9_]*|[\[\+\-\*\/\^\%\<\>\=\!\?\|\&\:]/);
+        const prevWordRange = document.getWordRangeAtPosition(position, /[.][a-zA-Z_][a-zA-Z0-9_]*|[\.\[\+\-\*\/\^\%\<\>\=\!\?\|\&\:]/);
         if (prevWordRange) {
           const prevWord = document.getText(prevWordRange);
-          //vscode.window.showInformationMessage(`prevWord: ${prevWord}`); // 调试
+          vscode.window.showInformationMessage(`prevWord: ${prevWord}`); // 调试
           if (prevWord.startsWith(".")) {
             continue;
           }
