@@ -11,6 +11,7 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
         (change.text === "" && change.rangeLength > 0) ||
         change.text === " "
       ) {
+        //vscode.window.showInformationMessage(`change: ${JSON.stringify(change, null, 2)}`); // 调试
         const scope = getScope(event.document, change.range.end);
 
         if (scope.name === "条件" || scope.name === "动作") {
@@ -30,7 +31,7 @@ const disposable = vscode.workspace.onDidChangeTextDocument((event) => {
             if (wordRange === undefined) {
               return;
             }
-            if (wordRange.start.character === 0) {
+            if (wordRange.start.line !== change.range.start.line) {
               return;
             }
             const word = event.document.getText(wordRange);
