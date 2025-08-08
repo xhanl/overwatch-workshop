@@ -627,7 +627,7 @@ function getEntry(
           return;
         }
 
-        if (position.isBeforeOrEqual(charStart)) {
+        if (position.isBefore(charStart)) {
           return {
             kind: "条件",
           };
