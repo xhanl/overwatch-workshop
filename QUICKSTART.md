@@ -14,6 +14,9 @@
 
 ```sh
 npm run package-web
+```
+
+```sh
 vsce package
 ```
 

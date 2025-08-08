@@ -625,6 +625,13 @@ function getEntry(
         if (name === "" || name.match(/^-?\d+$/)) {
           return;
         }
+
+        if (position.isBeforeOrEqual(charStart)) {
+          return {
+            kind: "条件",
+          };
+        }
+
         return {
           kind: getRuleDynamicKind(name),
         };
