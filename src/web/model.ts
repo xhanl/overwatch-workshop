@@ -2725,6 +2725,13 @@ let 常量: 常量类型 = {
       图标: "images/ow/hero/avatar/damage_freja_avatar.png",
       拼音: "Fu Lei Ya",
     },
+    {
+      名称: "无漾",
+      标签: ["英雄", "支援"],
+      提示: "无漾来自五行大学的水学院，掌握水愈技术的他随时准备在战场上力挽狂澜。",
+      图标: "images/ow/hero/avatar/support_wuyang_avatar.png",
+      拼音: "Wu Yang",
+    },
   ],
   HUD位置: [
     {

@@ -1053,6 +1053,17 @@ ${buildHero({
           melee: "melee.png",
           jump: "support_juno_jump.png",
         })}
+        
+${buildHero({
+          name: "无漾",
+          avatar: "support_wuyang_avatar.png",
+          primaryWeapon: "support_wuyang_weapon.png",
+          secondary: "support_wuyang_secondaryfire.png",
+          ultimate: "support_wuyang_ultimate.png",
+          ability1: "support_wuyang_ability1.png",
+          ability2: "support_juno_ability2.png",
+          melee: "melee.png",
+        })}
 
 </tbody>
 </table>

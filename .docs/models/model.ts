@@ -163,8 +163,8 @@ type 规则事件玩家类型 = {
   拼音: string;
   悬停?: vscode.Hover | { 深色: vscode.Hover; 浅色: vscode.Hover };
   补全?:
-    | vscode.CompletionItem
-    | { 深色: vscode.CompletionItem; 浅色: vscode.CompletionItem };
+  | vscode.CompletionItem
+  | { 深色: vscode.CompletionItem; 浅色: vscode.CompletionItem };
 };
 
 type 参数类型 = {
@@ -2691,6 +2691,13 @@ let 常量: 常量类型 = {
       提示: "弗蕾娅曾经是守望先锋搜救小队的一员，在守望先锋解散后，成为了赏金猎人。",
       图标: "images/ow/hero/avatar/damage_freja_avatar.png",
       拼音: "Fu Lei Ya",
+    },
+    {
+      名称: "无漾",
+      标签: ["英雄", "支援"],
+      提示: "无漾来自五行大学的水学院，掌握水愈技术的他随时准备在战场上力挽狂澜。",
+      图标: "images/ow/hero/avatar/support_wuyang_avatar.png",
+      拼音: "Wu Yang",
     },
   ],
   HUD位置: [
