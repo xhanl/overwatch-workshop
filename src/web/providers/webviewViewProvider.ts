@@ -1061,7 +1061,7 @@ ${buildHero({
           secondary: "support_wuyang_secondaryfire.png",
           ultimate: "support_wuyang_ultimate.png",
           ability1: "support_wuyang_ability1.png",
-          ability2: "support_juno_ability2.png",
+          ability2: "support_wuyang_ability2.png",
           melee: "melee.png",
         })}
 
