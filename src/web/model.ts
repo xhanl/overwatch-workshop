@@ -2732,6 +2732,13 @@ let 常量: 常量类型 = {
       图标: "images/ow/hero/avatar/support_wuyang_avatar.png",
       拼音: "Wu Yang",
     },
+    {
+      名称: "斩仇",
+      标签: ["英雄", "输出"],
+      提示: "“斩仇”是斗兽场的冠军，也是意大利的上层精英。",
+      图标: "images/ow/hero/avatar/damage_vendetta_avatar.png",
+      拼音: "Zhan Chou",
+    },
   ],
   HUD位置: [
     {
