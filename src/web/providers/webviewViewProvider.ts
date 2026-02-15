@@ -665,6 +665,11 @@ ${buildHero({
   jump: "tank_hazard_jump.png",
 })}
 
+${buildHero({
+  name: "金驭",
+  avatar: "tank_domina_avatar.png",
+})}
+
 </tbody>
 </table>
 
@@ -911,6 +916,16 @@ ${buildHero({
   melee: "melee.png",
 })}
 
+${buildHero({
+  name: "安燃",
+  avatar: "damage_anran_avatar.png",
+})}
+
+${buildHero({
+  name: "埃姆雷",
+  avatar: "damage_emre_avatar.png",
+})}
+
 </tbody>
 </table>
 
@@ -1066,7 +1081,7 @@ ${buildHero({
   melee: "melee.png",
   jump: "support_juno_jump.png",
 })}
-        
+
 ${buildHero({
   name: "无漾",
   avatar: "support_wuyang_avatar.png",
@@ -1077,6 +1092,17 @@ ${buildHero({
   ability2: "support_wuyang_ability2.png",
   melee: "melee.png",
 })}
+
+${buildHero({
+  name: "瑞稀",
+  avatar: "support_mizuki_avatar.png",
+})}
+
+${buildHero({
+  name: "飞天猫",
+  avatar: "support_jetpack-cat_avatar.png",
+})}
+
 </tbody>
 </table>
 </body>

@@ -2739,6 +2739,41 @@ let 常量: 常量类型 = {
       图标: "images/ow/hero/avatar/damage_vendetta_avatar.png",
       拼音: "Zhan Chou",
     },
+    {
+      名称: "金驭",
+      标签: ["英雄", "重装"],
+      提示: "“金驭”是费斯卡集团一言千金的谈判专家，对高强度光束的驾驭炉火纯青，世上没有她掌控不了的局面。",
+      图标: "images/ow/hero/avatar/tank_domina_avatar.png",
+      拼音: "Jin Yu",
+    },
+    {
+      名称: "安燃",
+      标签: ["英雄", "输出"],
+      提示: "安燃是五行大学火学院的毕业生之星，心中燃着熊熊烈火的她永远渴望着突破自身的极限。",
+      图标: "images/ow/hero/avatar/damage_anran_avatar.png",
+      拼音: "An Ran",
+    },
+    {
+      名称: "埃姆雷",
+      标签: ["英雄", "输出"],
+      提示: "埃姆雷在守望先锋突击小队效力期间广受赞誉，后来竟突然人间蒸发。多年后，他再度现身，躯体和心智却已受到某种未知存在的操控。",
+      图标: "images/ow/hero/avatar/damage_emre_avatar.png",
+      拼音: "Ai Mu Lei",
+    },
+    {
+      名称: "瑞稀",
+      标签: ["英雄", "支援"],
+      提示: "瑞稀从出生起便被厄运笼罩，为了打破诅咒、做自己命运的主宰，他甘愿付出任何代价。",
+      图标: "images/ow/hero/avatar/support_mizuki_avatar.png",
+      拼音: "Rui Xi",
+    },
+    {
+      名称: "飞天猫",
+      标签: ["英雄", "支援"],
+      提示: "“飞天猫”是一名英勇无畏的猫咪飞行员，她身穿布丽吉塔最新发明的喷气推进装置，把可爱的空域支援带到战场的每一个角落。",
+      图标: "images/ow/hero/avatar/support_jetpack-cat_avatar.png",
+      拼音: "Fei Tian Mao",
+    },
   ],
   HUD位置: [
     {
