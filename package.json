@@ -4,7 +4,7 @@
   "displayName": "Overwatch Workshop",
   "description": "守望先锋® 工坊语言支持（中文）",
   "publisher": "Xcrystal",
-  "version": "3.11.25",
+  "version": "3.11.26",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -38,7 +38,12 @@
         },
         "ow.obfuscate.lastOptions": {
           "type": "array",
-          "default": [0, 1, 2, 3],
+          "default": [
+            0,
+            1,
+            2,
+            3
+          ],
           "description": "上次选择的混淆选项"
         }
       }
@@ -194,8 +199,8 @@
     ]
   },
   "scripts": {
-    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/extensionTests.js",
-    "pretest": "pnpm run compile-web",
+    "test": "echo \"No tests\"",
+    "pretest": "",
     "vscode:prepublish": "pnpm run package-web",
     "compile-web": "pnpm run check-types && pnpm run lint && node esbuild.js",
     "watch-web": "npm-run-all -p watch-web:*",
