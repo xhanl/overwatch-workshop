@@ -2775,6 +2775,13 @@ let 常量: 常量类型 = {
       图标: "images/ow/hero/avatar/support_jetpack-cat_avatar.png",
       拼音: "Fei Tian Mao",
     },
+    {
+      名称: "西拉",
+      标签: ["英雄", "输出"],
+      提示: "西拉是位尽职尽责的队友，身怀强化能力的她成功在海力士安保公司崭露头角。她的心态积极向上，勇于直面一切挑战。",
+      图标: "images/ow/hero/avatar/damage_sierra_avatar.png",
+      拼音: "Xi La",
+    },
   ],
   HUD位置: [
     {

@@ -926,6 +926,11 @@ ${buildHero({
   avatar: "damage_emre_avatar.png",
 })}
 
+${buildHero({
+  name: "西拉",
+  avatar: "damage_sierra_avatar.png",
+})}
+
 </tbody>
 </table>
 
