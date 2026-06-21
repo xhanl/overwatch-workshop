@@ -2782,6 +2782,13 @@ let 常量: 常量类型 = {
       图标: "images/ow/hero/avatar/damage_sierra_avatar.png",
       拼音: "Xi La",
     },
+    {
+      名称: "死怨",
+      标签: ["英雄", "输出"],
+      提示: "昔日的桥元家族智械阶下囚，一跃成为了最恶名昭彰的桥元长老，死怨摇身一变，化作令人闻风丧胆的憎恨化身。",
+      图标: "images/ow/hero/avatar/damage_shion_avatar.png",
+      拼音: "Si Yuan",
+    }
   ],
   HUD位置: [
     {

@@ -931,6 +931,11 @@ ${buildHero({
   avatar: "damage_sierra_avatar.png",
 })}
 
+${buildHero({
+  name: "死怨",
+  avatar: "damage_shion_avatar.png",
+})}
+
 </tbody>
 </table>
 
