@@ -228,7 +228,7 @@ const disposable = vscode.commands.registerCommand(
                 //替换字符内容 / 移除注释 / 替换禁用（同时进行并为字符串设置高优先级避免冲突，例如字符串中可能包含注释格式//但不应该被解析为注释）
                 let skip_obfuscate_string = false;
                 rules = rules.replace(
-                  /(?:(?:(?:自定义字符串|字符串|规则)\s*\(\s*)?"((?:\\"|[^"])*)"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/|禁用\s+)/g,
+                  /(?:(?:(?:自定义字符串|字符串|规则)\s*\(\s*)?"((?:\\[\s\S]|[^"\\])*)"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/|禁用\s+)/g,
                   (match, string: string) => {
                     if (match.startsWith('"')) {
                       //移除字符串注释

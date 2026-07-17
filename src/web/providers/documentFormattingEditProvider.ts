@@ -12,7 +12,7 @@ class DocumentFormattingEditProvider
       const text = document.getText();
       const indentations = [];
       const pattern =
-        /(?:"(?:\\"|[^"])*"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/)|\{|\}|\[|\]|\(|\)|全局:|玩家:|For 全局变量|For 玩家变量|While|If|Else If|Else|End/g;
+        /(?:"(?:\\[\s\S]|[^"\\])*"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/)|\{|\}|\[|\]|\(|\)|全局:|玩家:|For 全局变量|For 玩家变量|While|If|Else If|Else|End/g;
       let isVariable = false;
       let level = 0;
       let ignore = 0;

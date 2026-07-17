@@ -416,7 +416,7 @@ function getNextValidWordRange(
 //获取忽略范围(注释/字符串)
 function getIgnoreRanges(document: vscode.TextDocument, range: vscode.Range) {
   const matchRanges = [];
-  const regex = /(?:"(?:\\"|[^"])*"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/)/g;
+  const regex = /(?:"(?:\\[\s\S]|[^"\\])*"|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/)/g;
   if (range) {
     const text = document.getText(range);
     let match;
