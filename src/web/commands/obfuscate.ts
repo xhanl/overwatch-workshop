@@ -724,12 +724,6 @@ const disposable = vscode.commands.registerCommand(
                     obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`);
                     elementCount--;
                   }
-                  //规则触顶提示：达到上限但仍有未填充的元素预算
-                  if (obfuscatedRules.length >= MAX_RULES && elementCount > 0) {
-                    vscode.window.showWarningMessage(
-                      `已达规则总数上限（${MAX_RULES}，当前 ${obfuscatedRules.length}），剩余 ${elementCount} 元素预算未填充；如需更强保护请精简原生规则/元素。`
-                    );
-                  }
                 }
 
                 //合并规则
