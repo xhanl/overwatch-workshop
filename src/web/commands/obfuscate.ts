@@ -695,24 +695,40 @@ const disposable = vscode.commands.registerCommand(
                   }
                 }
 
-                //映射规则：用 1 元素空白规则填满剩余预算，均匀分散以增强混淆
-                const slots = Math.max(ruleList.length, 1);
-                const length = Math.floor(elementCount / slots);
+                //映射规则：用 1 元素空白规则填满剩余元素预算，但不得超过“规则总数上限”
+                //（实测约 12375 条会触发“自定游戏设置过大”，取保守值 12000 留余量）
+                const MAX_RULES = 11500;
+                const fillerBudget = options.includes(0)
+                  ? Math.max(Math.min(elementCount, MAX_RULES - ruleList.length), 0)
+                  : 0;
+                const length = Math.floor(fillerBudget / Math.max(ruleList.length, 1));
                 for (let i = 0; i < ruleList.length; i++) {
                   obfuscatedRules.push(ruleList[i]);
-                  //填充空白规则 (1元素/个)
+                  //填充空白规则 (1元素/个)，双重护栏：元素预算 & 规则总数上限
                   if (options.includes(0)) {
-                    for (let j = 0; j < length && elementCount > 0; j++) {
+                    for (
+                      let j = 0;
+                      j < length &&
+                      elementCount > 0 &&
+                      obfuscatedRules.length < MAX_RULES;
+                      j++
+                    ) {
                       obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`);
                       elementCount--;
                     }
                   }
                 }
-                //用余数补满剩余预算
+                //用余数补满（仍受双重护栏约束）
                 if (options.includes(0)) {
-                  while (elementCount > 0) {
+                  while (elementCount > 0 && obfuscatedRules.length < MAX_RULES) {
                     obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`);
                     elementCount--;
+                  }
+                  //规则触顶提示：达到上限但仍有未填充的元素预算
+                  if (obfuscatedRules.length >= MAX_RULES && elementCount > 0) {
+                    vscode.window.showWarningMessage(
+                      `已达规则总数上限（${MAX_RULES}，当前 ${obfuscatedRules.length}），剩余 ${elementCount} 元素预算未填充；如需更强保护请精简原生规则/元素。`
+                    );
                   }
                 }
 
