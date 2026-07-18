@@ -695,21 +695,24 @@ const disposable = vscode.commands.registerCommand(
                   }
                 }
 
-                //映射规则
-                let maxLength = Math.min(elementCount, 2500);
-                let length = Math.floor(maxLength / (ruleList.length - 1));
-                if (length === 0) {
-                  length = 5;
-                }
+                //映射规则：用 1 元素空白规则填满剩余预算，均匀分散以增强混淆
+                const slots = Math.max(ruleList.length, 1);
+                const length = Math.floor(elementCount / slots);
                 for (let i = 0; i < ruleList.length; i++) {
                   obfuscatedRules.push(ruleList[i]);
-                  //填充空白规则 (随机插入，1元素/个)
+                  //填充空白规则 (1元素/个)
                   if (options.includes(0)) {
-                    for (let j = 0; j < length; j++) {
-                      if (elementCount > 0) {
-                        obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`);
-                      }
+                    for (let j = 0; j < length && elementCount > 0; j++) {
+                      obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`);
+                      elementCount--;
                     }
+                  }
+                }
+                //用余数补满剩余预算
+                if (options.includes(0)) {
+                  while (elementCount > 0) {
+                    obfuscatedRules.push(`规则(""){事件{持续 - 全局;}}`);
+                    elementCount--;
                   }
                 }
 
